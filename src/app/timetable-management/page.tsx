@@ -1,0 +1,1936 @@
+"use client";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { useState, useEffect } from "react";
+
+type Subject = {
+  id: number;
+  name: string;
+  teacher: string;
+  duration: string;
+};
+
+type TimetableEntry = {
+  id: number;
+  day: string;
+  time: string;
+  subject: Subject;
+  classroom: string;
+};
+
+type ClassTimetable = {
+  id: number;
+  className: string;
+  timetable: TimetableEntry[];
+};
+
+export default function TimetableManagement() {
+  const [classTimetables, setClassTimetables] = useState<ClassTimetable[]>([
+    {
+      id: 1,
+      className: "Creche",
+      timetable: [
+        {
+          id: 1,
+          day: "Monday",
+          time: "09:00 - 10:00",
+          subject: { id: 1, name: "Play Time", teacher: "Ms. Ama", duration: "1 hour" },
+          classroom: "Play Room"
+        },
+        {
+          id: 2,
+          day: "Monday",
+          time: "10:00 - 10:30",
+          subject: { id: 2, name: "Story Time", teacher: "Ms. Esi", duration: "30 mins" },
+          classroom: "Reading Corner"
+        },
+        {
+          id: 3,
+          day: "Monday",
+          time: "11:00 - 12:00",
+          subject: { id: 3, name: "Nap Time", teacher: "Ms. Ama", duration: "1 hour" },
+          classroom: "Sleep Room"
+        },
+        {
+          id: 4,
+          day: "Monday",
+          time: "13:00 - 14:00",
+          subject: { id: 4, name: "Music Time", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Music Room"
+        },
+        {
+          id: 5,
+          day: "Monday",
+          time: "14:30 - 15:30",
+          subject: { id: 5, name: "Outdoor Play", teacher: "Ms. Adwoa", duration: "1 hour" },
+          classroom: "Playground"
+        },
+        {
+          id: 6,
+          day: "Tuesday",
+          time: "09:00 - 10:00",
+          subject: { id: 6, name: "Art & Craft", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        },
+        {
+          id: 7,
+          day: "Tuesday",
+          time: "10:30 - 11:30",
+          subject: { id: 7, name: "Sensory Play", teacher: "Ms. Esi", duration: "1 hour" },
+          classroom: "Sensory Room"
+        },
+        {
+          id: 8,
+          day: "Tuesday",
+          time: "13:00 - 14:00",
+          subject: { id: 8, name: "Story Time", teacher: "Ms. Ama", duration: "1 hour" },
+          classroom: "Reading Corner"
+        },
+        {
+          id: 9,
+          day: "Wednesday",
+          time: "09:00 - 10:00",
+          subject: { id: 9, name: "Music & Movement", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Music Room"
+        },
+        {
+          id: 10,
+          day: "Wednesday",
+          time: "10:30 - 11:30",
+          subject: { id: 10, name: "Water Play", teacher: "Ms. Adwoa", duration: "1 hour" },
+          classroom: "Outdoor Area"
+        },
+        {
+          id: 11,
+          day: "Thursday",
+          time: "09:00 - 10:00",
+          subject: { id: 11, name: "Building Blocks", teacher: "Ms. Esi", duration: "1 hour" },
+          classroom: "Play Room"
+        },
+        {
+          id: 12,
+          day: "Thursday",
+          time: "10:30 - 11:30",
+          subject: { id: 12, name: "Puppet Show", teacher: "Ms. Ama", duration: "1 hour" },
+          classroom: "Reading Corner"
+        },
+        {
+          id: 13,
+          day: "Friday",
+          time: "09:00 - 10:00",
+          subject: { id: 13, name: "Free Play", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Play Room"
+        },
+        {
+          id: 14,
+          day: "Friday",
+          time: "10:30 - 11:30",
+          subject: { id: 14, name: "Show & Tell", teacher: "Ms. Adwoa", duration: "1 hour" },
+          classroom: "Main Room"
+        }
+      ]
+    },
+    {
+      id: 2,
+      className: "Nursery 1",
+      timetable: [
+        {
+          id: 1,
+          day: "Monday",
+          time: "09:00 - 10:00",
+          subject: { id: 1, name: "Circle Time", teacher: "Ms. Adwoa", duration: "1 hour" },
+          classroom: "Main Room"
+        },
+        {
+          id: 2,
+          day: "Monday",
+          time: "10:30 - 11:30",
+          subject: { id: 2, name: "Phonics", teacher: "Ms. Akosua", duration: "1 hour" },
+          classroom: "Main Room"
+        },
+        {
+          id: 3,
+          day: "Monday",
+          time: "13:00 - 14:00",
+          subject: { id: 3, name: "Numbers", teacher: "Ms. Abena", duration: "1 hour" },
+          classroom: "Main Room"
+        },
+        {
+          id: 4,
+          day: "Monday",
+          time: "14:30 - 15:30",
+          subject: { id: 4, name: "Arts & Crafts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        },
+        {
+          id: 5,
+          day: "Tuesday",
+          time: "09:00 - 10:00",
+          subject: { id: 5, name: "Story Time", teacher: "Ms. Esi", duration: "1 hour" },
+          classroom: "Reading Corner"
+        },
+        {
+          id: 6,
+          day: "Tuesday",
+          time: "10:30 - 11:30",
+          subject: { id: 6, name: "Music", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Music Room"
+        },
+        {
+          id: 7,
+          day: "Tuesday",
+          time: "13:00 - 14:00",
+          subject: { id: 7, name: "Shapes & Colors", teacher: "Ms. Abena", duration: "1 hour" },
+          classroom: "Main Room"
+        },
+        {
+          id: 8,
+          day: "Wednesday",
+          time: "09:00 - 10:00",
+          subject: { id: 8, name: "Phonics", teacher: "Ms. Akosua", duration: "1 hour" },
+          classroom: "Main Room"
+        },
+        {
+          id: 9,
+          day: "Wednesday",
+          time: "10:30 - 11:30",
+          subject: { id: 9, name: "Outdoor Play", teacher: "Ms. Adwoa", duration: "1 hour" },
+          classroom: "Playground"
+        },
+        {
+          id: 10,
+          day: "Wednesday",
+          time: "13:00 - 14:00",
+          subject: { id: 10, name: "Numbers", teacher: "Ms. Abena", duration: "1 hour" },
+          classroom: "Main Room"
+        },
+        {
+          id: 11,
+          day: "Thursday",
+          time: "09:00 - 10:00",
+          subject: { id: 11, name: "Arts & Crafts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        },
+        {
+          id: 12,
+          day: "Thursday",
+          time: "10:30 - 11:30",
+          subject: { id: 12, name: "Story Time", teacher: "Ms. Esi", duration: "1 hour" },
+          classroom: "Reading Corner"
+        },
+        {
+          id: 13,
+          day: "Friday",
+          time: "09:00 - 10:00",
+          subject: { id: 13, name: "Show & Tell", teacher: "Ms. Adwoa", duration: "1 hour" },
+          classroom: "Main Room"
+        },
+        {
+          id: 14,
+          day: "Friday",
+          time: "10:30 - 11:30",
+          subject: { id: 14, name: "Music & Movement", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Music Room"
+        }
+      ]
+    },
+    {
+      id: 3,
+      className: "Nursery 2",
+      timetable: [
+        {
+          id: 1,
+          day: "Monday",
+          time: "09:00 - 10:00",
+          subject: { id: 1, name: "Phonics", teacher: "Ms. Akosua", duration: "1 hour" },
+          classroom: "Main Room"
+        },
+        {
+          id: 2,
+          day: "Monday",
+          time: "10:30 - 11:30",
+          subject: { id: 2, name: "Numbers", teacher: "Ms. Abena", duration: "1 hour" },
+          classroom: "Main Room"
+        },
+        {
+          id: 3,
+          day: "Monday",
+          time: "13:00 - 14:00",
+          subject: { id: 3, name: "Science Exploration", teacher: "Ms. Efia", duration: "1 hour" },
+          classroom: "Science Corner"
+        },
+        {
+          id: 4,
+          day: "Monday",
+          time: "14:30 - 15:30",
+          subject: { id: 4, name: "Arts & Crafts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        },
+        {
+          id: 5,
+          day: "Tuesday",
+          time: "09:00 - 10:00",
+          subject: { id: 5, name: "Story Time", teacher: "Ms. Esi", duration: "1 hour" },
+          classroom: "Reading Corner"
+        },
+        {
+          id: 6,
+          day: "Tuesday",
+          time: "10:30 - 11:30",
+          subject: { id: 6, name: "Music", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Music Room"
+        },
+        {
+          id: 7,
+          day: "Tuesday",
+          time: "13:00 - 14:00",
+          subject: { id: 7, name: "Phonics", teacher: "Ms. Akosua", duration: "1 hour" },
+          classroom: "Main Room"
+        },
+        {
+          id: 8,
+          day: "Wednesday",
+          time: "09:00 - 10:00",
+          subject: { id: 8, name: "Numbers", teacher: "Ms. Abena", duration: "1 hour" },
+          classroom: "Main Room"
+        },
+        {
+          id: 9,
+          day: "Wednesday",
+          time: "10:30 - 11:30",
+          subject: { id: 9, name: "Outdoor Play", teacher: "Ms. Adwoa", duration: "1 hour" },
+          classroom: "Playground"
+        },
+        {
+          id: 10,
+          day: "Wednesday",
+          time: "13:00 - 14:00",
+          subject: { id: 10, name: "Science Exploration", teacher: "Ms. Efia", duration: "1 hour" },
+          classroom: "Science Corner"
+        },
+        {
+          id: 11,
+          day: "Thursday",
+          time: "09:00 - 10:00",
+          subject: { id: 11, name: "Arts & Crafts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        },
+        {
+          id: 12,
+          day: "Thursday",
+          time: "10:30 - 11:30",
+          subject: { id: 12, name: "Story Time", teacher: "Ms. Esi", duration: "1 hour" },
+          classroom: "Reading Corner"
+        },
+        {
+          id: 13,
+          day: "Friday",
+          time: "09:00 - 10:00",
+          subject: { id: 13, name: "Show & Tell", teacher: "Ms. Adwoa", duration: "1 hour" },
+          classroom: "Main Room"
+        },
+        {
+          id: 14,
+          day: "Friday",
+          time: "10:30 - 11:30",
+          subject: { id: 14, name: "Music & Movement", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Music Room"
+        }
+      ]
+    },
+    {
+      id: 4,
+      className: "KG 1",
+      timetable: [
+        {
+          id: 1,
+          day: "Monday",
+          time: "09:00 - 10:00",
+          subject: { id: 1, name: "English", teacher: "Ms. Akua", duration: "1 hour" },
+          classroom: "KG Room 1"
+        },
+        {
+          id: 2,
+          day: "Monday",
+          time: "10:30 - 11:30",
+          subject: { id: 2, name: "Math", teacher: "Ms. Ama", duration: "1 hour" },
+          classroom: "KG Room 1"
+        },
+        {
+          id: 3,
+          day: "Monday",
+          time: "13:00 - 14:00",
+          subject: { id: 3, name: "Science", teacher: "Ms. Efia", duration: "1 hour" },
+          classroom: "Science Corner"
+        },
+        {
+          id: 4,
+          day: "Monday",
+          time: "14:30 - 15:30",
+          subject: { id: 4, name: "Creative Arts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        },
+        {
+          id: 5,
+          day: "Tuesday",
+          time: "09:00 - 10:00",
+          subject: { id: 5, name: "Phonics", teacher: "Ms. Akosua", duration: "1 hour" },
+          classroom: "KG Room 1"
+        },
+        {
+          id: 6,
+          day: "Tuesday",
+          time: "10:30 - 11:30",
+          subject: { id: 6, name: "Social Studies", teacher: "Mr. Kwame", duration: "1 hour" },
+          classroom: "KG Room 1"
+        },
+        {
+          id: 7,
+          day: "Tuesday",
+          time: "13:00 - 14:00",
+          subject: { id: 7, name: "Music", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Music Room"
+        },
+        {
+          id: 8,
+          day: "Wednesday",
+          time: "09:00 - 10:00",
+          subject: { id: 8, name: "English", teacher: "Ms. Akua", duration: "1 hour" },
+          classroom: "KG Room 1"
+        },
+        {
+          id: 9,
+          day: "Wednesday",
+          time: "10:30 - 11:30",
+          subject: { id: 9, name: "Math", teacher: "Ms. Ama", duration: "1 hour" },
+          classroom: "KG Room 1"
+        },
+        {
+          id: 10,
+          day: "Wednesday",
+          time: "13:00 - 14:00",
+          subject: { id: 10, name: "Physical Education", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Playground"
+        },
+        {
+          id: 11,
+          day: "Thursday",
+          time: "09:00 - 10:00",
+          subject: { id: 11, name: "Science", teacher: "Ms. Efia", duration: "1 hour" },
+          classroom: "Science Corner"
+        },
+        {
+          id: 12,
+          day: "Thursday",
+          time: "10:30 - 11:30",
+          subject: { id: 12, name: "Creative Arts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        },
+        {
+          id: 13,
+          day: "Friday",
+          time: "09:00 - 10:00",
+          subject: { id: 13, name: "Show & Tell", teacher: "Ms. Adwoa", duration: "1 hour" },
+          classroom: "KG Room 1"
+        },
+        {
+          id: 14,
+          day: "Friday",
+          time: "10:30 - 11:30",
+          subject: { id: 14, name: "Music & Movement", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Music Room"
+        }
+      ]
+    },
+    {
+      id: 5,
+      className: "KG 2",
+      timetable: [
+        {
+          id: 1,
+          day: "Monday",
+          time: "09:00 - 10:00",
+          subject: { id: 1, name: "English", teacher: "Ms. Yaa", duration: "1 hour" },
+          classroom: "KG Room 2"
+        },
+        {
+          id: 2,
+          day: "Monday",
+          time: "10:30 - 11:30",
+          subject: { id: 2, name: "Math", teacher: "Ms. Ama", duration: "1 hour" },
+          classroom: "KG Room 2"
+        },
+        {
+          id: 3,
+          day: "Monday",
+          time: "13:00 - 14:00",
+          subject: { id: 3, name: "Science", teacher: "Ms. Efia", duration: "1 hour" },
+          classroom: "Science Corner"
+        },
+        {
+          id: 4,
+          day: "Monday",
+          time: "14:30 - 15:30",
+          subject: { id: 4, name: "Creative Arts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        },
+        {
+          id: 5,
+          day: "Tuesday",
+          time: "09:00 - 10:00",
+          subject: { id: 5, name: "Phonics", teacher: "Ms. Akosua", duration: "1 hour" },
+          classroom: "KG Room 2"
+        },
+        {
+          id: 6,
+          day: "Tuesday",
+          time: "10:30 - 11:30",
+          subject: { id: 6, name: "Social Studies", teacher: "Mr. Kwame", duration: "1 hour" },
+          classroom: "KG Room 2"
+        },
+        {
+          id: 7,
+          day: "Tuesday",
+          time: "13:00 - 14:00",
+          subject: { id: 7, name: "Music", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Music Room"
+        },
+        {
+          id: 8,
+          day: "Wednesday",
+          time: "09:00 - 10:00",
+          subject: { id: 8, name: "English", teacher: "Ms. Yaa", duration: "1 hour" },
+          classroom: "KG Room 2"
+        },
+        {
+          id: 9,
+          day: "Wednesday",
+          time: "10:30 - 11:30",
+          subject: { id: 9, name: "Math", teacher: "Ms. Ama", duration: "1 hour" },
+          classroom: "KG Room 2"
+        },
+        {
+          id: 10,
+          day: "Wednesday",
+          time: "13:00 - 14:00",
+          subject: { id: 10, name: "Physical Education", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Playground"
+        },
+        {
+          id: 11,
+          day: "Thursday",
+          time: "09:00 - 10:00",
+          subject: { id: 11, name: "Science", teacher: "Ms. Efia", duration: "1 hour" },
+          classroom: "Science Corner"
+        },
+        {
+          id: 12,
+          day: "Thursday",
+          time: "10:30 - 11:30",
+          subject: { id: 12, name: "Creative Arts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        },
+        {
+          id: 13,
+          day: "Friday",
+          time: "09:00 - 10:00",
+          subject: { id: 13, name: "Show & Tell", teacher: "Ms. Adwoa", duration: "1 hour" },
+          classroom: "KG Room 2"
+        },
+        {
+          id: 14,
+          day: "Friday",
+          time: "10:30 - 11:30",
+          subject: { id: 14, name: "Music & Movement", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Music Room"
+        }
+      ]
+    },
+    {
+      id: 6,
+      className: "Grade 1",
+      timetable: [
+        {
+          id: 1,
+          day: "Monday",
+          time: "09:00 - 10:00",
+          subject: { id: 1, name: "Mathematics", teacher: "Mr. Smith", duration: "1 hour" },
+          classroom: "Room 101"
+        },
+        {
+          id: 2,
+          day: "Monday",
+          time: "10:30 - 11:30",
+          subject: { id: 2, name: "English", teacher: "Mrs. Brown", duration: "1 hour" },
+          classroom: "Room 101"
+        },
+        {
+          id: 3,
+          day: "Monday",
+          time: "13:00 - 14:00",
+          subject: { id: 3, name: "Science", teacher: "Ms. Johnson", duration: "1 hour" },
+          classroom: "Lab 1"
+        },
+        {
+          id: 4,
+          day: "Monday",
+          time: "14:30 - 15:30",
+          subject: { id: 4, name: "Creative Arts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        },
+        {
+          id: 5,
+          day: "Tuesday",
+          time: "09:00 - 10:00",
+          subject: { id: 5, name: "Social Studies", teacher: "Mr. Kwame", duration: "1 hour" },
+          classroom: "Room 101"
+        },
+        {
+          id: 6,
+          day: "Tuesday",
+          time: "10:30 - 11:30",
+          subject: { id: 6, name: "Physical Education", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Playground"
+        },
+        {
+          id: 7,
+          day: "Tuesday",
+          time: "13:00 - 14:00",
+          subject: { id: 7, name: "Mathematics", teacher: "Mr. Smith", duration: "1 hour" },
+          classroom: "Room 101"
+        },
+        {
+          id: 8,
+          day: "Wednesday",
+          time: "09:00 - 10:00",
+          subject: { id: 8, name: "English", teacher: "Mrs. Brown", duration: "1 hour" },
+          classroom: "Room 101"
+        },
+        {
+          id: 9,
+          day: "Wednesday",
+          time: "10:30 - 11:30",
+          subject: { id: 9, name: "Science", teacher: "Ms. Johnson", duration: "1 hour" },
+          classroom: "Lab 1"
+        },
+        {
+          id: 10,
+          day: "Wednesday",
+          time: "13:00 - 14:00",
+          subject: { id: 10, name: "ICT", teacher: "Mr. Boateng", duration: "1 hour" },
+          classroom: "Computer Lab"
+        },
+        {
+          id: 11,
+          day: "Thursday",
+          time: "09:00 - 10:00",
+          subject: { id: 11, name: "Mathematics", teacher: "Mr. Smith", duration: "1 hour" },
+          classroom: "Room 101"
+        },
+        {
+          id: 12,
+          day: "Thursday",
+          time: "10:30 - 11:30",
+          subject: { id: 12, name: "English", teacher: "Mrs. Brown", duration: "1 hour" },
+          classroom: "Room 101"
+        },
+        {
+          id: 13,
+          day: "Friday",
+          time: "09:00 - 10:00",
+          subject: { id: 13, name: "Science", teacher: "Ms. Johnson", duration: "1 hour" },
+          classroom: "Lab 1"
+        },
+        {
+          id: 14,
+          day: "Friday",
+          time: "10:30 - 11:30",
+          subject: { id: 14, name: "Music", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Music Room"
+        }
+      ]
+    },
+    {
+      id: 7,
+      className: "Grade 2",
+      timetable: [
+        {
+          id: 1,
+          day: "Monday",
+          time: "09:00 - 10:30",
+          subject: { id: 1, name: "English", teacher: "Mrs. Brown", duration: "1.5 hours" },
+          classroom: "Room 102"
+        },
+        {
+          id: 2,
+          day: "Monday",
+          time: "11:00 - 12:00",
+          subject: { id: 2, name: "Mathematics", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Room 102"
+        },
+        {
+          id: 3,
+          day: "Monday",
+          time: "13:00 - 14:00",
+          subject: { id: 3, name: "Science", teacher: "Ms. Johnson", duration: "1 hour" },
+          classroom: "Lab 1"
+        },
+        {
+          id: 4,
+          day: "Monday",
+          time: "14:30 - 15:30",
+          subject: { id: 4, name: "Creative Arts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        },
+        {
+          id: 5,
+          day: "Tuesday",
+          time: "09:00 - 10:00",
+          subject: { id: 5, name: "Social Studies", teacher: "Mr. Kwame", duration: "1 hour" },
+          classroom: "Room 102"
+        },
+        {
+          id: 6,
+          day: "Tuesday",
+          time: "10:30 - 11:30",
+          subject: { id: 6, name: "Physical Education", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Playground"
+        },
+        {
+          id: 7,
+          day: "Tuesday",
+          time: "13:00 - 14:00",
+          subject: { id: 7, name: "English", teacher: "Mrs. Brown", duration: "1 hour" },
+          classroom: "Room 102"
+        },
+        {
+          id: 8,
+          day: "Wednesday",
+          time: "09:00 - 10:00",
+          subject: { id: 8, name: "Mathematics", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Room 102"
+        },
+        {
+          id: 9,
+          day: "Wednesday",
+          time: "10:30 - 11:30",
+          subject: { id: 9, name: "Science", teacher: "Ms. Johnson", duration: "1 hour" },
+          classroom: "Lab 1"
+        },
+        {
+          id: 10,
+          day: "Wednesday",
+          time: "13:00 - 14:00",
+          subject: { id: 10, name: "ICT", teacher: "Mr. Boateng", duration: "1 hour" },
+          classroom: "Computer Lab"
+        },
+        {
+          id: 11,
+          day: "Thursday",
+          time: "09:00 - 10:30",
+          subject: { id: 11, name: "English", teacher: "Mrs. Brown", duration: "1.5 hours" },
+          classroom: "Room 102"
+        },
+        {
+          id: 12,
+          day: "Thursday",
+          time: "11:00 - 12:00",
+          subject: { id: 12, name: "Mathematics", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Room 102"
+        },
+        {
+          id: 13,
+          day: "Friday",
+          time: "09:00 - 10:00",
+          subject: { id: 13, name: "Science", teacher: "Ms. Johnson", duration: "1 hour" },
+          classroom: "Lab 1"
+        },
+        {
+          id: 14,
+          day: "Friday",
+          time: "10:30 - 11:30",
+          subject: { id: 14, name: "Music", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Music Room"
+        }
+      ]
+    },
+    {
+      id: 8,
+      className: "Grade 3",
+      timetable: [
+        {
+          id: 1,
+          day: "Monday",
+          time: "09:00 - 10:00",
+          subject: { id: 1, name: "Mathematics", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Room 103"
+        },
+        {
+          id: 2,
+          day: "Monday",
+          time: "10:30 - 11:30",
+          subject: { id: 2, name: "English", teacher: "Ms. Adjei", duration: "1 hour" },
+          classroom: "Room 103"
+        },
+        {
+          id: 3,
+          day: "Monday",
+          time: "13:00 - 14:00",
+          subject: { id: 3, name: "Science", teacher: "Ms. Asante", duration: "1 hour" },
+          classroom: "Lab 2"
+        },
+        {
+          id: 4,
+          day: "Monday",
+          time: "14:30 - 15:30",
+          subject: { id: 4, name: "ICT", teacher: "Mr. Boateng", duration: "1 hour" },
+          classroom: "Computer Lab"
+        },
+        {
+          id: 5,
+          day: "Tuesday",
+          time: "09:00 - 10:00",
+          subject: { id: 5, name: "Social Studies", teacher: "Mr. Kwame", duration: "1 hour" },
+          classroom: "Room 103"
+        },
+        {
+          id: 6,
+          day: "Tuesday",
+          time: "10:30 - 11:30",
+          subject: { id: 6, name: "Physical Education", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Playground"
+        },
+        {
+          id: 7,
+          day: "Tuesday",
+          time: "13:00 - 14:00",
+          subject: { id: 7, name: "Mathematics", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Room 103"
+        },
+        {
+          id: 8,
+          day: "Wednesday",
+          time: "09:00 - 10:00",
+          subject: { id: 8, name: "English", teacher: "Ms. Adjei", duration: "1 hour" },
+          classroom: "Room 103"
+        },
+        {
+          id: 9,
+          day: "Wednesday",
+          time: "10:30 - 11:30",
+          subject: { id: 9, name: "Science", teacher: "Ms. Asante", duration: "1 hour" },
+          classroom: "Lab 2"
+        },
+        {
+          id: 10,
+          day: "Wednesday",
+          time: "13:00 - 14:00",
+          subject: { id: 10, name: "Creative Arts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        },
+        {
+          id: 11,
+          day: "Thursday",
+          time: "09:00 - 10:00",
+          subject: { id: 11, name: "Mathematics", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Room 103"
+        },
+        {
+          id: 12,
+          day: "Thursday",
+          time: "10:30 - 11:30",
+          subject: { id: 12, name: "English", teacher: "Ms. Adjei", duration: "1 hour" },
+          classroom: "Room 103"
+        },
+        {
+          id: 13,
+          day: "Friday",
+          time: "09:00 - 10:00",
+          subject: { id: 13, name: "Science", teacher: "Ms. Asante", duration: "1 hour" },
+          classroom: "Lab 2"
+        },
+        {
+          id: 14,
+          day: "Friday",
+          time: "10:30 - 11:30",
+          subject: { id: 14, name: "Music", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Music Room"
+        }
+      ]
+    },
+    {
+      id: 9,
+      className: "Grade 4",
+      timetable: [
+        {
+          id: 1,
+          day: "Monday",
+          time: "09:00 - 10:00",
+          subject: { id: 1, name: "English", teacher: "Ms. Adjei", duration: "1 hour" },
+          classroom: "Room 104"
+        },
+        {
+          id: 2,
+          day: "Monday",
+          time: "10:30 - 11:30",
+          subject: { id: 2, name: "Mathematics", teacher: "Mr. Mensah", duration: "1 hour" },
+          classroom: "Room 104"
+        },
+        {
+          id: 3,
+          day: "Monday",
+          time: "13:00 - 14:00",
+          subject: { id: 3, name: "Science", teacher: "Ms. Asante", duration: "1 hour" },
+          classroom: "Lab 2"
+        },
+        {
+          id: 4,
+          day: "Monday",
+          time: "14:30 - 15:30",
+          subject: { id: 4, name: "French", teacher: "Ms. Nkrumah", duration: "1 hour" },
+          classroom: "Room 104"
+        },
+        {
+          id: 5,
+          day: "Tuesday",
+          time: "09:00 - 10:00",
+          subject: { id: 5, name: "Social Studies", teacher: "Mr. Asare", duration: "1 hour" },
+          classroom: "Room 104"
+        },
+        {
+          id: 6,
+          day: "Tuesday",
+          time: "10:30 - 11:30",
+          subject: { id: 6, name: "Physical Education", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Playground"
+        },
+        {
+          id: 7,
+          day: "Tuesday",
+          time: "13:00 - 14:00",
+          subject: { id: 7, name: "English", teacher: "Ms. Adjei", duration: "1 hour" },
+          classroom: "Room 104"
+        },
+        {
+          id: 8,
+          day: "Wednesday",
+          time: "09:00 - 10:00",
+          subject: { id: 8, name: "Mathematics", teacher: "Mr. Mensah", duration: "1 hour" },
+          classroom: "Room 104"
+        },
+        {
+          id: 9,
+          day: "Wednesday",
+          time: "10:30 - 11:30",
+          subject: { id: 9, name: "Science", teacher: "Ms. Asante", duration: "1 hour" },
+          classroom: "Lab 2"
+        },
+        {
+          id: 10,
+          day: "Wednesday",
+          time: "13:00 - 14:00",
+          subject: { id: 10, name: "ICT", teacher: "Mr. Boateng", duration: "1 hour" },
+          classroom: "Computer Lab"
+        },
+        {
+          id: 11,
+          day: "Thursday",
+          time: "09:00 - 10:00",
+          subject: { id: 11, name: "English", teacher: "Ms. Adjei", duration: "1 hour" },
+          classroom: "Room 104"
+        },
+        {
+          id: 12,
+          day: "Thursday",
+          time: "10:30 - 11:30",
+          subject: { id: 12, name: "Mathematics", teacher: "Mr. Mensah", duration: "1 hour" },
+          classroom: "Room 104"
+        },
+        {
+          id: 13,
+          day: "Friday",
+          time: "09:00 - 10:00",
+          subject: { id: 13, name: "Science", teacher: "Ms. Asante", duration: "1 hour" },
+          classroom: "Lab 2"
+        },
+        {
+          id: 14,
+          day: "Friday",
+          time: "10:30 - 11:30",
+          subject: { id: 14, name: "Creative Arts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        }
+      ]
+    },
+    {
+      id: 10,
+      className: "Grade 5",
+      timetable: [
+        {
+          id: 1,
+          day: "Monday",
+          time: "09:00 - 10:30",
+          subject: { id: 1, name: "Mathematics", teacher: "Mr. Mensah", duration: "1.5 hours" },
+          classroom: "Room 105"
+        },
+        {
+          id: 2,
+          day: "Monday",
+          time: "11:00 - 12:00",
+          subject: { id: 2, name: "English", teacher: "Mrs. Appiah", duration: "1 hour" },
+          classroom: "Room 105"
+        },
+        {
+          id: 3,
+          day: "Monday",
+          time: "13:00 - 14:00",
+          subject: { id: 3, name: "Science", teacher: "Ms. Asante", duration: "1 hour" },
+          classroom: "Lab 2"
+        },
+        {
+          id: 4,
+          day: "Monday",
+          time: "14:30 - 15:30",
+          subject: { id: 4, name: "French", teacher: "Ms. Nkrumah", duration: "1 hour" },
+          classroom: "Room 105"
+        },
+        {
+          id: 5,
+          day: "Tuesday",
+          time: "09:00 - 10:00",
+          subject: { id: 5, name: "Social Studies", teacher: "Mr. Asare", duration: "1 hour" },
+          classroom: "Room 105"
+        },
+        {
+          id: 6,
+          day: "Tuesday",
+          time: "10:30 - 11:30",
+          subject: { id: 6, name: "Physical Education", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Playground"
+        },
+        {
+          id: 7,
+          day: "Tuesday",
+          time: "13:00 - 14:00",
+          subject: { id: 7, name: "Mathematics", teacher: "Mr. Mensah", duration: "1 hour" },
+          classroom: "Room 105"
+        },
+        {
+          id: 8,
+          day: "Wednesday",
+          time: "09:00 - 10:00",
+          subject: { id: 8, name: "English", teacher: "Mrs. Appiah", duration: "1 hour" },
+          classroom: "Room 105"
+        },
+        {
+          id: 9,
+          day: "Wednesday",
+          time: "10:30 - 11:30",
+          subject: { id: 9, name: "Science", teacher: "Ms. Asante", duration: "1 hour" },
+          classroom: "Lab 2"
+        },
+        {
+          id: 10,
+          day: "Wednesday",
+          time: "13:00 - 14:00",
+          subject: { id: 10, name: "ICT", teacher: "Mr. Boateng", duration: "1 hour" },
+          classroom: "Computer Lab"
+        },
+        {
+          id: 11,
+          day: "Thursday",
+          time: "09:00 - 10:30",
+          subject: { id: 11, name: "Mathematics", teacher: "Mr. Mensah", duration: "1.5 hours" },
+          classroom: "Room 105"
+        },
+        {
+          id: 12,
+          day: "Thursday",
+          time: "11:00 - 12:00",
+          subject: { id: 12, name: "English", teacher: "Mrs. Appiah", duration: "1 hour" },
+          classroom: "Room 105"
+        },
+        {
+          id: 13,
+          day: "Friday",
+          time: "09:00 - 10:00",
+          subject: { id: 13, name: "Science", teacher: "Ms. Asante", duration: "1 hour" },
+          classroom: "Lab 2"
+        },
+        {
+          id: 14,
+          day: "Friday",
+          time: "10:30 - 11:30",
+          subject: { id: 14, name: "Creative Arts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        }
+      ]
+    },
+    {
+      id: 11,
+      className: "Grade 6",
+      timetable: [
+        {
+          id: 1,
+          day: "Monday",
+          time: "09:00 - 10:00",
+          subject: { id: 1, name: "English", teacher: "Mrs. Appiah", duration: "1 hour" },
+          classroom: "Room 106"
+        },
+        {
+          id: 2,
+          day: "Monday",
+          time: "10:30 - 11:30",
+          subject: { id: 2, name: "Mathematics", teacher: "Mr. Owusu", duration: "1 hour" },
+          classroom: "Room 106"
+        },
+        {
+          id: 3,
+          day: "Monday",
+          time: "13:00 - 14:30",
+          subject: { id: 3, name: "Integrated Science", teacher: "Mr. Agyeman", duration: "1.5 hours" },
+          classroom: "Lab 2"
+        },
+        {
+          id: 4,
+          day: "Monday",
+          time: "15:00 - 16:00",
+          subject: { id: 4, name: "French", teacher: "Ms. Nkrumah", duration: "1 hour" },
+          classroom: "Room 106"
+        },
+        {
+          id: 5,
+          day: "Tuesday",
+          time: "09:00 - 10:00",
+          subject: { id: 5, name: "Social Studies", teacher: "Mr. Asare", duration: "1 hour" },
+          classroom: "Room 106"
+        },
+        {
+          id: 6,
+          day: "Tuesday",
+          time: "10:30 - 11:30",
+          subject: { id: 6, name: "Physical Education", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Playground"
+        },
+        {
+          id: 7,
+          day: "Tuesday",
+          time: "13:00 - 14:00",
+          subject: { id: 7, name: "English", teacher: "Mrs. Appiah", duration: "1 hour" },
+          classroom: "Room 106"
+        },
+        {
+          id: 8,
+          day: "Wednesday",
+          time: "09:00 - 10:00",
+          subject: { id: 8, name: "Mathematics", teacher: "Mr. Owusu", duration: "1 hour" },
+          classroom: "Room 106"
+        },
+        {
+          id: 9,
+          day: "Wednesday",
+          time: "10:30 - 11:30",
+          subject: { id: 9, name: "Integrated Science", teacher: "Mr. Agyeman", duration: "1 hour" },
+          classroom: "Lab 2"
+        },
+        {
+          id: 10,
+          day: "Wednesday",
+          time: "13:00 - 14:00",
+          subject: { id: 10, name: "ICT", teacher: "Ms. Danso", duration: "1 hour" },
+          classroom: "Computer Lab"
+        },
+        {
+          id: 11,
+          day: "Thursday",
+          time: "09:00 - 10:00",
+          subject: { id: 11, name: "English", teacher: "Mrs. Appiah", duration: "1 hour" },
+          classroom: "Room 106"
+        },
+        {
+          id: 12,
+          day: "Thursday",
+          time: "10:30 - 11:30",
+          subject: { id: 12, name: "Mathematics", teacher: "Mr. Owusu", duration: "1 hour" },
+          classroom: "Room 106"
+        },
+        {
+          id: 13,
+          day: "Friday",
+          time: "09:00 - 10:00",
+          subject: { id: 13, name: "Integrated Science", teacher: "Mr. Agyeman", duration: "1 hour" },
+          classroom: "Lab 2"
+        },
+        {
+          id: 14,
+          day: "Friday",
+          time: "10:30 - 11:30",
+          subject: { id: 14, name: "Creative Arts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        }
+      ]
+    },
+    {
+      id: 12,
+      className: "Grade 7",
+      timetable: [
+        {
+          id: 1,
+          day: "Monday",
+          time: "09:00 - 10:30",
+          subject: { id: 1, name: "Mathematics", teacher: "Mr. Owusu", duration: "1.5 hours" },
+          classroom: "Room 201"
+        },
+        {
+          id: 2,
+          day: "Monday",
+          time: "11:00 - 12:00",
+          subject: { id: 2, name: "English", teacher: "Mrs. Ampofo", duration: "1 hour" },
+          classroom: "Room 201"
+        },
+        {
+          id: 3,
+          day: "Monday",
+          time: "13:00 - 14:00",
+          subject: { id: 3, name: "Integrated Science", teacher: "Mr. Agyeman", duration: "1 hour" },
+          classroom: "Lab 3"
+        },
+        {
+          id: 4,
+          day: "Monday",
+          time: "14:30 - 15:30",
+          subject: { id: 4, name: "ICT", teacher: "Ms. Danso", duration: "1 hour" },
+          classroom: "Computer Lab"
+        },
+        {
+          id: 5,
+          day: "Tuesday",
+          time: "09:00 - 10:00",
+          subject: { id: 5, name: "Social Studies", teacher: "Mr. Asare", duration: "1 hour" },
+          classroom: "Room 201"
+        },
+        {
+          id: 6,
+          day: "Tuesday",
+          time: "10:30 - 11:30",
+          subject: { id: 6, name: "French", teacher: "Ms. Nkrumah", duration: "1 hour" },
+          classroom: "Room 201"
+        },
+        {
+          id: 7,
+          day: "Tuesday",
+          time: "13:00 - 14:00",
+          subject: { id: 7, name: "Mathematics", teacher: "Mr. Owusu", duration: "1 hour" },
+          classroom: "Room 201"
+        },
+        {
+          id: 8,
+          day: "Wednesday",
+          time: "09:00 - 10:00",
+          subject: { id: 8, name: "English", teacher: "Mrs. Ampofo", duration: "1 hour" },
+          classroom: "Room 201"
+        },
+        {
+          id: 9,
+          day: "Wednesday",
+          time: "10:30 - 11:30",
+          subject: { id: 9, name: "Integrated Science", teacher: "Mr. Agyeman", duration: "1 hour" },
+          classroom: "Lab 3"
+        },
+        {
+          id: 10,
+          day: "Wednesday",
+          time: "13:00 - 14:00",
+          subject: { id: 10, name: "Physical Education", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Playground"
+        },
+        {
+          id: 11,
+          day: "Thursday",
+          time: "09:00 - 10:30",
+          subject: { id: 11, name: "Mathematics", teacher: "Mr. Owusu", duration: "1.5 hours" },
+          classroom: "Room 201"
+        },
+        {
+          id: 12,
+          day: "Thursday",
+          time: "11:00 - 12:00",
+          subject: { id: 12, name: "English", teacher: "Mrs. Ampofo", duration: "1 hour" },
+          classroom: "Room 201"
+        },
+        {
+          id: 13,
+          day: "Friday",
+          time: "09:00 - 10:00",
+          subject: { id: 13, name: "Integrated Science", teacher: "Mr. Agyeman", duration: "1 hour" },
+          classroom: "Lab 3"
+        },
+        {
+          id: 14,
+          day: "Friday",
+          time: "10:30 - 11:30",
+          subject: { id: 14, name: "Creative Arts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        }
+      ]
+    },
+    {
+      id: 13,
+      className: "Grade 8",
+      timetable: [
+        {
+          id: 1,
+          day: "Monday",
+          time: "09:00 - 10:30",
+          subject: { id: 1, name: "English", teacher: "Mrs. Ampofo", duration: "1.5 hours" },
+          classroom: "Room 202"
+        },
+        {
+          id: 2,
+          day: "Monday",
+          time: "11:00 - 12:30",
+          subject: { id: 2, name: "Social Studies", teacher: "Mr. Asare", duration: "1.5 hours" },
+          classroom: "Room 202"
+        },
+        {
+          id: 3,
+          day: "Monday",
+          time: "13:00 - 14:00",
+          subject: { id: 3, name: "Mathematics", teacher: "Mr. Ofori", duration: "1 hour" },
+          classroom: "Room 202"
+        },
+        {
+          id: 4,
+          day: "Monday",
+          time: "14:30 - 15:30",
+          subject: { id: 4, name: "ICT", teacher: "Ms. Danso", duration: "1 hour" },
+          classroom: "Computer Lab"
+        },
+        {
+          id: 5,
+          day: "Tuesday",
+          time: "09:00 - 10:00",
+          subject: { id: 5, name: "Integrated Science", teacher: "Ms. Agyepong", duration: "1 hour" },
+          classroom: "Lab 3"
+        },
+        {
+          id: 6,
+          day: "Tuesday",
+          time: "10:30 - 11:30",
+          subject: { id: 6, name: "French", teacher: "Ms. Nkrumah", duration: "1 hour" },
+          classroom: "Room 202"
+        },
+        {
+          id: 7,
+          day: "Tuesday",
+          time: "13:00 - 14:30",
+          subject: { id: 7, name: "English", teacher: "Mrs. Ampofo", duration: "1.5 hours" },
+          classroom: "Room 202"
+        },
+        {
+          id: 8,
+          day: "Wednesday",
+          time: "09:00 - 10:00",
+          subject: { id: 8, name: "Mathematics", teacher: "Mr. Ofori", duration: "1 hour" },
+          classroom: "Room 202"
+        },
+        {
+          id: 9,
+          day: "Wednesday",
+          time: "10:30 - 11:30",
+          subject: { id: 9, name: "Social Studies", teacher: "Mr. Asare", duration: "1 hour" },
+          classroom: "Room 202"
+        },
+        {
+          id: 10,
+          day: "Wednesday",
+          time: "13:00 - 14:00",
+          subject: { id: 10, name: "Physical Education", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Playground"
+        },
+        {
+          id: 11,
+          day: "Thursday",
+          time: "09:00 - 10:30",
+          subject: { id: 11, name: "English", teacher: "Mrs. Ampofo", duration: "1.5 hours" },
+          classroom: "Room 202"
+        },
+        {
+          id: 12,
+          day: "Thursday",
+          time: "11:00 - 12:00",
+          subject: { id: 12, name: "Mathematics", teacher: "Mr. Ofori", duration: "1 hour" },
+          classroom: "Room 202"
+        },
+        {
+          id: 13,
+          day: "Friday",
+          time: "09:00 - 10:00",
+          subject: { id: 13, name: "Integrated Science", teacher: "Ms. Agyepong", duration: "1 hour" },
+          classroom: "Lab 3"
+        },
+        {
+          id: 14,
+          day: "Friday",
+          time: "10:30 - 11:30",
+          subject: { id: 14, name: "Creative Arts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        }
+      ]
+    },
+    {
+      id: 14,
+      className: "Grade 9",
+      timetable: [
+        {
+          id: 1,
+          day: "Monday",
+          time: "09:00 - 11:00",
+          subject: { id: 1, name: "Mathematics", teacher: "Mr. Ofori", duration: "2 hours" },
+          classroom: "Room 203"
+        },
+        {
+          id: 2,
+          day: "Monday",
+          time: "11:30 - 12:30",
+          subject: { id: 2, name: "English", teacher: "Mrs. Ampofo", duration: "1 hour" },
+          classroom: "Room 203"
+        },
+        {
+          id: 3,
+          day: "Monday",
+          time: "13:00 - 14:00",
+          subject: { id: 3, name: "Integrated Science", teacher: "Ms. Agyepong", duration: "1 hour" },
+          classroom: "Lab 3"
+        },
+        {
+          id: 4,
+          day: "Monday",
+          time: "14:30 - 15:30",
+          subject: { id: 4, name: "ICT", teacher: "Ms. Danso", duration: "1 hour" },
+          classroom: "Computer Lab"
+        },
+        {
+          id: 5,
+          day: "Tuesday",
+          time: "09:00 - 10:30",
+          subject: { id: 5, name: "Social Studies", teacher: "Mr. Asare", duration: "1.5 hours" },
+          classroom: "Room 203"
+        },
+        {
+          id: 6,
+          day: "Tuesday",
+          time: "11:00 - 12:00",
+          subject: { id: 6, name: "French", teacher: "Ms. Nkrumah", duration: "1 hour" },
+          classroom: "Room 203"
+        },
+        {
+          id: 7,
+          day: "Tuesday",
+          time: "13:00 - 14:00",
+          subject: { id: 7, name: "Mathematics", teacher: "Mr. Ofori", duration: "1 hour" },
+          classroom: "Room 203"
+        },
+        {
+          id: 8,
+          day: "Wednesday",
+          time: "09:00 - 10:00",
+          subject: { id: 8, name: "English", teacher: "Mrs. Ampofo", duration: "1 hour" },
+          classroom: "Room 203"
+        },
+        {
+          id: 9,
+          day: "Wednesday",
+          time: "10:30 - 11:30",
+          subject: { id: 9, name: "Integrated Science", teacher: "Ms. Agyepong", duration: "1 hour" },
+          classroom: "Lab 3"
+        },
+        {
+          id: 10,
+          day: "Wednesday",
+          time: "13:00 - 14:00",
+          subject: { id: 10, name: "Physical Education", teacher: "Mr. Osei", duration: "1 hour" },
+          classroom: "Playground"
+        },
+        {
+          id: 11,
+          day: "Thursday",
+          time: "09:00 - 11:00",
+          subject: { id: 11, name: "Mathematics", teacher: "Mr. Ofori", duration: "2 hours" },
+          classroom: "Room 203"
+        },
+        {
+          id: 12,
+          day: "Thursday",
+          time: "11:30 - 12:30",
+          subject: { id: 12, name: "English", teacher: "Mrs. Ampofo", duration: "1 hour" },
+          classroom: "Room 203"
+        },
+        {
+          id: 13,
+          day: "Friday",
+          time: "09:00 - 10:00",
+          subject: { id: 13, name: "Integrated Science", teacher: "Ms. Agyepong", duration: "1 hour" },
+          classroom: "Lab 3"
+        },
+        {
+          id: 14,
+          day: "Friday",
+          time: "10:30 - 11:30",
+          subject: { id: 14, name: "Creative Arts", teacher: "Ms. Afia", duration: "1 hour" },
+          classroom: "Art Room"
+        }
+      ]
+    }
+    // ... (keep the existing classTimetables data)
+  ]);
+
+  const [selectedClass, setSelectedClass] = useState<number | null>(null);
+  const [newEntry, setNewEntry] = useState<Omit<TimetableEntry, 'id'>>({
+    day: "",
+    time: "",
+    subject: { id: 0, name: "", teacher: "", duration: "" },
+    classroom: ""
+  });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [viewAllGrades, setViewAllGrades] = useState(false);
+  const [searchClicked, setSearchClicked] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isViewAllLoading, setIsViewAllLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    
+    if (name.startsWith("subject.")) {
+      const subjectField = name.split(".")[1];
+      setNewEntry({
+        ...newEntry,
+        subject: {
+          ...newEntry.subject,
+          [subjectField]: value
+        }
+      });
+    } else {
+      setNewEntry({
+        ...newEntry,
+        [name]: value
+      });
+    }
+  };
+
+  const handleAddOrUpdateEntry = () => {
+    if (!selectedClass) return;
+
+    const selectedClassIndex = classTimetables.findIndex(c => c.id === selectedClass);
+    if (selectedClassIndex === -1) return;
+
+    const classTimetable = classTimetables[selectedClassIndex];
+
+    if (isEditing && editingId) {
+      const updatedTimetable = classTimetable.timetable.map(entry => 
+        entry.id === editingId ? { ...newEntry, id: editingId } : entry
+      );
+      
+      const updatedClassTimetables = [...classTimetables];
+      updatedClassTimetables[selectedClassIndex] = {
+        ...classTimetable,
+        timetable: updatedTimetable
+      };
+
+      setClassTimetables(updatedClassTimetables);
+      setIsEditing(false);
+      setEditingId(null);
+    } else {
+      const newId = Math.max(0, ...classTimetable.timetable.map(e => e.id)) + 1;
+      const updatedTimetable = [...classTimetable.timetable, { ...newEntry, id: newId }];
+      
+      const updatedClassTimetables = [...classTimetables];
+      updatedClassTimetables[selectedClassIndex] = {
+        ...classTimetable,
+        timetable: updatedTimetable
+      };
+
+      setClassTimetables(updatedClassTimetables);
+    }
+
+    setNewEntry({
+      day: "",
+      time: "",
+      subject: { id: 0, name: "", teacher: "", duration: "" },
+      classroom: ""
+    });
+  };
+
+  const handleEdit = (entryId: number) => {
+    if (!selectedClass) return;
+
+    const classTimetable = classTimetables.find(c => c.id === selectedClass);
+    if (!classTimetable) return;
+
+    const entry = classTimetable.timetable.find(e => e.id === entryId);
+    if (!entry) return;
+
+    setNewEntry(entry);
+    setIsEditing(true);
+    setEditingId(entryId);
+  };
+
+  const handleDelete = (entryId: number) => {
+    if (!selectedClass) return;
+
+    const updatedClassTimetables = classTimetables.map(classTimetable => {
+      if (classTimetable.id === selectedClass) {
+        return {
+          ...classTimetable,
+          timetable: classTimetable.timetable.filter(entry => entry.id !== entryId)
+        };
+      }
+      return classTimetable;
+    });
+
+    setClassTimetables(updatedClassTimetables);
+  };
+
+  const toggleViewAllGrades = async () => {
+    setIsViewAllLoading(true);
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+    setViewAllGrades(!viewAllGrades);
+    setSearchClicked(false);
+    if (!viewAllGrades) {
+      setSelectedClass(null);
+    }
+    setIsViewAllLoading(false);
+  };
+
+  const handleSearch = async () => {
+    if (selectedClass) {
+      setIsSearching(true);
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setSearchClicked(true);
+      setIsSearching(false);
+    }
+  };
+
+  const selectedTimetable = searchClicked && selectedClass 
+    ? classTimetables.find(c => c.id === selectedClass)?.timetable || [] 
+    : [];
+
+  return (
+    <ProtectedRoute>
+      <div className="p-5">
+        <h1 className="text-2xl font-bold mb-6">Timetable Management</h1>
+        
+        <div className="bg-white p-4 rounded-lg shadow mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Select Class</label>
+              <select
+                className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                value={selectedClass || ""}
+                onChange={(e) => {
+                  setSelectedClass(Number(e.target.value));
+                  setViewAllGrades(false);
+                  setSearchClicked(false);
+                }}
+                disabled={viewAllGrades || isViewAllLoading}
+              >
+                <option value="">Select a class</option>
+                <option value="1">Creche</option>
+                <option value="2">Nursery 1</option>
+                <option value="3">Nursery 2</option>
+                <option value="4">KG 1</option>
+                <option value="5">KG 2</option>
+                {[...Array(9).keys()].map((grade) => (
+                  <option key={grade + 6} value={grade + 6}>
+                    Grade {grade + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-end">
+              <button
+                onClick={handleSearch}
+                className={`px-4 py-2 text-white rounded w-full flex items-center justify-center ${
+                  !selectedClass || viewAllGrades || isSearching
+                    ? 'bg-blue-300 cursor-not-allowed'
+                    : 'bg-blue-500 hover:bg-blue-600'
+                }`}
+                disabled={!selectedClass || viewAllGrades || isSearching}
+              >
+                {isSearching ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Searching...
+                  </>
+                ) : (
+                  "Search"
+                )}
+              </button>
+            </div>
+            <div className="flex items-end justify-end">
+              <button
+                onClick={toggleViewAllGrades}
+                className={`px-4 py-2 text-white rounded w-full flex items-center justify-center ${
+                  isViewAllLoading
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : viewAllGrades
+                    ? 'bg-gray-500 hover:bg-gray-600'
+                    : 'bg-blue-500 hover:bg-blue-600'
+                }`}
+                disabled={isViewAllLoading}
+              >
+                {isViewAllLoading ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Loading...
+                  </>
+                ) : viewAllGrades ? (
+                  "View Single Grade"
+                ) : (
+                  "View All Grades"
+                )}
+              </button>
+            </div>
+          </div>
+
+          {selectedClass && !viewAllGrades && (
+            <>
+              <h2 className="text-xl font-semibold mb-4">{isEditing ? "Edit Timetable Entry" : "Add Timetable Entry"}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Day</label>
+                  <select
+                    name="day"
+                    value={newEntry.day}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                  >
+                    <option value="">Select Day</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Time</label>
+                  <input
+                    type="text"
+                    name="time"
+                    placeholder="e.g. 08:00 - 09:00"
+                    value={newEntry.time}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Subject Name</label>
+                  <input
+                    type="text"
+                    name="subject.name"
+                    placeholder="Subject name"
+                    value={newEntry.subject.name}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Teacher</label>
+                  <input
+                    type="text"
+                    name="subject.teacher"
+                    placeholder="Teacher name"
+                    value={newEntry.subject.teacher}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Duration</label>
+                  <input
+                    type="text"
+                    name="subject.duration"
+                    placeholder="e.g. 1 hour"
+                    value={newEntry.subject.duration}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-1">Classroom</label>
+                  <input
+                    type="text"
+                    name="classroom"
+                    placeholder="Room number"
+                    value={newEntry.classroom}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                  />
+                </div>
+              </div>
+              
+              <button
+                className={`mt-4 px-4 py-2 text-white rounded hover:bg-blue-600 flex items-center justify-center ${
+                  !newEntry.day || !newEntry.time || !newEntry.subject.name || !newEntry.subject.teacher || !newEntry.subject.duration || !newEntry.classroom
+                    ? 'bg-blue-300 cursor-not-allowed'
+                    : 'bg-blue-500'
+                }`}
+                onClick={handleAddOrUpdateEntry}
+                disabled={!newEntry.day || !newEntry.time || !newEntry.subject.name || !newEntry.subject.teacher || !newEntry.subject.duration || !newEntry.classroom}
+              >
+                {isEditing ? "Update Entry" : "Add Entry"}
+              </button>
+            </>
+          )}
+        </div>
+
+        {viewAllGrades ? (
+          <div className="space-y-6">
+            {classTimetables.map((classTimetable) => {
+              const timetableByDay: Record<string, TimetableEntry[]> = {};
+              classTimetable.timetable.forEach((entry) => {
+                if (!timetableByDay[entry.day]) {
+                  timetableByDay[entry.day] = [];
+                }
+                timetableByDay[entry.day].push(entry);
+              });
+
+              return (
+                <div key={classTimetable.id} className="bg-white rounded-lg shadow overflow-hidden">
+                  <h2 className="text-xl font-semibold p-4 border-b">
+                    Timetable for {classTimetable.className}
+                  </h2>
+                  {classTimetable.timetable.length === 0 ? (
+                    <div className="p-4 text-center text-gray-500">
+                      No timetable entries available for this class.
+                    </div>
+                  ) : (
+                    <div>
+                      {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map((day) => {
+                        const dayEntries = timetableByDay[day] || [];
+                        if (dayEntries.length === 0) return null;
+
+                        return (
+                          <div key={day} className="mb-6">
+                            <h3 className="text-lg font-medium p-2 bg-gray-100">{day}</h3>
+                            <table className="min-w-full divide-y divide-gray-200">
+                              <thead className="bg-gray-50">
+                                <tr>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Classroom</th>
+                                </tr>
+                              </thead>
+                              <tbody className="bg-white divide-y divide-gray-200">
+                                {dayEntries.map((entry) => (
+                                  <tr key={entry.id} className="hover:bg-gray-50">
+                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{entry.time}</td>
+                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{entry.subject.name}</td>
+                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{entry.subject.teacher}</td>
+                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{entry.subject.duration}</td>
+                                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{entry.classroom}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ) : selectedClass && searchClicked ? (
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <h2 className="text-xl font-semibold p-4 border-b">
+              Timetable for {classTimetables.find(c => c.id === selectedClass)?.className}
+            </h2>
+            
+            {selectedTimetable.length === 0 ? (
+              <div className="p-4 text-center text-gray-500">
+                No timetable entries available for this class.
+              </div>
+            ) : (
+              <div>
+                {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map((day) => {
+                  const dayEntries = selectedTimetable.filter(entry => entry.day === day);
+                  if (dayEntries.length === 0) return null;
+                  
+                  return (
+                    <div key={day} className="mt-6">
+                      <h3 className="text-lg font-medium p-2 bg-gray-100">{day}</h3>
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Classroom</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {dayEntries.map((entry) => (
+                            <tr key={entry.id} className="hover:bg-gray-50">
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{entry.time}</td>
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{entry.subject.name}</td>
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{entry.subject.teacher}</td>
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{entry.subject.duration}</td>
+                              <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{entry.classroom}</td>
+                              <td className="px-4 py-2 whitespace-nowrap">
+                                <div className="flex space-x-2">
+                                  <button
+                                    onClick={() => handleEdit(entry.id)}
+                                    className="px-2 py-1 bg-yellow-500 text-white text-xs rounded hover:bg-yellow-600"
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    onClick={() => handleDelete(entry.id)}
+                                    className="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="bg-white rounded-lg shadow p-4 text-center text-gray-500">
+            {selectedClass && !searchClicked 
+              ? "Please click the Search button to view the timetable" 
+              : "Please select a class or click 'View All Grades' to see timetables"}
+          </div>
+        )}
+      </div>
+    </ProtectedRoute>
+  );
+}

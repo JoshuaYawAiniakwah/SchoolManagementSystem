@@ -1,22 +1,23 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+"use client";
+import React from "react";
+import "@/globals.css";
+import Menu from "../components/Menu";
+import { AuthProvider } from "@/context/AuthContext";
+import { EventsProvider } from "@/context/EventsContext"; // Import EventsProvider
 
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Lama Dev School Management Dashboard",
-  description: "Next.js School Management System",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className="flex">
+        <AuthProvider>
+          <EventsProvider> {/* Wrap with EventsProvider */}
+            <Menu />
+            <main className="flex-1 p-4">
+              {children}
+            </main>
+          </EventsProvider>
+        </AuthProvider>
+      </body>
     </html>
   );
 }
