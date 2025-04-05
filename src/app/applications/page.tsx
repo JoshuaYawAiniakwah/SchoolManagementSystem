@@ -2,6 +2,27 @@
 import ProtectedRoute from "@/components/ProtectedRoute";
 import React, { useState, useEffect } from "react";
 
+// Image fetching function
+const fetchImage = async (fileName: string): Promise<string | null> => {
+  try {
+    const response = await fetch(
+      `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/api/getFile`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileName }),
+      }
+    );
+
+    if (!response.ok) throw new Error(`Failed to fetch image: ${response.status}`);
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    console.error("❌ Error fetching image:", error);
+    return null;
+  }
+};
+
 // Placeholder User Icon
 const UserIcon = () => (
   <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
@@ -11,8 +32,17 @@ const UserIcon = () => (
 
 // Student Image Component
 const StudentImage: React.FC<{ fileName?: string; altText: string }> = ({ fileName, altText }) => {
-  return fileName ? (
-    <img src={fileName} alt={altText} className="w-12 h-12 rounded-full object-cover" />
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (fileName) {
+      const loadImage = async () => setImageUrl(await fetchImage(fileName));
+      loadImage();
+    }
+  }, [fileName]);
+
+  return imageUrl ? (
+    <img src={imageUrl} alt={altText} className="w-12 h-12 rounded-full object-cover" />
   ) : (
     <UserIcon />
   );

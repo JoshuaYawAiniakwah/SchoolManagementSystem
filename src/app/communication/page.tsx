@@ -46,14 +46,32 @@ function CommunicationPage() {
   // Updated Options for Recipient
   const options = [
     "All",
-    "Teachers",
-    "Specific Teacher",
     "All Students",
-    "Specific Student",
+    "All Teachers",
+    "Specific Teacher",
+    "Pre School (Creche, Nursery 1, Nursery 2, KG1, KG2)",
     "Lower Primary (Grade 1 - Grade 3)",
     "Upper Primary (Grade 4 - Grade 6)",
-    "Senior Level (Grade 7 - Grade 9)",
-    "Specific Grade"
+    "JHS (Grade 7 - Grade 9)",
+    "Specific Class"
+  ];
+
+  // Class options for specific class selection
+  const classOptions = [
+    "Creche",
+    "Nursery 1",
+    "Nursery 2",
+    "KG 1",
+    "KG 2",
+    "Grade 1",
+    "Grade 2",
+    "Grade 3",
+    "Grade 4",
+    "Grade 5",
+    "Grade 6",
+    "Grade 7",
+    "Grade 8",
+    "Grade 9"
   ];
 
   // Search Function (Triggered by Button Click)
@@ -68,21 +86,26 @@ function CommunicationPage() {
 
     try {
       let response;
-      if (selectedRecipient === "Specific Student") {
+      if (selectedRecipient === "Specific Class") {
+        // Filter class options based on search query
+        const filtered = classOptions.filter(option => 
+          option.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setFilteredResults(filtered);
+        return;
+      } else if (selectedRecipient === "All Students") {
         response = await fetch(`https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/search?name=${encodeURIComponent(searchQuery)}`);
-      } else if (selectedRecipient === "Specific Teacher") {
-        response = await fetch(`https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/search?name=${encodeURIComponent(searchQuery)}`);
-      } else if (selectedRecipient === "Specific Grade") {
-        response = await fetch(`https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/grade?grade=${encodeURIComponent(searchQuery)}`);
       }
 
-      if (!response.ok) {
+      if (response && !response.ok) {
         throw new Error('Failed to fetch search results');
       }
 
-      const data = await response.json();
-      setFilteredResults(data);
-      setSelectedResult(null);
+      if (response) {
+        const data = await response.json();
+        setFilteredResults(data);
+        setSelectedResult(null);
+      }
     } catch (error) {
       console.error("Error searching:", error);
       alert("Failed to search. Please try again.");
@@ -171,31 +194,34 @@ function CommunicationPage() {
     // Add recipient-specific fields based on selection
     if (selectedRecipient === "All Students") {
       requestBody.toAll = true;
-    } else if (selectedRecipient === "Specific Grade") {
+    } else if (selectedRecipient === "Specific Class") {
       if (!selectedResult) {
-        alert("Please select a grade first");
+        alert("Please select a class first");
         setIsSending(false);
         return;
       }
       requestBody.className = selectedResult;
-    } else if (selectedRecipient === "Specific Student") {
-      if (!selectedResult) {
-        alert("Please select a student first");
-        setIsSending(false);
-        return;
-      }
-      requestBody.studentId = selectedResult.id;
+    } else if (selectedRecipient === "Pre School (Creche, Nursery 1, Nursery 2, KG1, KG2)") {
+      requestBody.educationLevel = "Pre School";
+    } else if (selectedRecipient === "Lower Primary (Grade 1 - Grade 3)") {
+      requestBody.educationLevel = "Lower Primary";
+    } else if (selectedRecipient === "Upper Primary (Grade 4 - Grade 6)") {
+      requestBody.educationLevel = "Upper Primary";
+    } else if (selectedRecipient === "JHS (Grade 7 - Grade 9)") {
+      requestBody.educationLevel = "JHS";
+    } else if (selectedRecipient === "All Teachers") {
+      requestBody.toAllTeachers = true;
     } else if (selectedRecipient === "Specific Teacher") {
-      if (!selectedResult) {
-        alert("Please select a teacher first");
+      if (!searchQuery) {
+        alert("Please enter a teacher name");
         setIsSending(false);
         return;
       }
-      requestBody.teacherId = selectedResult.id;
+      requestBody.teacherName = searchQuery;
     }
 
     try {
-      const response = await fetch("https://xpmnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/messages/send", {
+      const response = await fetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/messages/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -338,47 +364,55 @@ function CommunicationPage() {
                 </div>
               </div>
 
-              {(selectedRecipient === "Specific Student" || selectedRecipient === "Specific Teacher" || selectedRecipient === "Specific Grade") && (
+              {(selectedRecipient === "Specific Class" || selectedRecipient === "Specific Teacher") && (
                 <div className="mt-4">
-                  <label className="block text-lg font-medium text-blue-700">Search:</label>
+                  <label className="block text-lg font-medium text-blue-700">
+                    {selectedRecipient === "Specific Class" ? "Search Class:" : "Enter Teacher Name:"}
+                  </label>
                   <div className="relative flex">
                     <input
                       type="text"
                       className="w-full border border-gray-300 rounded-lg py-2 px-3 bg-white disabled:bg-gray-100"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder={`Type to search ${selectedRecipient.toLowerCase()}...`}
-                      disabled={isSearching}
+                      placeholder={
+                        selectedRecipient === "Specific Class" 
+                          ? "Type to search for a class..." 
+                          : "Enter teacher name"
+                      }
+                      disabled={isSearching && selectedRecipient === "Specific Class"}
                     />
-                    <button
-                      className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px]"
-                      onClick={handleSearch}
-                      disabled={isSearching || searchQuery.trim() === ""}
-                    >
-                      {isSearching ? (
-                        <>
-                          <motion.span
-                            className="inline-block mr-2"
-                            animate={{ rotate: 360 }}
-                            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                          >
-                            ⏳
-                          </motion.span>
-                          Searching
-                        </>
-                      ) : (
-                        "Search"
-                      )}
-                    </button>
+                    {selectedRecipient === "Specific Class" && (
+                      <button
+                        className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px]"
+                        onClick={handleSearch}
+                        disabled={isSearching || searchQuery.trim() === ""}
+                      >
+                        {isSearching ? (
+                          <>
+                            <motion.span
+                              className="inline-block mr-2"
+                              animate={{ rotate: 360 }}
+                              transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                            >
+                              ⏳
+                            </motion.span>
+                            Searching
+                          </>
+                        ) : (
+                          "Search"
+                        )}
+                      </button>
+                    )}
                   </div>
 
-                  {isSearching && (
+                  {isSearching && selectedRecipient === "Specific Class" && (
                     <div className="mt-4 p-4 bg-white rounded-lg shadow-md text-center">
                       <p className="text-blue-700">Loading results...</p>
                     </div>
                   )}
 
-                  {!isSearching && filteredResults.length > 0 && (
+                  {!isSearching && filteredResults.length > 0 && selectedRecipient === "Specific Class" && (
                     <div className="mt-4 bg-white rounded-lg shadow-md p-4">
                       <h3 className="font-medium text-blue-700 mb-2">Search Results:</h3>
                       <ul className="space-y-2">
@@ -388,7 +422,7 @@ function CommunicationPage() {
                             className={`p-2 rounded cursor-pointer ${selectedResult === result ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
                             onClick={() => handleSelectResult(result)}
                           >
-                            {result.name || result}
+                            {result}
                           </li>
                         ))}
                       </ul>

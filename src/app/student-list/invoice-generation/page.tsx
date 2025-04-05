@@ -42,9 +42,9 @@ const students: Student[] = [
 ];
 
 const invoiceTemplates = {
-  tuition: (student: Student) => `
+  schoolFees: (student: Student) => `
     <div style="font-family: Arial, sans-serif; padding: 20px;">
-      <h1 style="text-align: center; font-size: 24px; font-weight: bold;">Tuition Fee Invoice</h1>
+      <h1 style="text-align: center; font-size: 24px; font-weight: bold;">School Fees Invoice</h1>
       <p><strong>School Name:</strong> [YOUR COMPANY NAME]</p>
       <p><strong>School Address:</strong> [YOUR COMPANY ADDRESS]</p>
       <p><strong>School Number:</strong> [YOUR COMPANY NUMBER]</p>
@@ -61,16 +61,45 @@ const invoiceTemplates = {
         </thead>
         <tbody>
           <tr>
-            <td style="border: 1px solid #000; padding: 8px;">Total Fees</td>
+            <td style="border: 1px solid #000; padding: 8px;">Term 1 School Fees</td>
             <td style="border: 1px solid #000; padding: 8px;">$2,500.00</td>
           </tr>
           <tr>
-            <td style="border: 1px solid #000; padding: 8px;">Total Amount Paid</td>
-            <td style="border: 1px solid #000; padding: 8px;">$1,000.00</td>
+            <td style="border: 1px solid #000; padding: 8px;">Total Amount to be Paid</td>
+            <td style="border: 1px solid #000; padding: 8px;">$2,500.00</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Bank Transfer:</strong> Please make payments to [YOUR COMPANY NAME] Account Number: 123456789 at BlueLeaf Bank.</p>
+      <p><strong>Payment Due Date:</strong> November 14, 2050.</p>
+      <p>Should you have any questions regarding this invoice, please do not hesitate to contact me at [YOUR EMAIL].</p>
+    </div>
+  `,
+  canteenFees: (student: Student) => `
+    <div style="font-family: Arial, sans-serif; padding: 20px;">
+      <h1 style="text-align: center; font-size: 24px; font-weight: bold;">Canteen Fees Invoice</h1>
+      <p><strong>School Name:</strong> [YOUR COMPANY NAME]</p>
+      <p><strong>School Address:</strong> [YOUR COMPANY ADDRESS]</p>
+      <p><strong>School Number:</strong> [YOUR COMPANY NUMBER]</p>
+      <p><strong>Parent/Guardian Name:</strong> ${student.fullName}</p>
+      <p><strong>Address:</strong> ${student.address}</p>
+      <p><strong>Email:</strong> [PARENT EMAIL]</p>
+      <p><strong>Phone Number:</strong> [PARENT PHONE NUMBER]</p>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+          <tr>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Description</th>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Monthly Canteen Fees</td>
+            <td style="border: 1px solid #000; padding: 8px;">$150.00</td>
           </tr>
           <tr>
             <td style="border: 1px solid #000; padding: 8px;">Total Amount to be Paid</td>
-            <td style="border: 1px solid #000; padding: 8px;">$1,500.00</td>
+            <td style="border: 1px solid #000; padding: 8px;">$150.00</td>
           </tr>
         </tbody>
       </table>
@@ -79,9 +108,9 @@ const invoiceTemplates = {
       <p>Should you have any questions regarding this invoice, please do not hesitate to contact me at [YOUR EMAIL].</p>
     </div>
   `,
-  artClub: (student: Student) => `
+  books: (student: Student) => `
     <div style="font-family: Arial, sans-serif; padding: 20px;">
-      <h1 style="text-align: center; font-size: 24px; font-weight: bold;">Art Club Fee Invoice</h1>
+      <h1 style="text-align: center; font-size: 24px; font-weight: bold;">Books Invoice</h1>
       <p><strong>School Name:</strong> [YOUR COMPANY NAME]</p>
       <p><strong>School Address:</strong> [YOUR COMPANY ADDRESS]</p>
       <p><strong>School Number:</strong> [YOUR COMPANY NUMBER]</p>
@@ -92,30 +121,29 @@ const invoiceTemplates = {
       <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
         <thead>
           <tr>
-            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Description of Services</th>
-            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Quantity</th>
-            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Unit Price</th>
-            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Total</th>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Description</th>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Amount</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td style="border: 1px solid #000; padding: 8px;">Art Club (Quarterly Fee)</td>
-            <td style="border: 1px solid #000; padding: 8px;">1</td>
-            <td style="border: 1px solid #000; padding: 8px;">$150.00</td>
-            <td style="border: 1px solid #000; padding: 8px;">$150.00</td>
+            <td style="border: 1px solid #000; padding: 8px;">Textbooks and Workbooks</td>
+            <td style="border: 1px solid #000; padding: 8px;">$200.00</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Total Amount to be Paid</td>
+            <td style="border: 1px solid #000; padding: 8px;">$200.00</td>
           </tr>
         </tbody>
       </table>
-      <p style="margin-top: 20px;"><strong>Total Amount Due:</strong> $150.00</p>
       <p><strong>Bank Transfer:</strong> Please make payments to [YOUR COMPANY NAME] Account Number: 123456789 at BlueLeaf Bank.</p>
       <p><strong>Payment Due Date:</strong> November 14, 2050.</p>
       <p>Should you have any questions regarding this invoice, please do not hesitate to contact me at [YOUR EMAIL].</p>
     </div>
   `,
-  scienceLab: (student: Student) => `
+  uniforms: (student: Student) => `
     <div style="font-family: Arial, sans-serif; padding: 20px;">
-      <h1 style="text-align: center; font-size: 24px; font-weight: bold;">Science Lab Fee Invoice</h1>
+      <h1 style="text-align: center; font-size: 24px; font-weight: bold;">Uniforms Invoice</h1>
       <p><strong>School Name:</strong> [YOUR COMPANY NAME]</p>
       <p><strong>School Address:</strong> [YOUR COMPANY ADDRESS]</p>
       <p><strong>School Number:</strong> [YOUR COMPANY NUMBER]</p>
@@ -126,22 +154,58 @@ const invoiceTemplates = {
       <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
         <thead>
           <tr>
-            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Description of Services</th>
-            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Quantity</th>
-            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Unit Price</th>
-            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Total</th>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Description</th>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Amount</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td style="border: 1px solid #000; padding: 8px;">Science Lab Materials</td>
-            <td style="border: 1px solid #000; padding: 8px;">1</td>
-            <td style="border: 1px solid #000; padding: 8px;">$75.00</td>
-            <td style="border: 1px solid #000; padding: 8px;">$75.00</td>
+            <td style="border: 1px solid #000; padding: 8px;">School Uniform Set</td>
+            <td style="border: 1px solid #000; padding: 8px;">$120.00</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">PE Kit</td>
+            <td style="border: 1px solid #000; padding: 8px;">$80.00</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Total Amount to be Paid</td>
+            <td style="border: 1px solid #000; padding: 8px;">$200.00</td>
           </tr>
         </tbody>
       </table>
-      <p style="margin-top: 20px;"><strong>Total Amount Due:</strong> $75.00</p>
+      <p><strong>Bank Transfer:</strong> Please make payments to [YOUR COMPANY NAME] Account Number: 123456789 at BlueLeaf Bank.</p>
+      <p><strong>Payment Due Date:</strong> November 14, 2050.</p>
+      <p>Should you have any questions regarding this invoice, please do not hesitate to contact me at [YOUR EMAIL].</p>
+    </div>
+  `,
+  stationery: (student: Student) => `
+    <div style="font-family: Arial, sans-serif; padding: 20px;">
+      <h1 style="text-align: center; font-size: 24px; font-weight: bold;">Stationery Invoice</h1>
+      <p><strong>School Name:</strong> [YOUR COMPANY NAME]</p>
+      <p><strong>School Address:</strong> [YOUR COMPANY ADDRESS]</p>
+      <p><strong>School Number:</strong> [YOUR COMPANY NUMBER]</p>
+      <p><strong>Parent/Guardian Name:</strong> ${student.fullName}</p>
+      <p><strong>Address:</strong> ${student.address}</p>
+      <p><strong>Email:</strong> [PARENT EMAIL]</p>
+      <p><strong>Phone Number:</strong> [PARENT PHONE NUMBER]</p>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+          <tr>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Description</th>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Stationery Pack</td>
+            <td style="border: 1px solid #000; padding: 8px;">$50.00</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Total Amount to be Paid</td>
+            <td style="border: 1px solid #000; padding: 8px;">$50.00</td>
+          </tr>
+        </tbody>
+      </table>
       <p><strong>Bank Transfer:</strong> Please make payments to [YOUR COMPANY NAME] Account Number: 123456789 at BlueLeaf Bank.</p>
       <p><strong>Payment Due Date:</strong> November 14, 2050.</p>
       <p>Should you have any questions regarding this invoice, please do not hesitate to contact me at [YOUR EMAIL].</p>
@@ -153,7 +217,7 @@ function InvoiceGenerationPage() {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState<keyof typeof invoiceTemplates>('tuition');
+  const [selectedInvoiceType, setSelectedInvoiceType] = useState<keyof typeof invoiceTemplates>('schoolFees');
   const [invoiceContent, setInvoiceContent] = useState('');
   const [searchName, setSearchName] = useState('');
   const [searchClass, setSearchClass] = useState('');
@@ -169,6 +233,14 @@ function InvoiceGenerationPage() {
   const classOptions = ["Creche", "Nursery 1", "Nursery 2", "KG 1", "KG 2", 
                        "Grade 1", "Grade 2", "Grade 3", "Grade 4", 
                        "Grade 5", "Grade 6", "Grade 7", "Grade 8", "Grade 9"];
+
+  const invoiceTypeOptions = [
+    { value: 'schoolFees', label: 'School Fees' },
+    { value: 'canteenFees', label: 'Canteen Fees' },
+    { value: 'books', label: 'Books' },
+    { value: 'uniforms', label: 'Uniforms' },
+    { value: 'stationery', label: 'Stationery' }
+  ];
 
   const filteredStudents = students.filter(student => {
     const nameMatch = student.fullName.toLowerCase().includes(searchName.toLowerCase());
@@ -212,7 +284,7 @@ function InvoiceGenerationPage() {
 
   const handleCreateInvoice = (student: Student) => {
     setSelectedStudent(student);
-    setInvoiceContent(invoiceTemplates[selectedTemplate](student));
+    setInvoiceContent(invoiceTemplates[selectedInvoiceType](student));
     setIsPreviewing(true);
   };
 
@@ -292,12 +364,29 @@ function InvoiceGenerationPage() {
     const newRow = `
       <tr>
         <td style="border: 1px solid #000; padding: 8px;" contenteditable="true">New Service</td>
-        <td style="border: 1px solid #000; padding: 8px;" contenteditable="true">1</td>
-        <td style="border: 1px solid #000; padding: 8px;" contenteditable="true">$0.00</td>
         <td style="border: 1px solid #000; padding: 8px;" contenteditable="true">$0.00</td>
       </tr>
     `;
     setInvoiceContent((prevContent) => prevContent.replace(/<\/tbody>/, `${newRow}</tbody>`));
+  };
+
+  const handleAddColumn = () => {
+    // Add column to header
+    const newHeaderColumn = `<th style="border: 1px solid #000; padding: 8px; text-align: left;" contenteditable="true">New Column</th>`;
+    
+    // Add column to each row
+    const newDataColumn = `<td style="border: 1px solid #000; padding: 8px;" contenteditable="true"></td>`;
+    
+    // Update the invoice content
+    setInvoiceContent(prevContent => {
+      // Add to header (between last th and closing tr)
+      let updatedContent = prevContent.replace(/(<\/th>)(\s*<\/tr>)/, `$1${newHeaderColumn}$2`);
+      
+      // Add to each data row (between last td and closing tr)
+      updatedContent = updatedContent.replace(/(<\/td>)(\s*<\/tr>)/g, `$1${newDataColumn}$2`);
+      
+      return updatedContent;
+    });
   };
 
   return (
@@ -380,6 +469,32 @@ function InvoiceGenerationPage() {
               )}
             </button>
           </div>
+        </div>
+      </div>
+
+      {/* Invoice Type Selection */}
+      <div className="bg-white p-4 rounded-lg shadow mb-6">
+        <h2 className="text-lg font-semibold mb-3">Select Invoice Type</h2>
+        <div className="flex gap-2">
+          <select
+            className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+            value={selectedInvoiceType}
+            onChange={(e) => setSelectedInvoiceType(e.target.value as keyof typeof invoiceTemplates)}
+          >
+            {invoiceTypeOptions.map((option) => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+          </select>
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 whitespace-nowrap"
+            onClick={() => {
+              if (selectedStudent) {
+                setInvoiceContent(invoiceTemplates[selectedInvoiceType](selectedStudent));
+              }
+            }}
+          >
+            Select
+          </button>
         </div>
       </div>
 
@@ -503,7 +618,7 @@ function InvoiceGenerationPage() {
         <Modal isOpen={isPreviewing} onClose={() => setIsPreviewing(false)}>
           <div className="bg-white p-6 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Invoice Preview</h2>
+              <h2 className="text-xl font-bold">Invoice Preview - {invoiceTypeOptions.find(opt => opt.value === selectedInvoiceType)?.label}</h2>
               <button 
                 onClick={() => setIsPreviewing(false)}
                 className="text-gray-500 hover:text-gray-700"
@@ -545,14 +660,18 @@ function InvoiceGenerationPage() {
                   >
                     Finish Editing
                   </button>
-                  {selectedTemplate !== 'tuition' && (
-                    <button
-                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                      onClick={handleAddRow}
-                    >
-                      Add Row
-                    </button>
-                  )}
+                  <button
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    onClick={handleAddRow}
+                  >
+                    Add Row
+                  </button>
+                  <button
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    onClick={handleAddColumn}
+                  >
+                    Add Column
+                  </button>
                 </>
               ) : (
                 <button
