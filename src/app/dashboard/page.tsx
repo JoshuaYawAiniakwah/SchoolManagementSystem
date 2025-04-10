@@ -1,6 +1,6 @@
 "use client";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -22,71 +22,8 @@ import {
 const Dashboard = ({ events }) => {
   const [date, setDate] = useState(new Date());
   const { user } = useAuth();
-  const [isEditing, setIsEditing] = useState(false);
-  const [tempName, setTempName] = useState("");
-  const [avatarSettings, setAvatarSettings] = useState({
-    name: "Guest",
-    color: "#FF0000",
-  });
 
-  // Initialize from localStorage or auth user
-  useEffect(() => {
-    const savedSettings = localStorage.getItem("avatarSettings");
-    if (savedSettings) {
-      setAvatarSettings(JSON.parse(savedSettings));
-    } else if (user?.username) {
-      setAvatarSettings({
-        name: user.username,
-        color: generateColorFromName(user.username),
-      });
-    }
-  }, [user]);
-
-  // Generate consistent color from name
-  const generateColorFromName = (name) => {
-    const hash = name.split("").reduce((acc, char) => {
-      return char.charCodeAt(0) + ((acc << 5) - acc);
-    }, 0);
-    return `hsl(${Math.abs(hash % 360)}, 70%, 50%)`;
-  };
-
-  // Get initials (supports multiple names)
-  const getInitials = (name) => {
-    if (!name) return "G";
-    const names = name.trim().split(/\s+/);
-    if (names.length === 1) return names[0].charAt(0).toUpperCase();
-    return `${names[0].charAt(0)}${names[names.length - 1].charAt(0)}`.toUpperCase();
-  };
-
-  const handleAvatarClick = () => {
-    setIsEditing(true);
-    setTempName(avatarSettings.name);
-  };
-
-  const handleSave = () => {
-    const newName = tempName.trim();
-    if (!newName) return;
-
-    const newSettings = {
-      name: newName,
-      color: avatarSettings.color, // Keep current color unless changed
-    };
-
-    localStorage.setItem("avatarSettings", JSON.stringify(newSettings));
-    setAvatarSettings(newSettings);
-    setIsEditing(false);
-  };
-
-  const handleColorChange = (e) => {
-    const newSettings = {
-      ...avatarSettings,
-      color: e.target.value,
-    };
-    localStorage.setItem("avatarSettings", JSON.stringify(newSettings));
-    setAvatarSettings(newSettings);
-  };
-
-  // Sample Data for Charts
+  // Sample Data for Charts (Moved back inside the component)
   const studentGenderData = [
     { name: "Boys", value: 1234, color: "#FFCC00" },
     { name: "Girls", value: 1134, color: "#C0E0FF" },
@@ -111,57 +48,16 @@ const Dashboard = ({ events }) => {
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      {/* Header with Editable Avatar */}
-      <div className="flex justify-end items-center mb-6">
-        <div className="flex items-center space-x-4">
-          {isEditing ? (
-            <div className="flex flex-col space-y-2">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="text"
-                  value={tempName}
-                  onChange={(e) => setTempName(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSave()}
-                  className="border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  autoFocus
-                  placeholder="Enter your name"
-                />
-                <input
-                  type="color"
-                  value={avatarSettings.color}
-                  onChange={handleColorChange}
-                  className="w-8 h-8 cursor-pointer rounded-full border"
-                  title="Choose color"
-                />
-              </div>
-              <div className="flex space-x-2">
-                <button
-                  onClick={handleSave}
-                  className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition text-sm"
-                >
-                  Save
-                </button>
-                <button
-                  onClick={() => setIsEditing(false)}
-                  className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600 transition text-sm"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          ) : (
-            <>
-              <span className="text-gray-700 font-semibold">{avatarSettings.name}</span>
-              <div
-                className="w-10 h-10 text-white flex items-center justify-center rounded-full cursor-pointer hover:opacity-80 transition select-none"
-                style={{ backgroundColor: avatarSettings.color }}
-                onClick={handleAvatarClick}
-                title="Click to edit name and color"
-              >
-                {getInitials(avatarSettings.name)}
-              </div>
-            </>
-          )}
+      {/* Header with Admin and School Logo */}
+      <div className="flex justify-between items-center mb-6">
+        <div></div> {/* Empty div to maintain space */}
+        <div className="flex items-center gap-4">
+          <span className="text-gray-700 font-semibold">Admin</span>
+          <img 
+            src="/OAIS NEW LOGO.png" // Replace with your actual image path
+            alt="School Logo" 
+            className="h-32 w-auto" // Adjust height as needed
+          />
         </div>
       </div>
 

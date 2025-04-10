@@ -208,7 +208,7 @@ function CommunicationPage() {
     } else if (selectedRecipient === "Upper Primary (Grade 4 - Grade 6)") {
       requestBody.educationLevel = "Upper Primary";
     } else if (selectedRecipient === "JHS (Grade 7 - Grade 9)") {
-      requestBody.educationLevel = "JHS";
+      requestBody.educationLevel = "Senior Level";
     } else if (selectedRecipient === "All Teachers") {
       requestBody.toAllTeachers = true;
     } else if (selectedRecipient === "Specific Teacher") {

@@ -2,15 +2,14 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { useEffect, useState } from "react"; // Added useState and useEffect
+import { useEffect, useState } from "react";
 
 export default function Menu() {
   const router = useRouter();
   const pathname = usePathname();
   const { isAuthenticated, isLoading, logout } = useAuth();
-  const [pendingCount, setPendingCount] = useState(0); // Added for notification count
+  const [pendingCount, setPendingCount] = useState(0);
 
-  // Added useEffect to fetch pending applications count
   useEffect(() => {
     if (isAuthenticated) {
       const fetchPendingCount = async () => {
@@ -45,7 +44,7 @@ export default function Menu() {
     { 
       name: "Applications", 
       path: "/applications",
-      notificationCount: pendingCount // Added notification count
+      notificationCount: pendingCount
     },
     { name: "Communication Portal", path: "/communication" },
     { name: "Fee Management", path: "/fee-management" },
@@ -62,20 +61,20 @@ export default function Menu() {
 
   return (
     <div className="flex">
-      <nav className="p-4 bg-[#0074ff] text-white fixed top-0 left-0 h-full w-64 overflow-y-auto">
+      {/* Changed blue colors to green */}
+      <nav className="p-4 bg-[#1a5f1a] text-white fixed top-0 left-0 h-full w-64 overflow-y-auto">
         <ul className="space-y-2">
           {menuItems.map((item) => (
-            <li key={item.path} className="relative"> {/* Added relative positioning */}
+            <li key={item.path} className="relative">
               <Link
                 href={item.path}
                 className={`block px-4 py-2 rounded-lg transition duration-200 ${
                   pathname === item.path
-                    ? "bg-[#005bb5] text-white font-semibold"
-                    : "text-white hover:bg-[#005bb5] hover:text-white"
+                    ? "bg-[#0e4a0e] text-white font-semibold"
+                    : "text-white hover:bg-[#0e4a0e] hover:text-white"
                 }`}
               >
                 {item.name}
-                {/* Added notification badge */}
                 {item.notificationCount > 0 && (
                   <span className="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-600 rounded-full -translate-y-1/2 translate-x-1/2">
                     {item.notificationCount}
@@ -88,12 +87,12 @@ export default function Menu() {
           {!isAuthenticated ? (
             <>
               <li>
-                <Link href="/signup" className="block px-4 py-2 rounded-lg text-white hover:bg-[#005bb5] hover:text-white">
+                <Link href="/signup" className="block px-4 py-2 rounded-lg text-white hover:bg-[#0e4a0e] hover:text-white">
                   Sign Up
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="block px-4 py-2 rounded-lg text-white hover:bg-[#005bb5] hover:text-white">
+                <Link href="/login" className="block px-4 py-2 rounded-lg text-white hover:bg-[#0e4a0e] hover:text-white">
                   Login
                 </Link>
               </li>

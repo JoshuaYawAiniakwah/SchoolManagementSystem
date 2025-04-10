@@ -1,6 +1,6 @@
 "use client";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const UserIcon = () => (
   <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
@@ -8,13 +8,38 @@ const UserIcon = () => (
   </div>
 );
 
+const fetchImage = async (fileName: string): Promise<string | null> => {
+  try {
+    const response = await fetch(
+      `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/api/getFile`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileName }),
+      }
+    );
+
+    if (!response.ok) throw new Error(`Failed to fetch image: ${response.status}`);
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    console.error("❌ Error fetching image:", error);
+    return null;
+  }
+};
+
 const StudentImage: React.FC<{ fileName: string; altText: string }> = ({ fileName, altText }) => {
-  return (
-    <img 
-      src="https://via.placeholder.com/48" 
-      alt={altText} 
-      className="w-12 h-12 rounded-full object-cover" 
-    />
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadImage = async () => setImageUrl(await fetchImage(fileName));
+    loadImage();
+  }, [fileName]);
+
+  return imageUrl ? (
+    <img src={imageUrl} alt={altText} className="w-12 h-12 rounded-full object-cover" />
+  ) : (
+    <UserIcon />
   );
 };
 
@@ -54,6 +79,7 @@ interface Student {
   parentGuardian?: ParentGuardian[];
   previousAcademicDetail?: string | null;
   studentId: string;
+  status?: string;
 }
 
 interface Admission {
@@ -197,290 +223,8 @@ const StudentDetailsPopup: React.FC<{ student: Student | undefined; onClose: () 
 };
 
 function StudentList() {
-  const staticStudents: Admission[] = [
-    {
-      classForAdmission: "Grade 1",
-      academicYear: 2023,
-      preferredSecondLanguage: "French",
-      hasSiblingsInSchool: true,
-      siblingName: "Jane Smith",
-      siblingClass: "Grade 3",
-      status: "Active",
-      student: {
-        fullName: "John Smith",
-        grade: "Grade 1",
-        dateOfBirth: "2016-05-15",
-        nationality: "Ghanaian",
-        religion: "Christian",
-        gender: "Male",
-        passportPhotoPath: "john_smith.jpg",
-        residentialAddress: {
-          city: "Accra",
-          region: "Greater Accra",
-          country: "Ghana",
-          street_name: "Main Street",
-          house_number: 123
-        },
-        medicalInformation: {
-          bloodType: "A+",
-          allergiesOrConditions: "None",
-          emergencyContactsName: "Mary Smith",
-          emergencyContactsNumber: "+233 24 123 4567"
-        },
-        parentGuardian: [
-          {
-            firstName: "James",
-            lastName: "Smith",
-            contactNumber: "+233 24 765 4321",
-            emailAddress: "james.smith@example.com",
-            occupation: "Engineer"
-          },
-          {
-            firstName: "Mary",
-            lastName: "Smith",
-            contactNumber: "+233 24 123 4567",
-            emailAddress: "mary.smith@example.com",
-            occupation: "Teacher"
-          }
-        ],
-        previousAcademicDetail: "KG 2 at ABC School",
-        studentId: "ST001"
-      }
-    },
-    {
-      classForAdmission: "Grade 2",
-      academicYear: 2023,
-      preferredSecondLanguage: null,
-      hasSiblingsInSchool: false,
-      siblingName: null,
-      siblingClass: null,
-      status: "Active",
-      student: {
-        fullName: "Alice Johnson",
-        grade: "Grade 2",
-        dateOfBirth: "2015-08-22",
-        nationality: "Ghanaian",
-        religion: "Muslim",
-        gender: "Female",
-        passportPhotoPath: "alice_johnson.jpg",
-        residentialAddress: {
-          city: "Kumasi",
-          region: "Ashanti",
-          country: "Ghana",
-          street_name: "Oak Avenue",
-          house_number: 456
-        },
-        medicalInformation: {
-          bloodType: "O+",
-          allergiesOrConditions: "Peanuts",
-          emergencyContactsName: "Sarah Johnson",
-          emergencyContactsNumber: "+233 20 987 6543"
-        },
-        parentGuardian: [
-          {
-            firstName: "David",
-            lastName: "Johnson",
-            contactNumber: "+233 20 987 6543",
-            emailAddress: "david.johnson@example.com",
-            occupation: "Doctor"
-          }
-        ],
-        previousAcademicDetail: "Grade 1 at XYZ School",
-        studentId: "ST002"
-      }
-    },
-    {
-      classForAdmission: "Grade 3",
-      academicYear: 2023,
-      preferredSecondLanguage: "French",
-      hasSiblingsInSchool: false,
-      siblingName: null,
-      siblingClass: null,
-      status: "Suspended",
-      student: {
-        fullName: "Kwame Mensah",
-        grade: "Grade 3",
-        dateOfBirth: "2014-11-10",
-        nationality: "Ghanaian",
-        religion: "Christian",
-        gender: "Male",
-        passportPhotoPath: "kwame_mensah.jpg",
-        residentialAddress: {
-          city: "Takoradi",
-          region: "Western",
-          country: "Ghana",
-          street_name: "Palm Road",
-          house_number: 789
-        },
-        medicalInformation: {
-          bloodType: "B+",
-          allergiesOrConditions: "None",
-          emergencyContactsName: "Ama Mensah",
-          emergencyContactsNumber: "+233 27 555 1234"
-        },
-        parentGuardian: [
-          {
-            firstName: "Kofi",
-            lastName: "Mensah",
-            contactNumber: "+233 27 555 1234",
-            emailAddress: "kofi.mensah@example.com",
-            occupation: "Businessman"
-          },
-          {
-            firstName: "Ama",
-            lastName: "Mensah",
-            contactNumber: "+233 27 555 5678",
-            emailAddress: "ama.mensah@example.com",
-            occupation: "Nurse"
-          }
-        ],
-        previousAcademicDetail: "Grade 2 at DEF School",
-        studentId: "ST003"
-      }
-    },
-    {
-      classForAdmission: "Grade 4",
-      academicYear: 2023,
-      preferredSecondLanguage: null,
-      hasSiblingsInSchool: true,
-      siblingName: "Kofi Boateng",
-      siblingClass: "Grade 6",
-      status: "Active",
-      student: {
-        fullName: "Esi Boateng",
-        grade: "Grade 4",
-        dateOfBirth: "2013-03-18",
-        nationality: "Ghanaian",
-        religion: "Christian",
-        gender: "Female",
-        passportPhotoPath: "esi_boateng.jpg",
-        residentialAddress: {
-          city: "Tamale",
-          region: "Northern",
-          country: "Ghana",
-          street_name: "Pine Street",
-          house_number: 321
-        },
-        medicalInformation: {
-          bloodType: "AB+",
-          allergiesOrConditions: "None",
-          emergencyContactsName: "Yaa Boateng",
-          emergencyContactsNumber: "+233 54 321 6789"
-        },
-        parentGuardian: [
-          {
-            firstName: "Yaw",
-            lastName: "Boateng",
-            contactNumber: "+233 54 321 6789",
-            emailAddress: "yaw.boateng@example.com",
-            occupation: "Farmer"
-          },
-          {
-            firstName: "Yaa",
-            lastName: "Boateng",
-            contactNumber: "+233 54 987 6543",
-            emailAddress: "yaa.boateng@example.com",
-            occupation: "Teacher"
-          }
-        ],
-        previousAcademicDetail: "Grade 3 at GHI School",
-        studentId: "ST004"
-      }
-    },
-    {
-      classForAdmission: "Grade 5",
-      academicYear: 2023,
-      preferredSecondLanguage: "French",
-      hasSiblingsInSchool: false,
-      siblingName: null,
-      siblingClass: null,
-      status: "Completed",
-      student: {
-        fullName: "David Ofori",
-        grade: "Grade 5",
-        dateOfBirth: "2012-07-25",
-        nationality: "Ghanaian",
-        religion: "Christian",
-        gender: "Male",
-        passportPhotoPath: "david_ofori.jpg",
-        residentialAddress: {
-          city: "Cape Coast",
-          region: "Central",
-          country: "Ghana",
-          street_name: "Cedar Lane",
-          house_number: 654
-        },
-        medicalInformation: {
-          bloodType: "A-",
-          allergiesOrConditions: "Dust",
-          emergencyContactsName: "Grace Ofori",
-          emergencyContactsNumber: "+233 50 111 2222"
-        },
-        parentGuardian: [
-          {
-            firstName: "Samuel",
-            lastName: "Ofori",
-            contactNumber: "+233 50 111 2222",
-            emailAddress: "samuel.ofori@example.com",
-            occupation: "Banker"
-          },
-          {
-            firstName: "Grace",
-            lastName: "Ofori",
-            contactNumber: "+233 50 333 4444",
-            emailAddress: "grace.ofori@example.com",
-            occupation: "Lawyer"
-          }
-        ],
-        previousAcademicDetail: "Grade 4 at JKL School",
-        studentId: "ST005"
-      }
-    },
-    {
-      classForAdmission: "Grade 6",
-      academicYear: 2023,
-      preferredSecondLanguage: null,
-      hasSiblingsInSchool: false,
-      siblingName: null,
-      siblingClass: null,
-      status: "Sacked",
-      student: {
-        fullName: "Ama Ansah",
-        grade: "Grade 6",
-        dateOfBirth: "2011-09-30",
-        nationality: "Ghanaian",
-        religion: "Muslim",
-        gender: "Female",
-        passportPhotoPath: "ama_ansah.jpg",
-        residentialAddress: {
-          city: "Tema",
-          region: "Greater Accra",
-          country: "Ghana",
-          street_name: "Maple Road",
-          house_number: 987
-        },
-        medicalInformation: {
-          bloodType: "O-",
-          allergiesOrConditions: "None",
-          emergencyContactsName: "Fatima Ansah",
-          emergencyContactsNumber: "+233 55 666 7777"
-        },
-        parentGuardian: [
-          {
-            firstName: "Mohammed",
-            lastName: "Ansah",
-            contactNumber: "+233 55 666 7777",
-            emailAddress: "mohammed.ansah@example.com",
-            occupation: "Businessman"
-          }
-        ],
-        previousAcademicDetail: "Grade 5 at MNO School",
-        studentId: "ST006"
-      }
-    }
-  ];
-
-  const [students, setStudents] = useState<Admission[]>(staticStudents);
+  const [students, setStudents] = useState<Admission[]>([]);
+  const [allStudents, setAllStudents] = useState<Admission[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [classQuery, setClassQuery] = useState("");
   const [loading, setLoading] = useState(false);
@@ -497,13 +241,75 @@ function StudentList() {
   const [newGrade, setNewGrade] = useState("");
   const [isStatusFilterLoading, setIsStatusFilterLoading] = useState(false);
   const [currentStatusFilter, setCurrentStatusFilter] = useState("");
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
-  const allClasses = [
-    "Creche", "Nursery 1", "Nursery 2", "KG 1", "KG 2", 
-    ...Array.from({ length: 9 }, (_, i) => `Grade ${i + 1}`)
-  ];
+   const fetchAPI = async (url: string, options: RequestInit = {}) => {
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
+      });
 
-  const searchStudentsByName = () => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const text = await response.text();
+      return text ? JSON.parse(text) : null;
+    } catch (error) {
+      console.error('API Error:', error);
+      throw error;
+    }
+  };
+
+ const fetchAllStudents = async () => {
+  setIsViewAllLoading(true);
+  setCurrentStatusFilter("");
+  setError(null);
+  try {
+    const data = await fetchAPI("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/approved");
+    
+    // Get current statuses from localStorage if available
+    const savedStatuses = JSON.parse(localStorage.getItem('studentStatuses') || '{}');
+    
+    const mappedStudents = Array.isArray(data) ? data.map((student: Student) => {
+      // Use saved status if exists, otherwise server status, otherwise default to "Active"
+      const status = savedStatuses[student.studentId] || student.status || "Active";
+      
+      return {
+        classForAdmission: student.grade,
+        academicYear: new Date().getFullYear(),
+        preferredSecondLanguage: null,
+        hasSiblingsInSchool: false,
+        siblingName: null,
+        siblingClass: null,
+        status: status,
+        student: {
+          ...student,
+          status: status
+        },
+      };
+    }) : [];
+
+    setStudents(mappedStudents);
+    setAllStudents(mappedStudents);
+    setHasSearched(true);
+    
+    if (mappedStudents.length === 0) {
+      setError("No students found in the system");
+    }
+  } catch (error: any) {
+    console.error("Error fetching all students:", error);
+    setError(error.message || "Failed to fetch students. Please try again.");
+  } finally {
+    setIsViewAllLoading(false);
+  }
+};
+
+  const searchStudentsByName = async () => {
     if (!searchQuery.trim()) {
       setError("Please enter a name to search.");
       return;
@@ -511,20 +317,40 @@ function StudentList() {
     
     setIsSearching(true);
     setError(null);
-    setTimeout(() => {
-      const filtered = staticStudents.filter(student =>
-        student.student.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+    try {
+      const data = await fetchAPI(
+        `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/search?name=${encodeURIComponent(searchQuery)}`
       );
-      setStudents(filtered);
+
+      const mappedStudents = Array.isArray(data) ? data.map((student: Student) => ({
+        classForAdmission: student.grade,
+        academicYear: new Date().getFullYear(),
+        preferredSecondLanguage: null,
+        hasSiblingsInSchool: false,
+        siblingName: null,
+        siblingClass: null,
+        status: student.status || "Active",
+        student: {
+          ...student,
+          status: student.status || "Active"
+        }
+      })) : [];
+      
+      setStudents(mappedStudents);
       setHasSearched(true);
-      setIsSearching(false);
-      if (filtered.length === 0) {
+      
+      if (mappedStudents.length === 0) {
         setError("No students found matching your search");
       }
-    }, 500);
+    } catch (error: any) {
+      console.error("Error searching students by name:", error);
+      setError(error.message || "Failed to search students. Please try again.");
+    } finally {
+      setIsSearching(false);
+    }
   };
 
-  const fetchStudentsByClass = () => {
+  const fetchStudentsByClass = async () => {
     if (!classQuery.trim()) {
       setError("Please select a class to search.");
       return;
@@ -532,67 +358,192 @@ function StudentList() {
     
     setIsFiltering(true);
     setError(null);
-    setTimeout(() => {
-      const filtered = staticStudents.filter(student =>
-        student.student.grade === classQuery
+    try {
+      const data = await fetchAPI(
+        `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/grade?grade=${encodeURIComponent(classQuery)}`
       );
-      setStudents(filtered);
+
+      const mappedStudents = Array.isArray(data) ? data.map((student: Student) => ({
+        classForAdmission: student.grade,
+        academicYear: new Date().getFullYear(),
+        preferredSecondLanguage: null,
+        hasSiblingsInSchool: false,
+        siblingName: null,
+        siblingClass: null,
+        status: student.status || "Active",
+        student: {
+          ...student,
+          status: student.status || "Active"
+        }
+      })) : [];
+      
+      setStudents(mappedStudents);
       setHasSearched(true);
-      setIsFiltering(false);
-      if (filtered.length === 0) {
+      
+      if (mappedStudents.length === 0) {
         setError("No students found in this class");
       }
-    }, 500);
+    } catch (error: any) {
+      console.error("Error fetching students by class:", error);
+      setError(error.message || "Failed to fetch students by class. Please try again.");
+    } finally {
+      setIsFiltering(false);
+    }
   };
 
-  const fetchStudentsByStatus = (status: string) => {
+  const fetchStudentsByStatus = async (status: string) => {
     setIsStatusFilterLoading(true);
     setCurrentStatusFilter(status);
     setError(null);
-    setTimeout(() => {
-      const filtered = staticStudents.filter(student =>
-        student.status === status
+    try {
+      const formattedStatus = status.toUpperCase();
+      const data = await fetchAPI(
+        `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/status/${formattedStatus}`
       );
-      setStudents(filtered);
+
+      const mappedStudents = Array.isArray(data) ? data.map((student: Student) => ({
+        classForAdmission: student.grade,
+        academicYear: new Date().getFullYear(),
+        preferredSecondLanguage: null,
+        hasSiblingsInSchool: false,
+        siblingName: null,
+        siblingClass: null,
+        status: student.status || status,
+        student: {
+          ...student,
+          status: student.status || status
+        }
+      })) : [];
+      
+      setStudents(mappedStudents);
       setHasSearched(true);
-      setIsStatusFilterLoading(false);
-      if (filtered.length === 0) {
+      
+      if (mappedStudents.length === 0) {
         setError(`No ${status.toLowerCase()} students found`);
       }
-    }, 500);
+    } catch (error: any) {
+      console.error(`Error fetching ${status} students:`, error);
+      setError(error.message || `Failed to fetch ${status} students. Please try again.`);
+    } finally {
+      setIsStatusFilterLoading(false);
+    }
   };
 
-  const fetchAllStudents = () => {
-    setIsViewAllLoading(true);
+  const updateStudentStatus = async (studentId: string, status: string) => {
+  try {
+    setIsUpdatingStatus(true);
     setError(null);
-    setTimeout(() => {
-      setStudents(staticStudents);
-      setHasSearched(true);
-      setIsViewAllLoading(false);
-    }, 500);
-  };
+    
+    const formattedStatus = status.toUpperCase();
+    const endpoint = `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/status/updateGrade/${studentId}?newStatus=${formattedStatus}`;
+    
+    const response = await fetch(endpoint, {
+      method: "PUT",
+      headers: { 
+        "Content-Type": "application/json",
+      }
+    });
 
-  const updateStudentStatus = (studentId: string, status: string) => {
-    setStudents(students.map(student => 
-      student.student.studentId === studentId 
-        ? { ...student, status } 
-        : student
-    ));
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Server responded with ${response.status}: ${errorText}`);
+    }
+
+    // Update localStorage
+    const savedStatuses = JSON.parse(localStorage.getItem('studentStatuses') || '{}');
+    savedStatuses[studentId] = formattedStatus;
+    localStorage.setItem('studentStatuses', JSON.stringify(savedStatuses));
+
+    // Update both students and allStudents state
+    setStudents(prevStudents => 
+      prevStudents.map(student => 
+        student.student.studentId === studentId 
+          ? { 
+              ...student, 
+              status: formattedStatus,
+              student: { ...student.student, status: formattedStatus }
+            } 
+          : student
+      )
+    );
+
+    setAllStudents(prevAllStudents => 
+      prevAllStudents.map(student => 
+        student.student.studentId === studentId 
+          ? { 
+              ...student, 
+              status: formattedStatus,
+              student: { ...student.student, status: formattedStatus }
+            } 
+          : student
+      )
+    );
+    
     setIsStatusModalOpen(false);
-  };
+    setError(`Status updated successfully to ${status}`);
+    setTimeout(() => setError(null), 3000);
+    
+  } catch (error) {
+    console.error("Error updating student status:", error);
+    setError(error instanceof Error ? error.message : "Failed to update student status");
+  } finally {
+    setIsUpdatingStatus(false);
+  }
+};
+  const promoteStudent = async (studentId: string, newGrade: string) => {
+  try {
+    const endpoint = `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/updateGrade/${studentId}?newGrade=${encodeURIComponent(newGrade)}`;
+    
+    const response = await fetch(endpoint, {
+      method: "PUT",
+      headers: { 
+        "Content-Type": "application/json",
+      }
+    });
 
-  const promoteStudent = (studentId: string, newGrade: string) => {
-    setStudents(students.map(student => 
-      student.student.studentId === studentId 
-        ? { 
-            ...student, 
-            classForAdmission: newGrade,
-            student: { ...student.student, grade: newGrade }
-          } 
-        : student
-    ));
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Server responded with ${response.status}: ${errorText}`);
+    }
+
+    // Update localStorage for grades if needed
+    const savedGrades = JSON.parse(localStorage.getItem('studentGrades') || '{}');
+    savedGrades[studentId] = newGrade;
+    localStorage.setItem('studentGrades', JSON.stringify(savedGrades));
+
+    // Update both states
+    setStudents(prevStudents => 
+      prevStudents.map(student => 
+        student.student.studentId === studentId 
+          ? { 
+              ...student, 
+              classForAdmission: newGrade,
+              student: { ...student.student, grade: newGrade }
+            } 
+          : student
+      )
+    );
+
+    setAllStudents(prevAllStudents => 
+      prevAllStudents.map(student => 
+        student.student.studentId === studentId 
+          ? { 
+              ...student, 
+              classForAdmission: newGrade,
+              student: { ...student.student, grade: newGrade }
+            } 
+          : student
+      )
+    );
+
     setIsPromoteModalOpen(false);
-  };
+    setError(`Student promoted to ${newGrade} successfully`);
+    setTimeout(() => setError(null), 3000);
+  } catch (error) {
+    console.error("Error promoting student:", error);
+    setError(error instanceof Error ? error.message : "Failed to promote student");
+  }
+};
 
   const openStatusModal = (student: Admission) => {
     setCurrentStudentForStatus(student);
@@ -606,18 +557,28 @@ function StudentList() {
     setIsPromoteModalOpen(true);
   };
 
-  const totalStudents = students.length;
-  const maleCount = students.filter(admission => 
+  const allClasses = [
+    "Creche", "Nursery 1", "Nursery 2", "KG 1", "KG 2", 
+    ...Array.from({ length: 9 }, (_, i) => `Grade ${i + 1}`)
+  ];
+
+  useEffect(() => {
+    fetchAllStudents();
+  }, []);
+
+  // Calculate counts from allStudents
+  const totalStudents = allStudents.length;
+  const maleCount = allStudents.filter(admission => 
     admission.student.gender && admission.student.gender.toLowerCase() === 'male'
   ).length;
-  const femaleCount = students.filter(admission => 
+  const femaleCount = allStudents.filter(admission => 
     admission.student.gender && admission.student.gender.toLowerCase() === 'female'
   ).length;
 
-  const activeStudentsCount = staticStudents.filter(s => s.status === "Active").length;
-  const completedStudentsCount = staticStudents.filter(s => s.status === "Completed").length;
-  const suspendedStudentsCount = staticStudents.filter(s => s.status === "Suspended").length;
-  const sackedStudentsCount = staticStudents.filter(s => s.status === "Sacked").length;
+  const activeStudentsCount = allStudents.filter(s => s.status === "Active" || s.status === "ACTIVE").length;
+  const completedStudentsCount = allStudents.filter(s => s.status === "Completed" || s.status === "COMPLETED").length;
+  const suspendedStudentsCount = allStudents.filter(s => s.status === "Suspended" || s.status === "SUSPENDED").length;
+  const sackedStudentsCount = allStudents.filter(s => s.status === "Sacked" || s.status === "SACKED").length;
 
   return (
     <ProtectedRoute>
@@ -716,18 +677,19 @@ function StudentList() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Loading...
+                      Loading...
                   </>
                 ) : 'View All Students'}
               </button>
             </div>
           </div>
 
-          {/* Status Filter Buttons */}
           <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-2">
             <button
-              onClick={() => fetchStudentsByStatus("Active")}
-              disabled={isStatusFilterLoading && currentStatusFilter === "Active"}
+              onClick={() => {
+                setCurrentStatusFilter("Active");
+                fetchStudentsByStatus("Active");
+              }}
               className={`bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded text-sm flex items-center justify-center ${
                 isStatusFilterLoading && currentStatusFilter === "Active" ? 'opacity-50 cursor-not-allowed' : ''
               }`}
@@ -746,9 +708,12 @@ function StudentList() {
                 </>
               )}
             </button>
+
             <button
-              onClick={() => fetchStudentsByStatus("Completed")}
-              disabled={isStatusFilterLoading && currentStatusFilter === "Completed"}
+              onClick={() => {
+                setCurrentStatusFilter("Completed");
+                fetchStudentsByStatus("Completed");
+              }}
               className={`bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm flex items-center justify-center ${
                 isStatusFilterLoading && currentStatusFilter === "Completed" ? 'opacity-50 cursor-not-allowed' : ''
               }`}
@@ -767,9 +732,12 @@ function StudentList() {
                 </>
               )}
             </button>
+
             <button
-              onClick={() => fetchStudentsByStatus("Suspended")}
-              disabled={isStatusFilterLoading && currentStatusFilter === "Suspended"}
+              onClick={() => {
+                setCurrentStatusFilter("Suspended");
+                fetchStudentsByStatus("Suspended");
+              }}
               className={`bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded text-sm flex items-center justify-center ${
                 isStatusFilterLoading && currentStatusFilter === "Suspended" ? 'opacity-50 cursor-not-allowed' : ''
               }`}
@@ -788,9 +756,12 @@ function StudentList() {
                 </>
               )}
             </button>
+
             <button
-              onClick={() => fetchStudentsByStatus("Sacked")}
-              disabled={isStatusFilterLoading && currentStatusFilter === "Sacked"}
+              onClick={() => {
+                setCurrentStatusFilter("Sacked");
+                fetchStudentsByStatus("Sacked");
+              }}
               className={`bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm flex items-center justify-center ${
                 isStatusFilterLoading && currentStatusFilter === "Sacked" ? 'opacity-50 cursor-not-allowed' : ''
               }`}
@@ -875,9 +846,9 @@ function StudentList() {
                       <td className="px-4 py-3 text-sm text-gray-600">{admission.student.grade}</td>
                       <td className="px-4 py-3 text-sm">
                         <span className={`px-2 py-1 rounded-full text-xs ${
-                          admission.status === "Active" ? "bg-green-100 text-green-800" :
-                          admission.status === "Completed" ? "bg-blue-100 text-blue-800" :
-                          admission.status === "Suspended" ? "bg-yellow-100 text-yellow-800" :
+                          admission.status === "Active" || admission.status === "ACTIVE" ? "bg-green-100 text-green-800" :
+                          admission.status === "Completed" || admission.status === "COMPLETED" ? "bg-blue-100 text-blue-800" :
+                          admission.status === "Suspended" || admission.status === "SUSPENDED" ? "bg-yellow-100 text-yellow-800" :
                           "bg-red-100 text-red-800"
                         }`}>
                           {admission.status || "Active"}
@@ -899,9 +870,9 @@ function StudentList() {
                           </button>
                           <button
                             onClick={() => admission.status === "Active" && openPromoteModal(admission)}
-                            disabled={admission.status !== "Active"}
+                            disabled={admission.status !== "Active" && admission.status !== "ACTIVE"}
                             className={`text-green-600 hover:text-green-800 hover:underline text-left ${
-                              admission.status !== "Active" ? 'opacity-50 cursor-not-allowed' : ''
+                              admission.status !== "Active" && admission.status !== "ACTIVE" ? 'opacity-50 cursor-not-allowed' : ''
                             }`}
                           >
                             Promote
@@ -926,7 +897,6 @@ function StudentList() {
           <StudentDetailsPopup student={selectedStudent} onClose={() => setSelectedStudent(null)} />
         )}
 
-        {/* Status Update Modal */}
         {isStatusModalOpen && currentStudentForStatus && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg w-full max-w-md">
@@ -941,6 +911,7 @@ function StudentList() {
                     className="w-full p-2 border rounded"
                     value={newStatus}
                     onChange={(e) => setNewStatus(e.target.value)}
+                    disabled={isUpdatingStatus}
                   >
                     <option value="Active">Active</option>
                     <option value="Completed">Completed</option>
@@ -953,21 +924,32 @@ function StudentList() {
                 <button
                   onClick={() => setIsStatusModalOpen(false)}
                   className="px-4 py-2 border rounded hover:bg-gray-100"
+                  disabled={isUpdatingStatus}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => updateStudentStatus(currentStudentForStatus.student.studentId, newStatus)}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center ${
+                    isUpdatingStatus ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  disabled={isUpdatingStatus}
                 >
-                  Update Status
+                  {isUpdatingStatus ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Updating...
+                    </>
+                  ) : 'Update Status'}
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Promote Student Modal */}
         {isPromoteModalOpen && currentStudentForStatus && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg w-full max-w-md">
