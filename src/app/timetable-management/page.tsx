@@ -16,7 +16,7 @@ type TimetableEntry = {
   time: string;
   subject: Subject;
   classroom: string;
-  invigilator?: string; // Added invigilator field
+  invigilator?: string;
 };
 
 type ClassTimetable = {
@@ -27,18 +27,39 @@ type ClassTimetable = {
 
 export default function TimetableManagement() {
   const [selectedTab, setSelectedTab] = useState(0);
-  const [classTimetables, setClassTimetables] = useState<ClassTimetable[]>([
-    {
-      id: 1,
-      className: "Creche",
-      timetable: [
-        {
-          id: 1,
-          day: "Monday",
-          time: "09:00 - 10:00",
-          subject: { id: 1, name: "Play Time", teacher: "Ms. Ama", duration: "1 hour" },
-          classroom: "Play Room"
-        },
+  const [classTimetables, setClassTimetables] = useState<ClassTimetable[]>([]);
+  const [examTimetables, setExamTimetables] = useState<ClassTimetable[]>([]);
+  const [selectedClass, setSelectedClass] = useState<number | null>(null);
+  const [newEntry, setNewEntry] = useState<Omit<TimetableEntry, 'id'>>({
+    day: "",
+    time: "",
+    subject: { id: 0, name: "", teacher: "", duration: "" },
+    classroom: "",
+    invigilator: ""
+  });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [viewAllGrades, setViewAllGrades] = useState(false);
+  const [searchClicked, setSearchClicked] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isViewAllLoading, setIsViewAllLoading] = useState(false);
+
+  // Initialize with sample data (same as before)
+  useEffect(() => {
+    // Class timetables initialization
+    const initialClassTimetables = [
+
+     {
+        id: 1,
+        className: "Creche",
+        timetable: [
+          {
+            id: 1,
+            day: "Monday",
+            time: "09:00 - 10:00",
+            subject: { id: 1, name: "Play Time", teacher: "Ms. Ama", duration: "1 hour" },
+            classroom: "Play Room"
+          },
         {
           id: 2,
           day: "Monday",
@@ -1483,10 +1504,11 @@ export default function TimetableManagement() {
           classroom: "Art Room"
         }
       ]
-    }
-  ]);
+    },
+  ];
 
-  const [examTimetables, setExamTimetables] = useState<ClassTimetable[]>([
+   const initialExamTimetables = [
+      
     {
       id: 1,
       className: "Creche",
@@ -2131,22 +2153,11 @@ export default function TimetableManagement() {
         }
       ]
     }
-  ]);
+  ];
 
-  const [selectedClass, setSelectedClass] = useState<number | null>(null);
-  const [newEntry, setNewEntry] = useState<Omit<TimetableEntry, 'id'>>({
-    day: "",
-    time: "",
-    subject: { id: 0, name: "", teacher: "", duration: "" },
-    classroom: "",
-    invigilator: ""
-  });
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [viewAllGrades, setViewAllGrades] = useState(false);
-  const [searchClicked, setSearchClicked] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
-  const [isViewAllLoading, setIsViewAllLoading] = useState(false);
+   setClassTimetables(initialClassTimetables);
+    setExamTimetables(initialExamTimetables);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -2266,7 +2277,6 @@ export default function TimetableManagement() {
 
   const toggleViewAllGrades = async () => {
     setIsViewAllLoading(true);
-    // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 500));
     setViewAllGrades(!viewAllGrades);
     setSearchClicked(false);
@@ -2279,7 +2289,6 @@ export default function TimetableManagement() {
   const handleSearch = async () => {
     if (selectedClass) {
       setIsSearching(true);
-      // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 500));
       setSearchClicked(true);
       setIsSearching(false);
@@ -2292,17 +2301,17 @@ export default function TimetableManagement() {
 
   return (
     <ProtectedRoute>
-      <div className="p-5">
-        <h1 className="text-2xl font-bold mb-6">Timetable Management</h1>
+      <div className="p-5 bg-green-50 min-h-screen">
+        <h1 className="text-3xl font-bold mb-6 text-green-800">Timetable Management</h1>
         
         <Tab.Group selectedIndex={selectedTab} onChange={setSelectedTab}>
-          <Tab.List className="flex space-x-4 mb-6 border-b border-gray-200">
+          <Tab.List className="flex space-x-4 mb-6 border-b border-green-200">
             <Tab
               className={({ selected }) =>
                 `px-4 py-2 text-sm font-medium rounded-t-lg ${
                   selected
-                    ? 'bg-blue-500 text-white'
-                    : 'text-gray-700 hover:text-blue-500'
+                    ? 'bg-green-600 text-white'
+                    : 'text-green-700 hover:text-green-800'
                 }`
               }
             >
@@ -2312,8 +2321,8 @@ export default function TimetableManagement() {
               className={({ selected }) =>
                 `px-4 py-2 text-sm font-medium rounded-t-lg ${
                   selected
-                    ? 'bg-blue-500 text-white'
-                    : 'text-gray-700 hover:text-blue-500'
+                    ? 'bg-green-600 text-white'
+                    : 'text-green-700 hover:text-green-800'
                 }`
               }
             >
@@ -2323,12 +2332,12 @@ export default function TimetableManagement() {
 
           <Tab.Panels>
             <Tab.Panel>
-              <div className="bg-white p-4 rounded-lg shadow mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="bg-white p-6 rounded-lg shadow-md mb-6 border border-green-200">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                   <div>
-                    <label className="block text-sm font-medium mb-1">Select Class</label>
+                    <label className="block text-sm font-medium mb-1 text-green-700">Select Class</label>
                     <select
-                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                      className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                       value={selectedClass || ""}
                       onChange={(e) => {
                         setSelectedClass(Number(e.target.value));
@@ -2355,9 +2364,9 @@ export default function TimetableManagement() {
                       onClick={handleSearch}
                       className={`px-4 py-2 text-white rounded w-full flex items-center justify-center ${
                         !selectedClass || viewAllGrades || isSearching
-                          ? 'bg-blue-300 cursor-not-allowed'
-                          : 'bg-blue-500 hover:bg-blue-600'
-                      }`}
+                          ? 'bg-green-300 cursor-not-allowed'
+                          : 'bg-green-600 hover:bg-green-700'
+                      } transition-colors`}
                       disabled={!selectedClass || viewAllGrades || isSearching}
                     >
                       {isSearching ? (
@@ -2378,11 +2387,11 @@ export default function TimetableManagement() {
                       onClick={toggleViewAllGrades}
                       className={`px-4 py-2 text-white rounded w-full flex items-center justify-center ${
                         isViewAllLoading
-                          ? 'bg-gray-400 cursor-not-allowed'
+                          ? 'bg-green-300 cursor-not-allowed'
                           : viewAllGrades
-                          ? 'bg-gray-500 hover:bg-gray-600'
-                          : 'bg-blue-500 hover:bg-blue-600'
-                      }`}
+                          ? 'bg-green-700 hover:bg-green-800'
+                          : 'bg-green-600 hover:bg-green-700'
+                      } transition-colors`}
                       disabled={isViewAllLoading}
                     >
                       {isViewAllLoading ? (
@@ -2404,15 +2413,15 @@ export default function TimetableManagement() {
 
                 {selectedClass && !viewAllGrades && (
                   <>
-                    <h2 className="text-xl font-semibold mb-4">{isEditing ? "Edit Timetable Entry" : "Add Timetable Entry"}</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <h2 className="text-xl font-semibold mb-4 text-green-800">{isEditing ? "Edit Timetable Entry" : "Add Timetable Entry"}</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium mb-1">Day</label>
+                        <label className="block text-sm font-medium mb-1 text-green-700">Day</label>
                         <select
                           name="day"
                           value={newEntry.day}
                           onChange={handleChange}
-                          className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                          className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                         >
                           <option value="">Select Day</option>
                           <option value="Monday">Monday</option>
@@ -2420,77 +2429,76 @@ export default function TimetableManagement() {
                           <option value="Wednesday">Wednesday</option>
                           <option value="Thursday">Thursday</option>
                           <option value="Friday">Friday</option>
-                          <option value="Saturday">Saturday</option>
                         </select>
                       </div>
                       
                       <div>
-                        <label className="block text-sm font-medium mb-1">Time</label>
+                        <label className="block text-sm font-medium mb-1 text-green-700">Time</label>
                         <input
                           type="text"
                           name="time"
                           placeholder="e.g. 08:00 - 09:00"
                           value={newEntry.time}
                           onChange={handleChange}
-                          className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                          className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                       </div>
                       
                       <div>
-                        <label className="block text-sm font-medium mb-1">Subject Name</label>
+                        <label className="block text-sm font-medium mb-1 text-green-700">Subject Name</label>
                         <input
                           type="text"
                           name="subject.name"
                           placeholder="Subject name"
                           value={newEntry.subject.name}
                           onChange={handleChange}
-                          className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                          className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                       </div>
                       
                       <div>
-                        <label className="block text-sm font-medium mb-1">Teacher</label>
+                        <label className="block text-sm font-medium mb-1 text-green-700">Teacher</label>
                         <input
                           type="text"
                           name="subject.teacher"
                           placeholder="Teacher name"
                           value={newEntry.subject.teacher}
                           onChange={handleChange}
-                          className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                          className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                       </div>
                       
                       <div>
-                        <label className="block text-sm font-medium mb-1">Duration</label>
+                        <label className="block text-sm font-medium mb-1 text-green-700">Duration</label>
                         <input
                           type="text"
                           name="subject.duration"
                           placeholder="e.g. 1 hour"
                           value={newEntry.subject.duration}
                           onChange={handleChange}
-                          className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                          className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                       </div>
                       
                       <div>
-                        <label className="block text-sm font-medium mb-1">Classroom</label>
+                        <label className="block text-sm font-medium mb-1 text-green-700">Classroom</label>
                         <input
                           type="text"
                           name="classroom"
                           placeholder="Room number"
                           value={newEntry.classroom}
                           onChange={handleChange}
-                          className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                          className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                       </div>
                     </div>
                     
                     <button
-                      className={`mt-4 px-4 py-2 text-white rounded hover:bg-blue-600 flex items-center justify-center ${
+                      className={`mt-6 px-4 py-2 text-white rounded hover:bg-green-700 flex items-center justify-center ${
                         !newEntry.day || !newEntry.time || !newEntry.subject.name || !newEntry.subject.teacher || !newEntry.subject.duration || !newEntry.classroom
-                          ? 'bg-blue-300 cursor-not-allowed'
-                          : 'bg-blue-500'
-                      }`}
+                          ? 'bg-green-300 cursor-not-allowed'
+                          : 'bg-green-600'
+                      } transition-colors`}
                       onClick={handleAddOrUpdateEntry}
                       disabled={!newEntry.day || !newEntry.time || !newEntry.subject.name || !newEntry.subject.teacher || !newEntry.subject.duration || !newEntry.classroom}
                     >
@@ -2512,12 +2520,12 @@ export default function TimetableManagement() {
                     });
 
                     return (
-                      <div key={classTimetable.id} className="bg-white rounded-lg shadow overflow-hidden">
-                        <h2 className="text-xl font-semibold p-4 border-b">
+                      <div key={classTimetable.id} className="bg-white rounded-lg shadow-md overflow-hidden border border-green-200">
+                        <h2 className="text-xl font-semibold p-4 border-b bg-green-100 text-green-800">
                           Timetable for {classTimetable.className}
                         </h2>
                         {classTimetable.timetable.length === 0 ? (
-                          <div className="p-4 text-center text-gray-500">
+                          <div className="p-4 text-center text-green-700">
                             No timetable entries available for this class.
                           </div>
                         ) : (
@@ -2528,25 +2536,25 @@ export default function TimetableManagement() {
 
                               return (
                                 <div key={day} className="mb-6">
-                                  <h3 className="text-lg font-medium p-2 bg-gray-100">{day}</h3>
-                                  <table className="min-w-full divide-y divide-gray-200">
-                                    <thead className="bg-gray-50">
+                                  <h3 className="text-lg font-medium p-2 bg-green-50 text-green-800">{day}</h3>
+                                  <table className="min-w-full divide-y divide-green-200">
+                                    <thead className="bg-green-100">
                                       <tr>
-                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
-                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
-                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Classroom</th>
+                                        <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Time</th>
+                                        <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Subject</th>
+                                        <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Teacher</th>
+                                        <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Duration</th>
+                                        <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Classroom</th>
                                       </tr>
                                     </thead>
-                                    <tbody className="bg-white divide-y divide-gray-200">
+                                    <tbody className="bg-white divide-y divide-green-200">
                                       {dayEntries.map((entry) => (
-                                        <tr key={entry.id} className="hover:bg-gray-50">
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{entry.time}</td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{entry.subject.name}</td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{entry.subject.teacher}</td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{entry.subject.duration}</td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{entry.classroom}</td>
+                                        <tr key={entry.id} className="hover:bg-green-50">
+                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-green-700">{entry.time}</td>
+                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-green-700">{entry.subject.name}</td>
+                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-green-700">{entry.subject.teacher}</td>
+                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-green-700">{entry.subject.duration}</td>
+                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-green-700">{entry.classroom}</td>
                                         </tr>
                                       ))}
                                     </tbody>
@@ -2561,13 +2569,13 @@ export default function TimetableManagement() {
                   })}
                 </div>
               ) : selectedClass && searchClicked ? (
-                <div className="bg-white rounded-lg shadow overflow-hidden">
-                  <h2 className="text-xl font-semibold p-4 border-b">
+                <div className="bg-white rounded-lg shadow-md overflow-hidden border border-green-200">
+                  <h2 className="text-xl font-semibold p-4 border-b bg-green-100 text-green-800">
                     Timetable for {classTimetables.find(c => c.id === selectedClass)?.className}
                   </h2>
                   
                   {selectedTimetableData.length === 0 ? (
-                    <div className="p-4 text-center text-gray-500">
+                    <div className="p-4 text-center text-green-700">
                       No timetable entries available for this class.
                     </div>
                   ) : (
@@ -2578,37 +2586,37 @@ export default function TimetableManagement() {
                         
                         return (
                           <div key={day} className="mt-6">
-                            <h3 className="text-lg font-medium p-2 bg-gray-100">{day}</h3>
-                            <table className="min-w-full divide-y divide-gray-200">
-                              <thead className="bg-gray-50">
+                            <h3 className="text-lg font-medium p-2 bg-green-50 text-green-800">{day}</h3>
+                            <table className="min-w-full divide-y divide-green-200">
+                              <thead className="bg-green-100">
                                 <tr>
-                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
-                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
-                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Classroom</th>
-                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Time</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Subject</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Teacher</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Duration</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Classroom</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Actions</th>
                                 </tr>
                               </thead>
-                              <tbody className="bg-white divide-y divide-gray-200">
+                              <tbody className="bg-white divide-y divide-green-200">
                                 {dayEntries.map((entry) => (
-                                  <tr key={entry.id} className="hover:bg-gray-50">
-                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{entry.time}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{entry.subject.name}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{entry.subject.teacher}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{entry.subject.duration}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{entry.classroom}</td>
+                                  <tr key={entry.id} className="hover:bg-green-50">
+                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-green-700">{entry.time}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-green-700">{entry.subject.name}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-green-700">{entry.subject.teacher}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-green-700">{entry.subject.duration}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-green-700">{entry.classroom}</td>
                                     <td className="px-4 py-2 whitespace-nowrap">
                                       <div className="flex space-x-2">
                                         <button
                                           onClick={() => handleEdit(entry.id)}
-                                          className="px-2 py-1 bg-yellow-500 text-white text-xs rounded hover:bg-yellow-600"
+                                          className="px-2 py-1 bg-yellow-500 text-white text-xs rounded hover:bg-yellow-600 transition-colors"
                                         >
                                           Edit
                                         </button>
                                         <button
                                           onClick={() => handleDelete(entry.id)}
-                                          className="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
+                                          className="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors"
                                         >
                                           Delete
                                         </button>
@@ -2625,7 +2633,7 @@ export default function TimetableManagement() {
                   )}
                 </div>
               ) : (
-                <div className="bg-white rounded-lg shadow p-4 text-center text-gray-500">
+                <div className="bg-white rounded-lg shadow-md p-4 text-center text-green-700 border border-green-200">
                   {selectedClass && !searchClicked 
                     ? "Please click the Search button to view the timetable" 
                     : "Please select a class or click 'View All Grades' to see timetables"}
@@ -2634,12 +2642,12 @@ export default function TimetableManagement() {
             </Tab.Panel>
 
             <Tab.Panel>
-              <div className="bg-white p-4 rounded-lg shadow mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="bg-white p-6 rounded-lg shadow-md mb-6 border border-green-200">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                   <div>
-                    <label className="block text-sm font-medium mb-1">Select Class</label>
+                    <label className="block text-sm font-medium mb-1 text-green-700">Select Class</label>
                     <select
-                      className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                      className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                       value={selectedClass || ""}
                       onChange={(e) => {
                         setSelectedClass(Number(e.target.value));
@@ -2666,9 +2674,9 @@ export default function TimetableManagement() {
                       onClick={handleSearch}
                       className={`px-4 py-2 text-white rounded w-full flex items-center justify-center ${
                         !selectedClass || viewAllGrades || isSearching
-                          ? 'bg-blue-300 cursor-not-allowed'
-                          : 'bg-blue-500 hover:bg-blue-600'
-                      }`}
+                          ? 'bg-green-300 cursor-not-allowed'
+                          : 'bg-green-600 hover:bg-green-700'
+                      } transition-colors`}
                       disabled={!selectedClass || viewAllGrades || isSearching}
                     >
                       {isSearching ? (
@@ -2689,11 +2697,11 @@ export default function TimetableManagement() {
                       onClick={toggleViewAllGrades}
                       className={`px-4 py-2 text-white rounded w-full flex items-center justify-center ${
                         isViewAllLoading
-                          ? 'bg-gray-400 cursor-not-allowed'
+                          ? 'bg-green-300 cursor-not-allowed'
                           : viewAllGrades
-                          ? 'bg-gray-500 hover:bg-gray-600'
-                          : 'bg-blue-500 hover:bg-blue-600'
-                      }`}
+                          ? 'bg-green-700 hover:bg-green-800'
+                          : 'bg-green-600 hover:bg-green-700'
+                      } transition-colors`}
                       disabled={isViewAllLoading}
                     >
                       {isViewAllLoading ? (
@@ -2713,102 +2721,102 @@ export default function TimetableManagement() {
                   </div>
                 </div>
 
-               {selectedClass && !viewAllGrades && (
-      <>
-        <h2 className="text-xl font-semibold mb-4">{isEditing ? "Edit Exam Entry" : "Add Exam Entry"}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Day</label>
-            <select
-              name="day"
-              value={newEntry.day}
-              onChange={handleChange}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
-            >
-              <option value="">Select Day</option>
-              <option value="Monday">Monday</option>
-              <option value="Tuesday">Tuesday</option>
-              <option value="Wednesday">Wednesday</option>
-              <option value="Thursday">Thursday</option>
-              <option value="Friday">Friday</option>
-            </select>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium mb-1">Time</label>
-            <input
-              type="text"
-              name="time"
-              placeholder="e.g. 08:00 - 10:00"
-              value={newEntry.time}
-              onChange={handleChange}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium mb-1">Subject Name</label>
-            <input
-              type="text"
-              name="subject.name"
-              placeholder="Subject name"
-              value={newEntry.subject.name}
-              onChange={handleChange}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium mb-1">Duration</label>
-            <input
-              type="text"
-              name="subject.duration"
-              placeholder="e.g. 2 hours"
-              value={newEntry.subject.duration}
-              onChange={handleChange}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium mb-1">Classroom</label>
-            <input
-              type="text"
-              name="classroom"
-              placeholder="Exam location"
-              value={newEntry.classroom}
-              onChange={handleChange}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium mb-1">Invigilator</label>
-            <input
-              type="text"
-              name="invigilator"
-              placeholder="Invigilator name"
-              value={newEntry.invigilator || ""}
-              onChange={handleChange}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
-            />
-          </div>
-        </div>
-        
-        <button
-          className={`mt-4 px-4 py-2 text-white rounded hover:bg-blue-600 flex items-center justify-center ${
-            !newEntry.day || !newEntry.time || !newEntry.subject.name || !newEntry.classroom || !newEntry.invigilator || !newEntry.subject.duration
-              ? 'bg-blue-300 cursor-not-allowed'
-              : 'bg-blue-500'
-          }`}
-          onClick={handleAddOrUpdateEntry}
-          disabled={!newEntry.day || !newEntry.time || !newEntry.subject.name || !newEntry.classroom || !newEntry.invigilator || !newEntry.subject.duration}
-        >
-          {isEditing ? "Update Entry" : "Add Entry"}
-        </button>
-      </>
-    )}
-  </div>
+                {selectedClass && !viewAllGrades && (
+                  <>
+                    <h2 className="text-xl font-semibold mb-4 text-green-800">{isEditing ? "Edit Exam Entry" : "Add Exam Entry"}</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium mb-1 text-green-700">Day</label>
+                        <select
+                          name="day"
+                          value={newEntry.day}
+                          onChange={handleChange}
+                          className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                        >
+                          <option value="">Select Day</option>
+                          <option value="Monday">Monday</option>
+                          <option value="Tuesday">Tuesday</option>
+                          <option value="Wednesday">Wednesday</option>
+                          <option value="Thursday">Thursday</option>
+                          <option value="Friday">Friday</option>
+                        </select>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-1 text-green-700">Time</label>
+                        <input
+                          type="text"
+                          name="time"
+                          placeholder="e.g. 08:00 - 10:00"
+                          value={newEntry.time}
+                          onChange={handleChange}
+                          className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-1 text-green-700">Subject Name</label>
+                        <input
+                          type="text"
+                          name="subject.name"
+                          placeholder="Subject name"
+                          value={newEntry.subject.name}
+                          onChange={handleChange}
+                          className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-1 text-green-700">Duration</label>
+                        <input
+                          type="text"
+                          name="subject.duration"
+                          placeholder="e.g. 2 hours"
+                          value={newEntry.subject.duration}
+                          onChange={handleChange}
+                          className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-1 text-green-700">Classroom</label>
+                        <input
+                          type="text"
+                          name="classroom"
+                          placeholder="Exam location"
+                          value={newEntry.classroom}
+                          onChange={handleChange}
+                          className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-1 text-green-700">Invigilator</label>
+                        <input
+                          type="text"
+                          name="invigilator"
+                          placeholder="Invigilator name"
+                          value={newEntry.invigilator || ""}
+                          onChange={handleChange}
+                          className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                      </div>
+                    </div>
+                    
+                    <button
+                      className={`mt-6 px-4 py-2 text-white rounded hover:bg-green-700 flex items-center justify-center ${
+                        !newEntry.day || !newEntry.time || !newEntry.subject.name || !newEntry.classroom || !newEntry.invigilator || !newEntry.subject.duration
+                          ? 'bg-green-300 cursor-not-allowed'
+                          : 'bg-green-600'
+                      } transition-colors`}
+                      onClick={handleAddOrUpdateEntry}
+                      disabled={!newEntry.day || !newEntry.time || !newEntry.subject.name || !newEntry.classroom || !newEntry.invigilator || !newEntry.subject.duration}
+                    >
+                      {isEditing ? "Update Entry" : "Add Entry"}
+                    </button>
+                  </>
+                )}
+              </div>
 
               {viewAllGrades ? (
                 <div className="space-y-6">
@@ -2822,12 +2830,12 @@ export default function TimetableManagement() {
                     });
 
                     return (
-                      <div key={examTimetable.id} className="bg-white rounded-lg shadow overflow-hidden">
-                        <h2 className="text-xl font-semibold p-4 border-b">
+                      <div key={examTimetable.id} className="bg-white rounded-lg shadow-md overflow-hidden border border-green-200">
+                        <h2 className="text-xl font-semibold p-4 border-b bg-green-100 text-green-800">
                           Exam Timetable for {examTimetable.className}
                         </h2>
                         {examTimetable.timetable.length === 0 ? (
-                          <div className="p-4 text-center text-gray-500">
+                          <div className="p-4 text-center text-green-700">
                             No exam timetable entries available for this class.
                           </div>
                         ) : (
@@ -2838,25 +2846,25 @@ export default function TimetableManagement() {
 
                               return (
                                 <div key={day} className="mb-6">
-                                  <h3 className="text-lg font-medium p-2 bg-gray-100">{day}</h3>
-                                  <table className="min-w-full divide-y divide-gray-200">
-                                    <thead className="bg-gray-50">
+                                  <h3 className="text-lg font-medium p-2 bg-green-50 text-green-800">{day}</h3>
+                                  <table className="min-w-full divide-y divide-green-200">
+                                    <thead className="bg-green-100">
                                       <tr>
-                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
-                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Classroom</th>
-                                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invigilator</th>
+                                        <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Time</th>
+                                        <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Subject</th>
+                                        <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Duration</th>
+                                        <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Classroom</th>
+                                        <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Invigilator</th>
                                       </tr>
                                     </thead>
-                                    <tbody className="bg-white divide-y divide-gray-200">
+                                    <tbody className="bg-white divide-y divide-green-200">
                                       {dayEntries.map((entry) => (
-                                        <tr key={entry.id} className="hover:bg-gray-50">
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{entry.time}</td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{entry.subject.name}</td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{entry.subject.duration}</td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{entry.classroom}</td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{entry.invigilator}</td>
+                                        <tr key={entry.id} className="hover:bg-green-50">
+                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-green-700">{entry.time}</td>
+                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-green-700">{entry.subject.name}</td>
+                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-green-700">{entry.subject.duration}</td>
+                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-green-700">{entry.classroom}</td>
+                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-green-700">{entry.invigilator}</td>
                                         </tr>
                                       ))}
                                     </tbody>
@@ -2871,13 +2879,13 @@ export default function TimetableManagement() {
                   })}
                 </div>
               ) : selectedClass && searchClicked ? (
-                <div className="bg-white rounded-lg shadow overflow-hidden">
-                  <h2 className="text-xl font-semibold p-4 border-b">
+                <div className="bg-white rounded-lg shadow-md overflow-hidden border border-green-200">
+                  <h2 className="text-xl font-semibold p-4 border-b bg-green-100 text-green-800">
                     Exam Timetable for {examTimetables.find(c => c.id === selectedClass)?.className}
                   </h2>
                   
                   {selectedTimetableData.length === 0 ? (
-                    <div className="p-4 text-center text-gray-500">
+                    <div className="p-4 text-center text-green-700">
                       No exam timetable entries available for this class.
                     </div>
                   ) : (
@@ -2888,37 +2896,37 @@ export default function TimetableManagement() {
                         
                         return (
                           <div key={day} className="mt-6">
-                            <h3 className="text-lg font-medium p-2 bg-gray-100">{day}</h3>
-                            <table className="min-w-full divide-y divide-gray-200">
-                              <thead className="bg-gray-50">
+                            <h3 className="text-lg font-medium p-2 bg-green-50 text-green-800">{day}</h3>
+                            <table className="min-w-full divide-y divide-green-200">
+                              <thead className="bg-green-100">
                                 <tr>
-                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
-                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Classroom</th>
-                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invigilator</th>
-                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Time</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Subject</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Duration</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Classroom</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Invigilator</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Actions</th>
                                 </tr>
                               </thead>
-                              <tbody className="bg-white divide-y divide-gray-200">
+                              <tbody className="bg-white divide-y divide-green-200">
                                 {dayEntries.map((entry) => (
-                                  <tr key={entry.id} className="hover:bg-gray-50">
-                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{entry.time}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{entry.subject.name}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{entry.subject.duration}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{entry.classroom}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-600">{entry.invigilator}</td>
+                                  <tr key={entry.id} className="hover:bg-green-50">
+                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-green-700">{entry.time}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-green-700">{entry.subject.name}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-green-700">{entry.subject.duration}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-green-700">{entry.classroom}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap text-sm text-green-700">{entry.invigilator}</td>
                                     <td className="px-4 py-2 whitespace-nowrap">
                                       <div className="flex space-x-2">
                                         <button
                                           onClick={() => handleEdit(entry.id)}
-                                          className="px-2 py-1 bg-yellow-500 text-white text-xs rounded hover:bg-yellow-600"
+                                          className="px-2 py-1 bg-yellow-500 text-white text-xs rounded hover:bg-yellow-600 transition-colors"
                                         >
                                           Edit
                                         </button>
                                         <button
                                           onClick={() => handleDelete(entry.id)}
-                                          className="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
+                                          className="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors"
                                         >
                                           Delete
                                         </button>
@@ -2935,7 +2943,7 @@ export default function TimetableManagement() {
                   )}
                 </div>
               ) : (
-                <div className="bg-white rounded-lg shadow p-4 text-center text-gray-500">
+                <div className="bg-white rounded-lg shadow-md p-4 text-center text-green-700 border border-green-200">
                   {selectedClass && !searchClicked 
                     ? "Please click the Search button to view the exam timetable" 
                     : "Please select a class or click 'View All Grades' to see exam timetables"}

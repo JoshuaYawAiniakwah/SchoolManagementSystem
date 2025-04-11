@@ -50,7 +50,12 @@ export default function Signup() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <img 
+        src="/OAIS NEW LOGO.png" 
+        alt="School Logo" 
+        className="h-48 w-auto mb-8"
+      />
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
         <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
         {error && <p className="text-red-500 text-center">{error}</p>}

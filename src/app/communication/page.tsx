@@ -301,7 +301,7 @@ function CommunicationPage() {
               className={({ selected }) =>
                 `px-6 py-2 text-lg font-semibold rounded-lg transition-all ${
                   selected
-                    ? "bg-blue-500 text-white"
+                    ? "bg-green-600 text-white shadow-md"
                     : "text-gray-700 bg-gray-200 hover:bg-gray-300"
                 }`
               }
@@ -312,31 +312,32 @@ function CommunicationPage() {
         </Tab.List>
 
         <Tab.Panels className="mt-6">
+          {/* Notifications Tab */}
           <Tab.Panel>
             <motion.div
-              className="p-6 bg-blue-100 border border-blue-300 rounded-lg shadow-lg"
+              className="p-6 bg-green-50 border-2 border-green-200 rounded-lg shadow-lg"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
             >
-              <h2 className="text-2xl font-semibold text-blue-800">📢 Send a Notification</h2>
+              <h2 className="text-2xl font-semibold text-green-800 mb-4">📢 Send a Notification</h2>
 
-              <div className="mt-4">
-                <label className="block text-lg font-medium text-blue-700">Subject:</label>
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-green-100 mb-4">
+                <label className="block text-lg font-medium text-green-700 mb-2">Subject:</label>
                 <input
                   type="text"
-                  className="w-full bg-white border border-gray-300 rounded-lg py-2 px-3"
+                  className="w-full bg-white border border-green-200 rounded-lg py-2 px-3 focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Enter message subject"
                 />
               </div>
 
-              <div className="mt-4">
-                <label className="block text-lg font-medium text-blue-700">Select Recipient:</label>
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-green-100 mb-4">
+                <label className="block text-lg font-medium text-green-700 mb-2">Select Recipient:</label>
                 <div className="flex gap-2">
                   <select
-                    className="w-full bg-white border border-gray-300 rounded-lg py-2 px-3"
+                    className="w-full bg-white border border-green-200 rounded-lg py-2 px-3 focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     value={selectedRecipient}
                     onChange={(e) => {
                       const value = e.target.value;
@@ -351,7 +352,7 @@ function CommunicationPage() {
                     ))}
                   </select>
                   <button
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 whitespace-nowrap"
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 whitespace-nowrap transition-colors shadow-md"
                     onClick={() => {
                       if (selectedRecipient.includes("Specific")) {
                         setSearchQuery("");
@@ -365,14 +366,14 @@ function CommunicationPage() {
               </div>
 
               {(selectedRecipient === "Specific Class" || selectedRecipient === "Specific Teacher") && (
-                <div className="mt-4">
-                  <label className="block text-lg font-medium text-blue-700">
+                <div className="bg-white p-4 rounded-lg shadow-sm border border-green-100 mb-4">
+                  <label className="block text-lg font-medium text-green-700 mb-2">
                     {selectedRecipient === "Specific Class" ? "Search Class:" : "Enter Teacher Name:"}
                   </label>
                   <div className="relative flex">
                     <input
                       type="text"
-                      className="w-full border border-gray-300 rounded-lg py-2 px-3 bg-white disabled:bg-gray-100"
+                      className="w-full border border-green-200 rounded-lg py-2 px-3 bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder={
@@ -384,19 +385,16 @@ function CommunicationPage() {
                     />
                     {selectedRecipient === "Specific Class" && (
                       <button
-                        className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px]"
+                        className="ml-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed flex items-center justify-center min-w-[100px] transition-colors shadow-md"
                         onClick={handleSearch}
                         disabled={isSearching || searchQuery.trim() === ""}
                       >
                         {isSearching ? (
                           <>
-                            <motion.span
-                              className="inline-block mr-2"
-                              animate={{ rotate: 360 }}
-                              transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                            >
-                              ⏳
-                            </motion.span>
+                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
                             Searching
                           </>
                         ) : (
@@ -407,19 +405,23 @@ function CommunicationPage() {
                   </div>
 
                   {isSearching && selectedRecipient === "Specific Class" && (
-                    <div className="mt-4 p-4 bg-white rounded-lg shadow-md text-center">
-                      <p className="text-blue-700">Loading results...</p>
+                    <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200 text-center">
+                      <p className="text-green-700">Loading results...</p>
                     </div>
                   )}
 
                   {!isSearching && filteredResults.length > 0 && selectedRecipient === "Specific Class" && (
-                    <div className="mt-4 bg-white rounded-lg shadow-md p-4">
-                      <h3 className="font-medium text-blue-700 mb-2">Search Results:</h3>
+                    <div className="mt-4 bg-green-50 rounded-lg border border-green-200 p-4">
+                      <h3 className="font-medium text-green-700 mb-2">Search Results:</h3>
                       <ul className="space-y-2">
                         {filteredResults.map((result, index) => (
                           <li 
                             key={index} 
-                            className={`p-2 rounded cursor-pointer ${selectedResult === result ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
+                            className={`p-2 rounded cursor-pointer transition-colors ${
+                              selectedResult === result 
+                                ? 'bg-green-600 text-white' 
+                                : 'bg-white hover:bg-green-100 text-green-800'
+                            }`}
                             onClick={() => handleSelectResult(result)}
                           >
                             {result}
@@ -427,7 +429,7 @@ function CommunicationPage() {
                         ))}
                       </ul>
                       <button
-                        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed"
+                        className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed transition-colors shadow-md"
                         onClick={handleConfirmSelection}
                         disabled={!selectedResult}
                       >
@@ -438,27 +440,27 @@ function CommunicationPage() {
                 </div>
               )}
 
-              <ReactQuill
-                className="mt-4 bg-white rounded-md"
-                style={{ backgroundColor: "white" }}
-                value={announcement}
-                onChange={setAnnouncement}
-              />
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-green-100 mb-4">
+                <ReactQuill
+                  className="bg-white rounded-md"
+                  style={{ backgroundColor: "white" }}
+                  value={announcement}
+                  onChange={setAnnouncement}
+                />
+              </div>
+              
               <button
-                className="mt-4 px-5 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 flex items-center justify-center min-w-[160px]"
+                className="w-full px-5 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 flex items-center justify-center transition-colors disabled:bg-green-400 disabled:cursor-not-allowed shadow-md"
                 onClick={sendAnnouncement}
                 disabled={isSending}
               >
                 {isSending ? (
                   <>
-                    <motion.span
-                      className="inline-block mr-2"
-                      animate={{ rotate: 360 }}
-                      transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                    >
-                      ⏳
-                    </motion.span>
-                    Sending...
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Sending Notification...
                   </>
                 ) : (
                   "Send Notification"
@@ -467,42 +469,45 @@ function CommunicationPage() {
             </motion.div>
           </Tab.Panel>
 
+          {/* Messages Tab */}
           <Tab.Panel>
             <motion.div
-              className="p-6 bg-green-100 border border-green-300 rounded-lg shadow-lg"
+              className="p-6 bg-green-50 border-2 border-green-200 rounded-lg shadow-lg"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
             >
-              <h2 className="text-2xl font-semibold text-green-800">💬 Messages</h2>
+              <h2 className="text-2xl font-semibold text-green-800 mb-4">💬 Messages</h2>
 
-              <div className="mt-4 space-y-4">
+              <div className="space-y-4">
                 {parentMessages.map((msg) => (
-                  <div key={msg.id} className="p-4 bg-white rounded-lg shadow-md">
+                  <div key={msg.id} className="p-4 bg-white rounded-lg shadow-sm border border-green-100">
                     <h3 className="text-xl font-semibold text-green-700">{msg.from}</h3>
-                    <p className="text-gray-800">{msg.message}</p>
-                    <button
-                      className="mt-2 px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                      onClick={() => handleReply(msg.id)}
-                    >
-                      Reply
-                    </button>
+                    <p className="text-gray-800 mt-1">{msg.message}</p>
+                    <div className="mt-3">
+                      <button
+                        className="px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md"
+                        onClick={() => handleReply(msg.id)}
+                      >
+                        Reply
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
 
               {replyingTo && (
-                <div className="mt-4">
-                  <h3 className="text-xl font-semibold text-green-700">Replying to {replyingTo.from}</h3>
+                <div className="mt-6 bg-white p-4 rounded-lg shadow-sm border border-green-100">
+                  <h3 className="text-xl font-semibold text-green-700 mb-2">Replying to {replyingTo.from}</h3>
                   <textarea
-                    className="w-full p-3 mt-2 border rounded-md bg-white"
+                    className="w-full p-3 mt-2 border border-green-200 rounded-md bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     rows={4}
                     placeholder="Type your reply..."
                     value={reply}
                     onChange={(e) => setReply(e.target.value)}
                   />
                   <button
-                    className="mt-2 px-5 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600"
+                    className="mt-3 px-5 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-md"
                     onClick={sendReply}
                   >
                     Send Reply
@@ -512,85 +517,88 @@ function CommunicationPage() {
             </motion.div>
           </Tab.Panel>
 
+          {/* Events Tab */}
           <Tab.Panel>
             <motion.div
-              className="p-6 bg-purple-100 border border-purple-300 rounded-lg shadow-lg"
+              className="p-6 bg-green-50 border-2 border-green-200 rounded-lg shadow-lg"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
             >
-              <h2 className="text-2xl font-semibold text-purple-800">📅 Events</h2>
+              <h2 className="text-2xl font-semibold text-green-800 mb-4">📅 Events</h2>
 
-              <div className="mt-4 bg-white p-4 rounded-lg shadow-md">
-                <h3 className="text-xl font-semibold text-purple-700 mb-4">
-                  {editingEvent ? "Edit Event" : "Add New Event"}
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-green-100 mb-6">
+                <h3 className="text-xl font-semibold text-green-700 mb-4">
+                  {editingEvent ? "✏️ Edit Event" : "➕ Add New Event"}
                 </h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-lg font-medium text-purple-700">Title:</label>
+                    <label className="block text-lg font-medium text-green-700 mb-1">Title:</label>
                     <input
                       type="text"
-                      className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                      className="w-full border border-green-200 rounded-lg py-2 px-3 focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       value={newEvent.title}
                       onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
                       placeholder="Enter event title"
                     />
                   </div>
                   <div>
-                    <label className="block text-lg font-medium text-purple-700">Time:</label>
+                    <label className="block text-lg font-medium text-green-700 mb-1">Time:</label>
                     <input
                       type="text"
-                      className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                      className="w-full border border-green-200 rounded-lg py-2 px-3 focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       value={newEvent.time}
                       onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })}
                       placeholder="Enter event time (e.g., 10th March, 10:00 AM)"
                     />
                   </div>
                   <div>
-                    <label className="block text-lg font-medium text-purple-700">Description:</label>
+                    <label className="block text-lg font-medium text-green-700 mb-1">Description:</label>
                     <textarea
-                      className="w-full border border-gray-300 rounded-lg py-2 px-3"
+                      className="w-full border border-green-200 rounded-lg py-2 px-3 focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       rows={3}
                       value={newEvent.description}
                       onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
                       placeholder="Enter event description"
                     />
                   </div>
-                  <button
-                    className="px-5 py-2 bg-purple-500 text-white font-semibold rounded-lg hover:bg-purple-600"
-                    onClick={editingEvent ? handleUpdateEvent : handleAddEvent}
-                  >
-                    {editingEvent ? "Update Event" : "Add Event"}
-                  </button>
-                  {editingEvent && (
+                  <div className="flex space-x-2">
                     <button
-                      className="ml-2 px-5 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600"
-                      onClick={() => {
-                        setEditingEvent(null);
-                        setNewEvent({ title: "", time: "", description: "" });
-                      }}
+                      className="px-5 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-md"
+                      onClick={editingEvent ? handleUpdateEvent : handleAddEvent}
                     >
-                      Cancel
+                      {editingEvent ? "Update Event" : "Add Event"}
                     </button>
-                  )}
+                    {editingEvent && (
+                      <button
+                        className="px-5 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition-colors shadow-md"
+                        onClick={() => {
+                          setEditingEvent(null);
+                          setNewEvent({ title: "", time: "", description: "" });
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-6 space-y-4">
+              <div className="space-y-4">
                 {events && events.map((event) => (
-                  <div key={event.id} className="p-4 bg-white rounded-lg shadow-md">
-                    <h3 className="text-xl font-semibold text-purple-700">{event.title}</h3>
-                    <p className="text-gray-600">{event.time}</p>
-                    <p className="text-gray-800">{event.description}</p>
-                    <div className="mt-2">
+                  <div key={event.id} className="p-4 bg-white rounded-lg shadow-sm border border-green-100">
+                    <h3 className="text-xl font-semibold text-green-700">{event.title}</h3>
+                    <p className="text-gray-600 mt-1">{event.time}</p>
+                    <p className="text-gray-800 mt-2">{event.description}</p>
+                    <div className="mt-3 flex space-x-2">
                       <button
-                        className="mr-2 px-3 py-1 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
+                        className="px-3 py-1 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors shadow-md"
                         onClick={() => handleEditEvent(event)}
                       >
                         Edit
                       </button>
                       <button
-                        className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        className="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors shadow-md"
                         onClick={() => handleDeleteEvent(event.id)}
                       >
                         Delete

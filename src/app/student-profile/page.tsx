@@ -1,6 +1,7 @@
 "use client";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useState, useEffect } from "react";
+import { Modal } from '@/components/ui/Modal';
 
 const UserIcon = () => (
   <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
@@ -98,10 +99,10 @@ const StudentDetailsPopup: React.FC<{ student: Student | undefined; onClose: () 
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white p-6 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto border-2 border-green-200">
         <div className="flex justify-between items-start mb-4">
-          <h2 className="text-xl font-bold">Student Details</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <h2 className="text-xl font-bold text-green-800">Student Details</h2>
+          <button onClick={onClose} className="text-green-600 hover:text-green-800">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -110,97 +111,97 @@ const StudentDetailsPopup: React.FC<{ student: Student | undefined; onClose: () 
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p className="font-medium">Full Name:</p>
-              <p className="text-gray-600">{student.fullName}</p>
+              <p className="font-medium text-green-700">Full Name:</p>
+              <p className="text-green-600">{student.fullName}</p>
             </div>
             <div>
-              <p className="font-medium">Date of Birth:</p>
-              <p className="text-gray-600">{student.dateOfBirth}</p>
+              <p className="font-medium text-green-700">Date of Birth:</p>
+              <p className="text-green-600">{student.dateOfBirth}</p>
             </div>
             <div>
-              <p className="font-medium">Nationality:</p>
-              <p className="text-gray-600">{student.nationality}</p>
+              <p className="font-medium text-green-700">Nationality:</p>
+              <p className="text-green-600">{student.nationality}</p>
             </div>
             <div>
-              <p className="font-medium">Religion:</p>
-              <p className="text-gray-600">{student.religion || "N/A"}</p>
+              <p className="font-medium text-green-700">Religion:</p>
+              <p className="text-green-600">{student.religion || "N/A"}</p>
             </div>
             <div>
-              <p className="font-medium">Gender:</p>
-              <p className="text-gray-600">{student.gender}</p>
+              <p className="font-medium text-green-700">Gender:</p>
+              <p className="text-green-600">{student.gender}</p>
             </div>
           </div>
 
-          <div className="border-t pt-4">
-            <h3 className="font-bold mb-2">Residential Address</h3>
+          <div className="border-t border-green-200 pt-4">
+            <h3 className="font-bold mb-2 text-green-800">Residential Address</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <p className="font-medium">Street Name:</p>
-                <p className="text-gray-600">{student.residentialAddress?.street_name || "N/A"}</p>
+                <p className="font-medium text-green-700">Street Name:</p>
+                <p className="text-green-600">{student.residentialAddress?.street_name || "N/A"}</p>
               </div>
               <div>
-                <p className="font-medium">House Number:</p>
-                <p className="text-gray-600">{student.residentialAddress?.house_number || "N/A"}</p>
+                <p className="font-medium text-green-700">House Number:</p>
+                <p className="text-green-600">{student.residentialAddress?.house_number || "N/A"}</p>
               </div>
               <div>
-                <p className="font-medium">City:</p>
-                <p className="text-gray-600">{student.residentialAddress?.city || "N/A"}</p>
+                <p className="font-medium text-green-700">City:</p>
+                <p className="text-green-600">{student.residentialAddress?.city || "N/A"}</p>
               </div>
               <div>
-                <p className="font-medium">Region:</p>
-                <p className="text-gray-600">{student.residentialAddress?.region || "N/A"}</p>
+                <p className="font-medium text-green-700">Region:</p>
+                <p className="text-green-600">{student.residentialAddress?.region || "N/A"}</p>
               </div>
               <div>
-                <p className="font-medium">Country:</p>
-                <p className="text-gray-600">{student.residentialAddress?.country || "N/A"}</p>
+                <p className="font-medium text-green-700">Country:</p>
+                <p className="text-green-600">{student.residentialAddress?.country || "N/A"}</p>
               </div>
             </div>
           </div>
 
-          <div className="border-t pt-4">
-            <h3 className="font-bold mb-2">Medical Information</h3>
+          <div className="border-t border-green-200 pt-4">
+            <h3 className="font-bold mb-2 text-green-800">Medical Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <p className="font-medium">Blood Type:</p>
-                <p className="text-gray-600">{student.medicalInformation?.bloodType || "N/A"}</p>
+                <p className="font-medium text-green-700">Blood Type:</p>
+                <p className="text-green-600">{student.medicalInformation?.bloodType || "N/A"}</p>
               </div>
               <div>
-                <p className="font-medium">Allergies/Conditions:</p>
-                <p className="text-gray-600">{student.medicalInformation?.allergiesOrConditions || "N/A"}</p>
+                <p className="font-medium text-green-700">Allergies/Conditions:</p>
+                <p className="text-green-600">{student.medicalInformation?.allergiesOrConditions || "N/A"}</p>
               </div>
               <div>
-                <p className="font-medium">Emergency Contact Name:</p>
-                <p className="text-gray-600">{student.medicalInformation?.emergencyContactsName || "N/A"}</p>
+                <p className="font-medium text-green-700">Emergency Contact Name:</p>
+                <p className="text-green-600">{student.medicalInformation?.emergencyContactsName || "N/A"}</p>
               </div>
               <div>
-                <p className="font-medium">Emergency Contact Number:</p>
-                <p className="text-gray-600">{student.medicalInformation?.emergencyContactsNumber || "N/A"}</p>
+                <p className="font-medium text-green-700">Emergency Contact Number:</p>
+                <p className="text-green-600">{student.medicalInformation?.emergencyContactsNumber || "N/A"}</p>
               </div>
             </div>
           </div>
 
           {student.parentGuardian && student.parentGuardian.length > 0 && (
-            <div className="border-t pt-4">
-              <h3 className="font-bold mb-2">Parent/Guardian Information</h3>
+            <div className="border-t border-green-200 pt-4">
+              <h3 className="font-bold mb-2 text-green-800">Parent/Guardian Information</h3>
               <div className="space-y-4">
                 {student.parentGuardian.map((parent, idx) => (
-                  <div key={idx} className="bg-gray-50 p-4 rounded-lg">
+                  <div key={idx} className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <p className="font-medium">Name:</p>
-                        <p className="text-gray-600">{parent.firstName} {parent.lastName}</p>
+                        <p className="font-medium text-green-700">Name:</p>
+                        <p className="text-green-600">{parent.firstName} {parent.lastName}</p>
                       </div>
                       <div>
-                        <p className="font-medium">Contact Number:</p>
-                        <p className="text-gray-600">{parent.contactNumber || "N/A"}</p>
+                        <p className="font-medium text-green-700">Contact Number:</p>
+                        <p className="text-green-600">{parent.contactNumber || "N/A"}</p>
                       </div>
                       <div>
-                        <p className="font-medium">Email Address:</p>
-                        <p className="text-gray-600">{parent.emailAddress || "N/A"}</p>
+                        <p className="font-medium text-green-700">Email Address:</p>
+                        <p className="text-green-600">{parent.emailAddress || "N/A"}</p>
                       </div>
                       <div>
-                        <p className="font-medium">Occupation:</p>
-                        <p className="text-gray-600">{parent.occupation || "N/A"}</p>
+                        <p className="font-medium text-green-700">Occupation:</p>
+                        <p className="text-green-600">{parent.occupation || "N/A"}</p>
                       </div>
                     </div>
                   </div>
@@ -212,7 +213,7 @@ const StudentDetailsPopup: React.FC<{ student: Student | undefined; onClose: () 
         <div className="mt-6 flex justify-end">
           <button 
             onClick={onClose} 
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
           >
             Close
           </button>
@@ -582,8 +583,8 @@ function StudentList() {
 
   return (
     <ProtectedRoute>
-      <div className="p-5">
-        <h1 className="text-2xl font-bold mb-6">Student Profile Management</h1>
+      <div className="p-5 bg-green-50 min-h-screen">
+        <h1 className="text-3xl font-bold mb-6 text-green-800">Student Profile Management</h1>
 
         {error && (
           <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded" role="alert">
@@ -596,15 +597,15 @@ function StudentList() {
           </div>
         )}
 
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white p-6 rounded-lg shadow-md mb-6 border border-green-200">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <label className="block text-sm font-medium mb-1">Search by Name</label>
+              <label className="block text-sm font-medium mb-1 text-green-700">Search by Name</label>
               <div className="flex">
                 <input
                   type="text"
                   placeholder="Enter student name..."
-                  className="w-full p-2 border rounded-l focus:outline-none focus:ring-1 focus:ring-blue-300"
+                  className="flex-1 p-2 border border-green-300 rounded-l focus:outline-none focus:ring-2 focus:ring-green-500"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && searchStudentsByName()}
@@ -612,7 +613,7 @@ function StudentList() {
                 <button
                   onClick={searchStudentsByName}
                   disabled={isSearching || !searchQuery.trim()}
-                  className={`bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 flex items-center justify-center ${(isSearching || !searchQuery.trim()) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`bg-green-600 text-white px-4 py-2 rounded-r hover:bg-green-700 flex items-center justify-center ${(isSearching || !searchQuery.trim()) ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   {isSearching ? (
                     <>
@@ -628,10 +629,10 @@ function StudentList() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Search by Class</label>
+              <label className="block text-sm font-medium mb-1 text-green-700">Search by Class</label>
               <div className="flex">
                 <select
-                  className="w-full p-2 border rounded-l focus:outline-none focus:ring-1 focus:ring-blue-300"
+                  className="flex-1 p-2 border border-green-300 rounded-l focus:outline-none focus:ring-2 focus:ring-green-500"
                   value={classQuery}
                   onChange={(e) => setClassQuery(e.target.value)}
                 >
@@ -650,7 +651,7 @@ function StudentList() {
                 <button
                   onClick={fetchStudentsByClass}
                   disabled={isFiltering || !classQuery.trim()}
-                  className={`bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 flex items-center justify-center ${(isFiltering || !classQuery.trim()) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`bg-green-600 text-white px-4 py-2 rounded-r hover:bg-green-700 flex items-center justify-center ${(isFiltering || !classQuery.trim()) ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   {isFiltering ? (
                     <>
@@ -669,7 +670,7 @@ function StudentList() {
               <button
                 onClick={fetchAllStudents}
                 disabled={isViewAllLoading}
-                className={`w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center justify-center ${isViewAllLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center justify-center ${isViewAllLoading ? 'opacity-50 cursor-not-allowed' : ''} transition-colors shadow-md`}
               >
                 {isViewAllLoading ? (
                   <>
@@ -685,6 +686,7 @@ function StudentList() {
           </div>
 
           <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-2">
+            {/* Status buttons remain with their original colors */}
             <button
               onClick={() => {
                 setCurrentStatusFilter("Active");
@@ -784,19 +786,19 @@ function StudentList() {
         </div>
 
         {students.length > 0 && (
-          <div className="bg-blue-50 p-4 rounded-lg shadow mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-white p-3 rounded-lg shadow text-center">
-                <h3 className="font-bold text-lg">Total Students</h3>
-                <p className="text-2xl">{totalStudents}</p>
+          <div className="bg-green-100 p-6 rounded-lg shadow-md mb-6 border border-green-200">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-green-200 text-center">
+                <h3 className="font-bold text-lg text-green-800">Total Students</h3>
+                <p className="text-2xl text-green-600">{totalStudents}</p>
               </div>
-              <div className="bg-white p-3 rounded-lg shadow text-center">
-                <h3 className="font-bold text-lg">Male Students</h3>
-                <p className="text-2xl">{maleCount}</p>
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-green-200 text-center">
+                <h3 className="font-bold text-lg text-green-800">Male Students</h3>
+                <p className="text-2xl text-green-600">{maleCount}</p>
               </div>
-              <div className="bg-white p-3 rounded-lg shadow text-center">
-                <h3 className="font-bold text-lg">Female Students</h3>
-                <p className="text-2xl">{femaleCount}</p>
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-green-200 text-center">
+                <h3 className="font-bold text-lg text-green-800">Female Students</h3>
+                <p className="text-2xl text-green-600">{femaleCount}</p>
               </div>
             </div>
           </div>
@@ -804,46 +806,46 @@ function StudentList() {
 
         {loading && (
           <div className="flex justify-center items-center p-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-            <span className="ml-3">Loading students...</span>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
+            <span className="ml-3 text-green-700">Loading students...</span>
           </div>
         )}
 
         {!loading && !hasSearched && students.length === 0 && (
-          <div className="bg-white rounded-lg shadow p-8 text-center">
-            <p className="text-gray-500 text-lg">
+          <div className="bg-white rounded-lg shadow p-8 text-center border border-green-200">
+            <p className="text-green-700 text-lg">
               Use the search or filter options above to view students
             </p>
           </div>
         )}
 
         {!loading && hasSearched && (
-          <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="bg-white rounded-lg shadow overflow-hidden border border-green-200">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-100">
+              <thead className="bg-green-100">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Photo</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Name</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date of Birth</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nationality</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Gender</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Class</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Actions</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Photo</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Name</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Date of Birth</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Nationality</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Gender</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Class</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {students.length > 0 ? (
                   students.map((admission, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
+                    <tr key={index} className="hover:bg-green-50">
                       <td className="px-4 py-3">
                         <StudentImage fileName={admission.student.passportPhotoPath} altText={admission.student.fullName} />
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-900">{admission.student.fullName}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{admission.student.dateOfBirth}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{admission.student.nationality}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{admission.student.gender}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{admission.student.grade}</td>
+                      <td className="px-4 py-3 text-sm text-green-900">{admission.student.fullName}</td>
+                      <td className="px-4 py-3 text-sm text-green-700">{admission.student.dateOfBirth}</td>
+                      <td className="px-4 py-3 text-sm text-green-700">{admission.student.nationality}</td>
+                      <td className="px-4 py-3 text-sm text-green-700">{admission.student.gender}</td>
+                      <td className="px-4 py-3 text-sm text-green-700">{admission.student.grade}</td>
                       <td className="px-4 py-3 text-sm">
                         <span className={`px-2 py-1 rounded-full text-xs ${
                           admission.status === "Active" || admission.status === "ACTIVE" ? "bg-green-100 text-green-800" :
@@ -858,13 +860,13 @@ function StudentList() {
                         <div className="flex flex-col space-y-1">
                           <button
                             onClick={() => setSelectedStudent(admission.student)}
-                            className="text-blue-600 hover:text-blue-800 hover:underline text-left"
+                            className="text-green-600 hover:text-green-800 hover:underline text-left"
                           >
                             View Details
                           </button>
                           <button
                             onClick={() => openStatusModal(admission)}
-                            className="text-yellow-600 hover:text-yellow-800 hover:underline text-left"
+                            className="text-green-600 hover:text-green-800 hover:underline text-left"
                           >
                             Update Status
                           </button>
@@ -883,7 +885,7 @@ function StudentList() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={8} className="p-4 text-center text-gray-500">
+                    <td colSpan={8} className="p-4 text-center text-green-700">
                       No students found. Try searching or viewing all students.
                     </td>
                   </tr>
@@ -899,16 +901,16 @@ function StudentList() {
 
         {isStatusModalOpen && currentStudentForStatus && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg w-full max-w-md">
-              <h2 className="text-xl font-bold mb-4">Update Student Status</h2>
+            <div className="bg-white p-6 rounded-lg w-full max-w-md border-2 border-green-200">
+              <h2 className="text-xl font-bold mb-4 text-green-800">Update Student Status</h2>
               <div className="space-y-4">
-                <p><span className="font-medium">Student:</span> {currentStudentForStatus.student.fullName}</p>
-                <p><span className="font-medium">Current Status:</span> {currentStudentForStatus.status || "Active"}</p>
+                <p><span className="font-medium text-green-700">Student:</span> <span className="text-green-600">{currentStudentForStatus.student.fullName}</span></p>
+                <p><span className="font-medium text-green-700">Current Status:</span> <span className="text-green-600">{currentStudentForStatus.status || "Active"}</span></p>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-1">New Status</label>
+                  <label className="block text-sm font-medium mb-1 text-green-700">New Status</label>
                   <select
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                     value={newStatus}
                     onChange={(e) => setNewStatus(e.target.value)}
                     disabled={isUpdatingStatus}
@@ -923,16 +925,16 @@ function StudentList() {
               <div className="mt-6 flex justify-end space-x-3">
                 <button
                   onClick={() => setIsStatusModalOpen(false)}
-                  className="px-4 py-2 border rounded hover:bg-gray-100"
+                  className="px-4 py-2 border border-green-300 rounded hover:bg-green-50 transition-colors"
                   disabled={isUpdatingStatus}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => updateStudentStatus(currentStudentForStatus.student.studentId, newStatus)}
-                  className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center ${
+                  className={`px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center justify-center ${
                     isUpdatingStatus ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
+                  } transition-colors`}
                   disabled={isUpdatingStatus}
                 >
                   {isUpdatingStatus ? (
@@ -952,16 +954,16 @@ function StudentList() {
 
         {isPromoteModalOpen && currentStudentForStatus && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg w-full max-w-md">
-              <h2 className="text-xl font-bold mb-4">Promote Student</h2>
+            <div className="bg-white p-6 rounded-lg w-full max-w-md border-2 border-green-200">
+              <h2 className="text-xl font-bold mb-4 text-green-800">Promote Student</h2>
               <div className="space-y-4">
-                <p><span className="font-medium">Student:</span> {currentStudentForStatus.student.fullName}</p>
-                <p><span className="font-medium">Current Class:</span> {currentStudentForStatus.student.grade}</p>
+                <p><span className="font-medium text-green-700">Student:</span> <span className="text-green-600">{currentStudentForStatus.student.fullName}</span></p>
+                <p><span className="font-medium text-green-700">Current Class:</span> <span className="text-green-600">{currentStudentForStatus.student.grade}</span></p>
                 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Promote To</label>
+                  <label className="block text-sm font-medium mb-1 text-green-700">Promote To</label>
                   <select
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                     value={newGrade}
                     onChange={(e) => setNewGrade(e.target.value)}
                   >
@@ -981,14 +983,14 @@ function StudentList() {
               <div className="mt-6 flex justify-end space-x-3">
                 <button
                   onClick={() => setIsPromoteModalOpen(false)}
-                  className="px-4 py-2 border rounded hover:bg-gray-100"
+                  className="px-4 py-2 border border-green-300 rounded hover:bg-green-50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => promoteStudent(currentStudentForStatus.student.studentId, newGrade)}
                   disabled={!newGrade}
-                  className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${!newGrade ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 ${!newGrade ? 'opacity-50 cursor-not-allowed' : ''} transition-colors`}
                 >
                   Promote Student
                 </button>

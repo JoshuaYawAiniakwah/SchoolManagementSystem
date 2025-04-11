@@ -1,6 +1,7 @@
 "use client";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import React, { useState } from "react";
+import { Modal } from '@/components/ui/Modal';
 
 interface Teacher {
   id: string;
@@ -297,34 +298,34 @@ export default function TeacherProfile() {
 
   return (
     <ProtectedRoute>
-      <div className="p-5">
-        <h1 className="text-2xl font-bold mb-6">Teacher Profiles</h1>
+      <div className="p-5 bg-green-50 min-h-screen">
+        <h1 className="text-3xl font-bold mb-6 text-green-800">Teacher Profiles</h1>
         
         <div className="flex justify-between mb-6">
           <button
             onClick={() => setIsAddTeacherModalOpen(true)}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors shadow-md"
           >
             Add New Teacher
           </button>
         </div>
         
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white p-6 rounded-lg shadow-md mb-6 border border-green-200">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <label className="block text-sm font-medium mb-1">Search by Name</label>
+              <label className="block text-sm font-medium mb-1 text-green-700">Search by Name</label>
               <div className="flex">
                 <input
                   type="text"
                   placeholder="Enter teacher name..."
-                  className="w-full p-2 border rounded-l focus:outline-none focus:ring-1 focus:ring-blue-300"
+                  className="flex-1 p-2 border border-green-300 rounded-l focus:outline-none focus:ring-2 focus:ring-green-500"
                   value={tempSearchTerm}
                   onChange={(e) => setTempSearchTerm(e.target.value)}
                 />
                 <button
                   onClick={handleSearch}
                   disabled={isSearching || !tempSearchTerm}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="bg-green-600 text-white px-4 rounded-r hover:bg-green-700 disabled:bg-green-300 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
                 >
                   {isSearching ? (
                     <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -339,10 +340,10 @@ export default function TeacherProfile() {
             </div>
             
             <div>
-              <label className="block text-sm font-medium mb-1">Filter by Class</label>
+              <label className="block text-sm font-medium mb-1 text-green-700">Filter by Class</label>
               <div className="flex">
                 <select
-                  className="w-full p-2 border rounded-l focus:outline-none focus:ring-1 focus:ring-blue-300"
+                  className="flex-1 p-2 border border-green-300 rounded-l focus:outline-none focus:ring-2 focus:ring-green-500"
                   value={tempClassFilter}
                   onChange={(e) => setTempClassFilter(e.target.value)}
                 >
@@ -354,7 +355,7 @@ export default function TeacherProfile() {
                 <button
                   onClick={handleClassFilter}
                   disabled={isFiltering || !tempClassFilter}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="bg-green-600 text-white px-4 rounded-r hover:bg-green-700 disabled:bg-green-300 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
                 >
                   {isFiltering ? (
                     <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -369,10 +370,10 @@ export default function TeacherProfile() {
             </div>
             
             <div>
-              <label className="block text-sm font-medium mb-1">Filter by Subject</label>
+              <label className="block text-sm font-medium mb-1 text-green-700">Filter by Subject</label>
               <div className="flex">
                 <select
-                  className="w-full p-2 border rounded-l focus:outline-none focus:ring-1 focus:ring-blue-300"
+                  className="flex-1 p-2 border border-green-300 rounded-l focus:outline-none focus:ring-2 focus:ring-green-500"
                   value={tempSubjectFilter}
                   onChange={(e) => setTempSubjectFilter(e.target.value)}
                 >
@@ -384,7 +385,7 @@ export default function TeacherProfile() {
                 <button
                   onClick={handleSubjectFilter}
                   disabled={isFiltering || !tempSubjectFilter}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="bg-green-600 text-white px-4 rounded-r hover:bg-green-700 disabled:bg-green-300 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
                 >
                   {isFiltering ? (
                     <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -403,7 +404,7 @@ export default function TeacherProfile() {
             <button
               onClick={handleViewAll}
               disabled={isViewAllLoading}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center justify-center"
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:bg-green-300 disabled:cursor-not-allowed flex items-center justify-center transition-colors shadow-md"
             >
               {isViewAllLoading ? (
                 <>
@@ -422,58 +423,58 @@ export default function TeacherProfile() {
 
         {/* Teacher Count Summary */}
         {hasSearched && filteredTeachers.length > 0 && (
-          <div className="bg-blue-50 p-4 rounded-lg shadow mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-white p-3 rounded-lg shadow text-center">
-                <h3 className="font-bold text-lg">Total Teachers</h3>
-                <p className="text-2xl">{totalTeachers}</p>
+          <div className="bg-green-100 p-6 rounded-lg shadow-md mb-6 border border-green-200">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-green-200 text-center">
+                <h3 className="font-bold text-lg text-green-800">Total Teachers</h3>
+                <p className="text-2xl text-green-600">{totalTeachers}</p>
               </div>
-              <div className="bg-white p-3 rounded-lg shadow text-center">
-                <h3 className="font-bold text-lg">Male Teachers</h3>
-                <p className="text-2xl">{maleCount}</p>
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-green-200 text-center">
+                <h3 className="font-bold text-lg text-green-800">Male Teachers</h3>
+                <p className="text-2xl text-green-600">{maleCount}</p>
               </div>
-              <div className="bg-white p-3 rounded-lg shadow text-center">
-                <h3 className="font-bold text-lg">Female Teachers</h3>
-                <p className="text-2xl">{femaleCount}</p>
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-green-200 text-center">
+                <h3 className="font-bold text-lg text-green-800">Female Teachers</h3>
+                <p className="text-2xl text-green-600">{femaleCount}</p>
               </div>
             </div>
           </div>
         )}
 
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden border border-green-200">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-100">
+            <thead className="bg-green-100">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Name</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Email</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nationality</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Gender</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Address</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Classes</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Subjects</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Phone</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Actions</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Name</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Email</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Nationality</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Gender</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Address</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Classes</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Subjects</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Phone</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {hasSearched ? (
                 filteredTeachers.length > 0 ? (
                   filteredTeachers.map((teacher) => (
-                    <tr key={teacher.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <tr key={teacher.id} className="hover:bg-green-50">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-green-900">
                         {teacher.name}
                         {teacher.isClassTeacher && (
-                          <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                          <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
                             Class Teacher ({teacher.classTeacherFor})
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-blue-600 hover:underline">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-green-600 hover:underline">
                         <a href={`mailto:${teacher.email}`}>{teacher.email}</a>
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{teacher.nationality}</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{teacher.gender}</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{teacher.address}</td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-green-700">{teacher.nationality}</td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-green-700">{teacher.gender}</td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-green-700">{teacher.address}</td>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <div className="flex flex-wrap gap-1">
                           {teacher.classAllocation.map((grade, index) => (
@@ -491,31 +492,31 @@ export default function TeacherProfile() {
                           {teacher.subjects.map((subject, index) => (
                             <span 
                               key={index} 
-                              className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800"
+                              className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800"
                             >
                               {subject}
                             </span>
                           ))}
                         </div>
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{teacher.phone}</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-green-700">{teacher.phone}</td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-green-700">
                         <div className="flex space-x-2">
                           <button
                             onClick={() => openEditModal(teacher)}
-                            className="text-yellow-600 hover:text-yellow-900"
+                            className="text-green-600 hover:text-green-800 hover:underline"
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => openAssignModal(teacher.id)}
-                            className="text-blue-600 hover:text-blue-900"
+                            className="text-green-600 hover:text-green-800 hover:underline"
                           >
                             Assign
                           </button>
                           <button
                             onClick={() => handleRemoveTeacher(teacher.id)}
-                            className="text-red-600 hover:text-red-900"
+                            className="text-red-600 hover:text-red-800 hover:underline"
                           >
                             Remove
                           </button>
@@ -525,14 +526,14 @@ export default function TeacherProfile() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={9} className="p-4 text-center text-gray-500">
+                    <td colSpan={9} className="p-4 text-center text-green-700">
                       No teachers found matching your criteria
                     </td>
                   </tr>
                 )
               ) : (
                 <tr>
-                  <td colSpan={9} className="p-4 text-center text-gray-500">
+                  <td colSpan={9} className="p-4 text-center text-green-700">
                     Use the search or filter options above to view teachers
                   </td>
                 </tr>
@@ -542,314 +543,338 @@ export default function TeacherProfile() {
         </div>
 
         {/* Add Teacher Modal */}
-        {isAddTeacherModalOpen && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-              <h2 className="text-xl font-bold mb-4">Add New Teacher</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Name</label>
-                  <input
-                    type="text"
-                    className="w-full p-2 border rounded"
-                    value={newTeacher.name}
-                    onChange={(e) => setNewTeacher({...newTeacher, name: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Nationality</label>
-                  <input
-                    type="text"
-                    className="w-full p-2 border rounded"
-                    value={newTeacher.nationality}
-                    onChange={(e) => setNewTeacher({...newTeacher, nationality: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Gender</label>
-                  <select
-                    className="w-full p-2 border rounded"
-                    value={newTeacher.gender}
-                    onChange={(e) => setNewTeacher({...newTeacher, gender: e.target.value})}
-                  >
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Address</label>
-                  <input
-                    type="text"
-                    className="w-full p-2 border rounded"
-                    value={newTeacher.address}
-                    onChange={(e) => setNewTeacher({...newTeacher, address: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Email</label>
-                  <input
-                    type="email"
-                    className="w-full p-2 border rounded"
-                    value={newTeacher.email}
-                    onChange={(e) => setNewTeacher({...newTeacher, email: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Phone</label>
-                  <input
-                    type="text"
-                    className="w-full p-2 border rounded"
-                    value={newTeacher.phone}
-                    onChange={(e) => setNewTeacher({...newTeacher, phone: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Subjects</label>
-                  <div className="flex">
-                    <select
-                      className="w-full p-2 border rounded-l"
-                      value={newSubject}
-                      onChange={(e) => setNewSubject(e.target.value)}
-                    >
-                      <option value="">Select Subject</option>
-                      {allSubjects.map((subject) => (
-                        <option key={subject} value={subject}>{subject}</option>
-                      ))}
-                    </select>
-                    <button
-                      type="button"
-                      onClick={addSubjectToNewTeacher}
-                      disabled={!newSubject}
-                      className="bg-blue-500 text-white px-3 py-1 rounded-r hover:bg-blue-600 disabled:bg-blue-300"
-                    >
-                      Add
-                    </button>
-                  </div>
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {newTeacher.subjects.map((subject, index) => (
-                      <span 
-                        key={index} 
-                        className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800"
-                      >
-                        {subject}
-                        <button 
-                          type="button"
-                          onClick={() => removeSubjectFromNewTeacher(subject)}
-                          className="ml-1 text-blue-600 hover:text-blue-900"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="mt-6 flex justify-end space-x-3">
-                <button
-                  onClick={() => setIsAddTeacherModalOpen(false)}
-                  className="px-4 py-2 border rounded hover:bg-gray-100"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleAddTeacher}
-                  disabled={!newTeacher.name || !newTeacher.email}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-blue-300"
-                >
-                  Add Teacher
-                </button>
-              </div>
+        <Modal isOpen={isAddTeacherModalOpen} onClose={() => setIsAddTeacherModalOpen(false)}>
+          <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto border-2 border-green-200">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-green-800">Add New Teacher</h2>
+              <button 
+                onClick={() => setIsAddTeacherModalOpen(false)}
+                className="text-green-600 hover:text-green-800"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
-          </div>
-        )}
-
-        {/* Edit Teacher Modal */}
-        {isEditTeacherModalOpen && editTeacher && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-              <h2 className="text-xl font-bold mb-4">Edit Teacher</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Name</label>
-                  <input
-                    type="text"
-                    className="w-full p-2 border rounded"
-                    value={editTeacher.name}
-                    onChange={(e) => setEditTeacher({...editTeacher, name: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Nationality</label>
-                  <input
-                    type="text"
-                    className="w-full p-2 border rounded"
-                    value={editTeacher.nationality}
-                    onChange={(e) => setEditTeacher({...editTeacher, nationality: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Gender</label>
-                  <select
-                    className="w-full p-2 border rounded"
-                    value={editTeacher.gender}
-                    onChange={(e) => setEditTeacher({...editTeacher, gender: e.target.value})}
-                  >
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Address</label>
-                  <input
-                    type="text"
-                    className="w-full p-2 border rounded"
-                    value={editTeacher.address}
-                    onChange={(e) => setEditTeacher({...editTeacher, address: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Email</label>
-                  <input
-                    type="email"
-                    className="w-full p-2 border rounded"
-                    value={editTeacher.email}
-                    onChange={(e) => setEditTeacher({...editTeacher, email: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Phone</label>
-                  <input
-                    type="text"
-                    className="w-full p-2 border rounded"
-                    value={editTeacher.phone}
-                    onChange={(e) => setEditTeacher({...editTeacher, phone: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Subjects</label>
-                  <div className="flex">
-                    <select
-                      className="w-full p-2 border rounded-l"
-                      value={newSubject}
-                      onChange={(e) => setNewSubject(e.target.value)}
-                    >
-                      <option value="">Select Subject</option>
-                      {allSubjects.map((subject) => (
-                        <option key={subject} value={subject}>{subject}</option>
-                      ))}
-                    </select>
-                    <button
-                      type="button"
-                      onClick={addSubjectToEditTeacher}
-                      disabled={!newSubject}
-                      className="bg-blue-500 text-white px-3 py-1 rounded-r hover:bg-blue-600 disabled:bg-blue-300"
-                    >
-                      Add
-                    </button>
-                  </div>
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {editTeacher.subjects.map((subject, index) => (
-                      <span 
-                        key={index} 
-                        className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800"
-                      >
-                        {subject}
-                        <button 
-                          type="button"
-                          onClick={() => removeSubjectFromEditTeacher(subject)}
-                          className="ml-1 text-blue-600 hover:text-blue-900"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Name</label>
+                <input
+                  type="text"
+                  className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  value={newTeacher.name}
+                  onChange={(e) => setNewTeacher({...newTeacher, name: e.target.value})}
+                />
               </div>
-              <div className="mt-6 flex justify-end space-x-3">
-                <button
-                  onClick={() => setIsEditTeacherModalOpen(false)}
-                  className="px-4 py-2 border rounded hover:bg-gray-100"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleEditTeacher}
-                  disabled={!editTeacher.name || !editTeacher.email}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-blue-300"
-                >
-                  Save Changes
-                </button>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Nationality</label>
+                <input
+                  type="text"
+                  className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  value={newTeacher.nationality}
+                  onChange={(e) => setNewTeacher({...newTeacher, nationality: e.target.value})}
+                />
               </div>
-            </div>
-          </div>
-        )}
-
-        {/* Assign Teacher Modal */}
-        {isAssignModalOpen && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-              <h2 className="text-xl font-bold mb-4">Assign Teacher</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Class</label>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Gender</label>
+                <select
+                  className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  value={newTeacher.gender}
+                  onChange={(e) => setNewTeacher({...newTeacher, gender: e.target.value})}
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Address</label>
+                <input
+                  type="text"
+                  className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  value={newTeacher.address}
+                  onChange={(e) => setNewTeacher({...newTeacher, address: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Email</label>
+                <input
+                  type="email"
+                  className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  value={newTeacher.email}
+                  onChange={(e) => setNewTeacher({...newTeacher, email: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Phone</label>
+                <input
+                  type="text"
+                  className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  value={newTeacher.phone}
+                  onChange={(e) => setNewTeacher({...newTeacher, phone: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Subjects</label>
+                <div className="flex">
                   <select
-                    className="w-full p-2 border rounded"
-                    value={assignmentData.class}
-                    onChange={(e) => setAssignmentData({...assignmentData, class: e.target.value})}
+                    className="flex-1 p-2 border border-green-300 rounded-l focus:outline-none focus:ring-2 focus:ring-green-500"
+                    value={newSubject}
+                    onChange={(e) => setNewSubject(e.target.value)}
                   >
-                    <option value="">Select Class</option>
-                    {allClasses.map((className) => (
-                      <option key={className} value={className}>{className}</option>
-                    ))}
-                  </select>
-                </div>
-                {assignmentData.class && isClassTeacherEligible(assignmentData.class) && (
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="isClassTeacher"
-                      className="mr-2"
-                      checked={assignmentData.isClassTeacher}
-                      onChange={(e) => setAssignmentData({...assignmentData, isClassTeacher: e.target.checked})}
-                    />
-                    <label htmlFor="isClassTeacher" className="text-sm font-medium">
-                      Assign as Class Teacher
-                    </label>
-                  </div>
-                )}
-                <div>
-                  <label className="block text-sm font-medium mb-1">Subject (for Grade 4-9)</label>
-                  <select
-                    className="w-full p-2 border rounded"
-                    value={assignmentData.subject}
-                    onChange={(e) => setAssignmentData({...assignmentData, subject: e.target.value})}
-                  >
-                    <option value="">Select Subject (optional)</option>
+                    <option value="">Select Subject</option>
                     {allSubjects.map((subject) => (
                       <option key={subject} value={subject}>{subject}</option>
                     ))}
                   </select>
+                  <button
+                    type="button"
+                    onClick={addSubjectToNewTeacher}
+                    disabled={!newSubject}
+                    className="bg-green-600 text-white px-3 py-1 rounded-r hover:bg-green-700 disabled:bg-green-300 transition-colors"
+                  >
+                    Add
+                  </button>
+                </div>
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {newTeacher.subjects.map((subject, index) => (
+                    <span 
+                      key={index} 
+                      className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800"
+                    >
+                      {subject}
+                      <button 
+                        type="button"
+                        onClick={() => removeSubjectFromNewTeacher(subject)}
+                        className="ml-1 text-green-600 hover:text-green-800"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
                 </div>
               </div>
-              <div className="mt-6 flex justify-end space-x-3">
-                <button
-                  onClick={() => setIsAssignModalOpen(false)}
-                  className="px-4 py-2 border rounded hover:bg-gray-100"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleAssignTeacher}
-                  disabled={!assignmentData.class && !assignmentData.subject}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-blue-300"
-                >
-                  Assign
-                </button>
-              </div>
+            </div>
+            <div className="mt-6 flex justify-end space-x-3">
+              <button
+                onClick={() => setIsAddTeacherModalOpen(false)}
+                className="px-4 py-2 border border-green-300 rounded hover:bg-green-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddTeacher}
+                disabled={!newTeacher.name || !newTeacher.email}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:bg-green-300 transition-colors"
+              >
+                Add Teacher
+              </button>
             </div>
           </div>
-        )}
+        </Modal>
+
+        {/* Edit Teacher Modal */}
+        <Modal isOpen={isEditTeacherModalOpen} onClose={() => setIsEditTeacherModalOpen(false)}>
+          <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto border-2 border-green-200">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-green-800">Edit Teacher</h2>
+              <button 
+                onClick={() => setIsEditTeacherModalOpen(false)}
+                className="text-green-600 hover:text-green-800"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Name</label>
+                <input
+                  type="text"
+                  className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  value={editTeacher?.name || ""}
+                  onChange={(e) => editTeacher && setEditTeacher({...editTeacher, name: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Nationality</label>
+                <input
+                  type="text"
+                  className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  value={editTeacher?.nationality || ""}
+                  onChange={(e) => editTeacher && setEditTeacher({...editTeacher, nationality: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Gender</label>
+                <select
+                  className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  value={editTeacher?.gender || "Male"}
+                  onChange={(e) => editTeacher && setEditTeacher({...editTeacher, gender: e.target.value})}
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Address</label>
+                <input
+                  type="text"
+                  className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  value={editTeacher?.address || ""}
+                  onChange={(e) => editTeacher && setEditTeacher({...editTeacher, address: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Email</label>
+                <input
+                  type="email"
+                  className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  value={editTeacher?.email || ""}
+                  onChange={(e) => editTeacher && setEditTeacher({...editTeacher, email: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Phone</label>
+                <input
+                  type="text"
+                  className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  value={editTeacher?.phone || ""}
+                  onChange={(e) => editTeacher && setEditTeacher({...editTeacher, phone: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Subjects</label>
+                <div className="flex">
+                  <select
+                    className="flex-1 p-2 border border-green-300 rounded-l focus:outline-none focus:ring-2 focus:ring-green-500"
+                    value={newSubject}
+                    onChange={(e) => setNewSubject(e.target.value)}
+                  >
+                    <option value="">Select Subject</option>
+                    {allSubjects.map((subject) => (
+                      <option key={subject} value={subject}>{subject}</option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={addSubjectToEditTeacher}
+                    disabled={!newSubject}
+                    className="bg-green-600 text-white px-3 py-1 rounded-r hover:bg-green-700 disabled:bg-green-300 transition-colors"
+                  >
+                    Add
+                  </button>
+                </div>
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {editTeacher?.subjects.map((subject, index) => (
+                    <span 
+                      key={index} 
+                      className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800"
+                    >
+                      {subject}
+                      <button 
+                        type="button"
+                        onClick={() => removeSubjectFromEditTeacher(subject)}
+                        className="ml-1 text-green-600 hover:text-green-800"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="mt-6 flex justify-end space-x-3">
+              <button
+                onClick={() => setIsEditTeacherModalOpen(false)}
+                className="px-4 py-2 border border-green-300 rounded hover:bg-green-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleEditTeacher}
+                disabled={!editTeacher?.name || !editTeacher?.email}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:bg-green-300 transition-colors"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </Modal>
+
+        {/* Assign Teacher Modal */}
+        <Modal isOpen={isAssignModalOpen} onClose={() => setIsAssignModalOpen(false)}>
+          <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto border-2 border-green-200">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-green-800">Assign Teacher</h2>
+              <button 
+                onClick={() => setIsAssignModalOpen(false)}
+                className="text-green-600 hover:text-green-800"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Class</label>
+                <select
+                  className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  value={assignmentData.class}
+                  onChange={(e) => setAssignmentData({...assignmentData, class: e.target.value})}
+                >
+                  <option value="">Select Class</option>
+                  {allClasses.map((className) => (
+                    <option key={className} value={className}>{className}</option>
+                  ))}
+                </select>
+              </div>
+              {assignmentData.class && isClassTeacherEligible(assignmentData.class) && (
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="isClassTeacher"
+                    className="mr-2"
+                    checked={assignmentData.isClassTeacher}
+                    onChange={(e) => setAssignmentData({...assignmentData, isClassTeacher: e.target.checked})}
+                  />
+                  <label htmlFor="isClassTeacher" className="text-sm font-medium text-green-700">
+                    Assign as Class Teacher
+                  </label>
+                </div>
+              )}
+              <div>
+                <label className="block text-sm font-medium mb-1 text-green-700">Subject (for Grade 4-9)</label>
+                <select
+                  className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  value={assignmentData.subject}
+                  onChange={(e) => setAssignmentData({...assignmentData, subject: e.target.value})}
+                >
+                  <option value="">Select Subject (optional)</option>
+                  {allSubjects.map((subject) => (
+                    <option key={subject} value={subject}>{subject}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="mt-6 flex justify-end space-x-3">
+              <button
+                onClick={() => setIsAssignModalOpen(false)}
+                className="px-4 py-2 border border-green-300 rounded hover:bg-green-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAssignTeacher}
+                disabled={!assignmentData.class && !assignmentData.subject}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:bg-green-300 transition-colors"
+              >
+                Assign
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </ProtectedRoute>
   );

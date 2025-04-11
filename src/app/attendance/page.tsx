@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useState, useEffect } from "react";
 import { Modal } from '@/components/ui/Modal';
@@ -307,10 +307,10 @@ const StudentDetailsPopup: React.FC<{ student: Student | undefined; onClose: () 
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white p-6 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto border-2 border-green-200">
         <div className="flex justify-between items-start mb-4">
-          <h2 className="text-xl font-bold">Student Details</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <h2 className="text-xl font-bold text-green-800">Student Details</h2>
+          <button onClick={onClose} className="text-green-600 hover:text-green-800">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -319,97 +319,97 @@ const StudentDetailsPopup: React.FC<{ student: Student | undefined; onClose: () 
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p className="font-medium">Full Name:</p>
-              <p className="text-gray-600">{student.fullName}</p>
+              <p className="font-medium text-green-700">Full Name:</p>
+              <p className="text-green-600">{student.fullName}</p>
             </div>
             <div>
-              <p className="font-medium">Date of Birth:</p>
-              <p className="text-gray-600">{student.dateOfBirth}</p>
+              <p className="font-medium text-green-700">Date of Birth:</p>
+              <p className="text-green-600">{student.dateOfBirth}</p>
             </div>
             <div>
-              <p className="font-medium">Nationality:</p>
-              <p className="text-gray-600">{student.nationality}</p>
+              <p className="font-medium text-green-700">Nationality:</p>
+              <p className="text-green-600">{student.nationality}</p>
             </div>
             <div>
-              <p className="font-medium">Religion:</p>
-              <p className="text-gray-600">{student.religion || "N/A"}</p>
+              <p className="font-medium text-green-700">Religion:</p>
+              <p className="text-green-600">{student.religion || "N/A"}</p>
             </div>
             <div>
-              <p className="font-medium">Gender:</p>
-              <p className="text-gray-600">{student.gender}</p>
+              <p className="font-medium text-green-700">Gender:</p>
+              <p className="text-green-600">{student.gender}</p>
             </div>
           </div>
 
-          <div className="border-t pt-4">
-            <h3 className="font-bold mb-2">Residential Address</h3>
+          <div className="border-t border-green-200 pt-4">
+            <h3 className="font-bold mb-2 text-green-800">Residential Address</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <p className="font-medium">Street Name:</p>
-                <p className="text-gray-600">{student.residentialAddress?.street_name || "N/A"}</p>
+                <p className="font-medium text-green-700">Street Name:</p>
+                <p className="text-green-600">{student.residentialAddress?.street_name || "N/A"}</p>
               </div>
               <div>
-                <p className="font-medium">House Number:</p>
-                <p className="text-gray-600">{student.residentialAddress?.house_number || "N/A"}</p>
+                <p className="font-medium text-green-700">House Number:</p>
+                <p className="text-green-600">{student.residentialAddress?.house_number || "N/A"}</p>
               </div>
               <div>
-                <p className="font-medium">City:</p>
-                <p className="text-gray-600">{student.residentialAddress?.city || "N/A"}</p>
+                <p className="font-medium text-green-700">City:</p>
+                <p className="text-green-600">{student.residentialAddress?.city || "N/A"}</p>
               </div>
               <div>
-                <p className="font-medium">Region:</p>
-                <p className="text-gray-600">{student.residentialAddress?.region || "N/A"}</p>
+                <p className="font-medium text-green-700">Region:</p>
+                <p className="text-green-600">{student.residentialAddress?.region || "N/A"}</p>
               </div>
               <div>
-                <p className="font-medium">Country:</p>
-                <p className="text-gray-600">{student.residentialAddress?.country || "N/A"}</p>
+                <p className="font-medium text-green-700">Country:</p>
+                <p className="text-green-600">{student.residentialAddress?.country || "N/A"}</p>
               </div>
             </div>
           </div>
 
-          <div className="border-t pt-4">
-            <h3 className="font-bold mb-2">Medical Information</h3>
+          <div className="border-t border-green-200 pt-4">
+            <h3 className="font-bold mb-2 text-green-800">Medical Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <p className="font-medium">Blood Type:</p>
-                <p className="text-gray-600">{student.medicalInformation?.bloodType || "N/A"}</p>
+                <p className="font-medium text-green-700">Blood Type:</p>
+                <p className="text-green-600">{student.medicalInformation?.bloodType || "N/A"}</p>
               </div>
               <div>
-                <p className="font-medium">Allergies/Conditions:</p>
-                <p className="text-gray-600">{student.medicalInformation?.allergiesOrConditions || "N/A"}</p>
+                <p className="font-medium text-green-700">Allergies/Conditions:</p>
+                <p className="text-green-600">{student.medicalInformation?.allergiesOrConditions || "N/A"}</p>
               </div>
               <div>
-                <p className="font-medium">Emergency Contact Name:</p>
-                <p className="text-gray-600">{student.medicalInformation?.emergencyContactsName || "N/A"}</p>
+                <p className="font-medium text-green-700">Emergency Contact Name:</p>
+                <p className="text-green-600">{student.medicalInformation?.emergencyContactsName || "N/A"}</p>
               </div>
               <div>
-                <p className="font-medium">Emergency Contact Number:</p>
-                <p className="text-gray-600">{student.medicalInformation?.emergencyContactsNumber || "N/A"}</p>
+                <p className="font-medium text-green-700">Emergency Contact Number:</p>
+                <p className="text-green-600">{student.medicalInformation?.emergencyContactsNumber || "N/A"}</p>
               </div>
             </div>
           </div>
 
           {student.parentGuardian && student.parentGuardian.length > 0 && (
-            <div className="border-t pt-4">
-              <h3 className="font-bold mb-2">Parent/Guardian Information</h3>
+            <div className="border-t border-green-200 pt-4">
+              <h3 className="font-bold mb-2 text-green-800">Parent/Guardian Information</h3>
               <div className="space-y-4">
                 {student.parentGuardian.map((parent, idx) => (
-                  <div key={idx} className="bg-gray-50 p-4 rounded-lg">
+                  <div key={idx} className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <p className="font-medium">Name:</p>
-                        <p className="text-gray-600">{parent.firstName} {parent.lastName}</p>
+                        <p className="font-medium text-green-700">Name:</p>
+                        <p className="text-green-600">{parent.firstName} {parent.lastName}</p>
                       </div>
                       <div>
-                        <p className="font-medium">Contact Number:</p>
-                        <p className="text-gray-600">{parent.contactNumber || "N/A"}</p>
+                        <p className="font-medium text-green-700">Contact Number:</p>
+                        <p className="text-green-600">{parent.contactNumber || "N/A"}</p>
                       </div>
                       <div>
-                        <p className="font-medium">Email Address:</p>
-                        <p className="text-gray-600">{parent.emailAddress || "N/A"}</p>
+                        <p className="font-medium text-green-700">Email Address:</p>
+                        <p className="text-green-600">{parent.emailAddress || "N/A"}</p>
                       </div>
                       <div>
-                        <p className="font-medium">Occupation:</p>
-                        <p className="text-gray-600">{parent.occupation || "N/A"}</p>
+                        <p className="font-medium text-green-700">Occupation:</p>
+                        <p className="text-green-600">{parent.occupation || "N/A"}</p>
                       </div>
                     </div>
                   </div>
@@ -421,7 +421,7 @@ const StudentDetailsPopup: React.FC<{ student: Student | undefined; onClose: () 
         <div className="mt-6 flex justify-end">
           <button 
             onClick={onClose} 
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
           >
             Close
           </button>
@@ -488,10 +488,10 @@ const AttendanceHistoryModal: React.FC<{
 
   return (
     <Modal isOpen={true} onClose={onClose}>
-      <div className="bg-white p-6 rounded-lg w-full max-w-4xl">
+      <div className="bg-white p-6 rounded-lg w-full max-w-4xl border-2 border-green-200">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">Attendance History - {student.fullName}</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <h2 className="text-xl font-bold text-green-800">Attendance History - {student.fullName}</h2>
+          <button onClick={onClose} className="text-green-600 hover:text-green-800">
             ✕
           </button>
         </div>
@@ -543,8 +543,8 @@ const AttendanceHistoryModal: React.FC<{
         </div>
 
         {selectedDate && isDateSelectable(selectedDate) && (
-          <div className="border-t pt-4">
-            <h3 className="font-semibold mb-2">
+          <div className="border-t border-green-200 pt-4">
+            <h3 className="font-semibold mb-2 text-green-700">
               Attendance for {format(selectedDate, 'MMMM d, yyyy')}
             </h3>
             
@@ -605,20 +605,20 @@ const AttendanceHistoryModal: React.FC<{
         )}
         
         <div className="mt-6">
-          <h3 className="font-semibold mb-2">Recent Attendance Records</h3>
+          <h3 className="font-semibold mb-2 text-green-700">Recent Attendance Records</h3>
           <div className="overflow-auto max-h-60">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className="bg-green-100">
                 <tr>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Marked By</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase">Date</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase">Status</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-green-800 uppercase">Marked By</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {attendanceRecords.slice(0, 10).map((record, index) => (
                   <tr key={index}>
-                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{record.date}</td>
+                    <td className="px-4 py-2 whitespace-nowrap text-sm text-green-700">{record.date}</td>
                     <td className="px-4 py-2 whitespace-nowrap text-sm">
                       <span className={`px-2 py-1 rounded-full text-xs ${
                         record.status === 'present' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
@@ -626,7 +626,7 @@ const AttendanceHistoryModal: React.FC<{
                         {record.status === 'present' ? 'Present' : 'Absent'}
                       </span>
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{record.markedBy}</td>
+                    <td className="px-4 py-2 whitespace-nowrap text-sm text-green-700">{record.markedBy}</td>
                   </tr>
                 ))}
               </tbody>
@@ -637,6 +637,7 @@ const AttendanceHistoryModal: React.FC<{
     </Modal>
   );
 };
+
 const GradeHistoryModal: React.FC<{
   student: Student;
   gradeRecords: GradeRecord[];
@@ -932,10 +933,10 @@ const GradeHistoryModal: React.FC<{
 
   return (
     <Modal isOpen={true} onClose={onClose}>
-      <div className="bg-white p-6 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white p-6 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto border-2 border-green-200">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">Grade History - {student.fullName}</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <h2 className="text-xl font-bold text-green-800">Grade History - {student.fullName}</h2>
+          <button onClick={onClose} className="text-green-600 hover:text-green-800">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -946,14 +947,14 @@ const GradeHistoryModal: React.FC<{
           <input
             type="text"
             placeholder="Search by class (e.g., Grade 1)"
-            className="flex-1 p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+            className="flex-1 p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
           />
           <button
             onClick={handleSearch}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
           >
             Search
           </button>
@@ -962,9 +963,9 @@ const GradeHistoryModal: React.FC<{
         <div className="space-y-6">
           {gradeRecords.length > 0 ? (
             gradeRecords.map((record, index) => (
-              <div key={index} className="border rounded-lg p-4">
+              <div key={index} className="border border-green-200 rounded-lg p-4">
                 <div className="flex justify-between items-center mb-3">
-                  <h3 className="font-semibold">
+                  <h3 className="font-semibold text-green-700">
                     {record.grade} - Term {record.term} {record.year}
                   </h3>
                   <button
@@ -974,7 +975,7 @@ const GradeHistoryModal: React.FC<{
                         setIsEditing(false);
                       }
                     }}
-                    className="text-blue-500 hover:text-blue-700 text-sm"
+                    className="text-green-600 hover:text-green-800 text-sm"
                   >
                     {selectedRecord === record ? 'Hide Report' : 'View Report'}
                   </button>
@@ -986,7 +987,7 @@ const GradeHistoryModal: React.FC<{
                       <div
                         contentEditable
                         suppressContentEditableWarning
-                        className="border p-4 rounded"
+                        className="border border-green-300 p-4 rounded"
                         onBlur={(e) => setInvoiceContent(e.currentTarget.innerHTML)}
                         dangerouslySetInnerHTML={{ __html: invoiceContent }}
                       />
@@ -1009,14 +1010,14 @@ const GradeHistoryModal: React.FC<{
                       </button>
                       
                       <button
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                         onClick={() => setIsEditing(!isEditing)}
                       >
                         {isEditing ? 'Finish Editing' : 'Edit Report'}
                       </button>
                       
                       <button
-                        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center justify-center min-w-[120px]"
+                        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center justify-center min-w-[120px]"
                         onClick={handleSaveAsPDF}
                         disabled={isSaving}
                       >
@@ -1056,7 +1057,7 @@ const GradeHistoryModal: React.FC<{
               </div>
             ))
           ) : (
-            <div className="text-center text-gray-500 py-4">
+            <div className="text-center text-green-700 py-4">
               No grade records found for this student.
             </div>
           )}
@@ -1300,8 +1301,8 @@ function AttendanceGradesPage() {
 
   return (
     <ProtectedRoute>
-      <div className="p-5">
-        <h1 className="text-2xl font-bold mb-6">Attendance & Grades Management</h1>
+      <div className="p-5 bg-green-50 min-h-screen">
+        <h1 className="text-3xl font-bold mb-6 text-green-800">Attendance & Grades Management</h1>
 
         {error && (
           <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded" role="alert">
@@ -1314,15 +1315,15 @@ function AttendanceGradesPage() {
           </div>
         )}
 
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white p-6 rounded-lg shadow mb-6 border border-green-200">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <label className="block text-sm font-medium mb-1">Search by Name</label>
+              <label className="block text-sm font-medium mb-1 text-green-700">Search by Name</label>
               <div className="flex">
                 <input
                   type="text"
                   placeholder="Enter student name..."
-                  className="w-full p-2 border rounded-l focus:outline-none focus:ring-1 focus:ring-blue-300"
+                  className="flex-1 p-2 border border-green-300 rounded-l focus:outline-none focus:ring-2 focus:ring-green-500"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && searchStudentsByName()}
@@ -1330,7 +1331,9 @@ function AttendanceGradesPage() {
                 <button
                   onClick={searchStudentsByName}
                   disabled={isSearching || !searchQuery.trim()}
-                  className={`bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 flex items-center justify-center ${(isSearching || !searchQuery.trim()) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`bg-green-600 text-white px-4 py-2 rounded-r hover:bg-green-700 flex items-center justify-center ${
+                    (isSearching || !searchQuery.trim()) ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                 >
                   {isSearching ? (
                     <>
@@ -1346,10 +1349,10 @@ function AttendanceGradesPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Search by Class</label>
+              <label className="block text-sm font-medium mb-1 text-green-700">Search by Class</label>
               <div className="flex">
                 <select
-                  className="w-full p-2 border rounded-l focus:outline-none focus:ring-1 focus:ring-blue-300"
+                  className="flex-1 p-2 border border-green-300 rounded-l focus:outline-none focus:ring-2 focus:ring-green-500"
                   value={classQuery}
                   onChange={(e) => setClassQuery(e.target.value)}
                 >
@@ -1361,7 +1364,9 @@ function AttendanceGradesPage() {
                 <button
                   onClick={fetchStudentsByClass}
                   disabled={isFiltering || !classQuery.trim()}
-                  className={`bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 flex items-center justify-center ${(isFiltering || !classQuery.trim()) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`bg-green-600 text-white px-4 py-2 rounded-r hover:bg-green-700 flex items-center justify-center ${
+                    (isFiltering || !classQuery.trim()) ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                 >
                   {isFiltering ? (
                     <>
@@ -1380,7 +1385,9 @@ function AttendanceGradesPage() {
               <button
                 onClick={fetchAllStudents}
                 disabled={isViewAllLoading}
-                className={`w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center justify-center ${isViewAllLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center justify-center ${
+                  isViewAllLoading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               >
                 {isViewAllLoading ? (
                   <>
@@ -1397,40 +1404,40 @@ function AttendanceGradesPage() {
         </div>
 
         {students.length > 0 && (
-          <div className="bg-blue-50 p-4 rounded-lg shadow mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-white p-3 rounded-lg shadow text-center">
-                <h3 className="font-bold text-lg">Total Students</h3>
-                <p className="text-2xl">{totalStudents}</p>
+          <div className="bg-green-100 p-6 rounded-lg shadow mb-6 border border-green-200">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-green-200 text-center">
+                <h3 className="font-bold text-lg text-green-800">Total Students</h3>
+                <p className="text-2xl text-green-600">{totalStudents}</p>
               </div>
-              <div className="bg-white p-3 rounded-lg shadow text-center">
-                <h3 className="font-bold text-lg">Male Students</h3>
-                <p className="text-2xl">{maleCount}</p>
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-green-200 text-center">
+                <h3 className="font-bold text-lg text-green-800">Male Students</h3>
+                <p className="text-2xl text-green-600">{maleCount}</p>
               </div>
-              <div className="bg-white p-3 rounded-lg shadow text-center">
-                <h3 className="font-bold text-lg">Female Students</h3>
-                <p className="text-2xl">{femaleCount}</p>
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-green-200 text-center">
+                <h3 className="font-bold text-lg text-green-800">Female Students</h3>
+                <p className="text-2xl text-green-600">{femaleCount}</p>
               </div>
             </div>
           </div>
         )}
 
         <Tab.Group selectedIndex={selectedTab === 'attendance' ? 0 : 1} onChange={(index) => setSelectedTab(index === 0 ? 'attendance' : 'grades')}>
-          <Tab.List className="flex space-x-1 rounded-lg bg-blue-900/20 p-1 mb-6">
+          <Tab.List className="flex space-x-1 rounded-lg bg-green-900/20 p-1 mb-6">
             <Tab
               className={({ selected }) =>
-                `w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700
-                ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2
-                ${selected ? 'bg-white shadow' : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'}`
+                `w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-green-700
+                ring-white ring-opacity-60 ring-offset-2 ring-offset-green-400 focus:outline-none focus:ring-2
+                ${selected ? 'bg-white shadow' : 'text-green-100 hover:bg-white/[0.12] hover:text-white'}`
               }
             >
               Attendance
             </Tab>
             <Tab
               className={({ selected }) =>
-                `w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700
-                ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2
-                ${selected ? 'bg-white shadow' : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'}`
+                `w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-green-700
+                ring-white ring-opacity-60 ring-offset-2 ring-offset-green-400 focus:outline-none focus:ring-2
+                ${selected ? 'bg-white shadow' : 'text-green-100 hover:bg-white/[0.12] hover:text-white'}`
               }
             >
               Grades
@@ -1440,57 +1447,57 @@ function AttendanceGradesPage() {
 
         {loading && (
           <div className="flex justify-center items-center p-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-            <span className="ml-3">Loading students...</span>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
+            <span className="ml-3 text-green-700">Loading students...</span>
           </div>
         )}
 
         {!loading && !hasSearched && students.length === 0 && (
-          <div className="bg-white rounded-lg shadow p-8 text-center">
-            <p className="text-gray-500 text-lg">
+          <div className="bg-white rounded-lg shadow p-8 text-center border border-green-200">
+            <p className="text-green-700 text-lg">
               Use the search or filter options above to view students
             </p>
           </div>
         )}
 
         {!loading && hasSearched && (
-          <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="bg-white rounded-lg shadow overflow-hidden border border-green-200">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-100">
+              <thead className="bg-green-100">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Photo</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Name</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date of Birth</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nationality</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Gender</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Class</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Photo</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Name</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Date of Birth</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Nationality</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Gender</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Class</th>
                   
                   {selectedTab === 'attendance' ? (
                     <>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Mark Attendance</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Attendance History</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Mark Attendance</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Attendance History</th>
                     </>
                   ) : (
                     <>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Grade History</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Grade History</th>
                     </>
                   )}
                   
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">View Details</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">View Details</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {students.length > 0 ? (
                   students.map((admission, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
+                    <tr key={index} className="hover:bg-green-50">
                       <td className="px-4 py-3">
                         <StudentImage fileName={admission.student.passportPhotoPath} altText={admission.student.fullName} />
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-900">{admission.student.fullName}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{admission.student.dateOfBirth}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{admission.student.nationality}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{admission.student.gender}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{admission.student.grade}</td>
+                      <td className="px-4 py-3 text-sm text-green-900">{admission.student.fullName}</td>
+                      <td className="px-4 py-3 text-sm text-green-700">{admission.student.dateOfBirth}</td>
+                      <td className="px-4 py-3 text-sm text-green-700">{admission.student.nationality}</td>
+                      <td className="px-4 py-3 text-sm text-green-700">{admission.student.gender}</td>
+                      <td className="px-4 py-3 text-sm text-green-700">{admission.student.grade}</td>
                       
                       {selectedTab === 'attendance' ? (
                         <>
@@ -1529,7 +1536,7 @@ function AttendanceGradesPage() {
                           <td className="px-4 py-3 text-sm">
                             <button
                               onClick={() => openAttendanceHistory(admission.student)}
-                              className="text-blue-600 hover:text-blue-800 hover:underline"
+                              className="text-green-600 hover:text-green-800 hover:underline"
                             >
                               View History
                             </button>
@@ -1539,7 +1546,7 @@ function AttendanceGradesPage() {
                         <td className="px-4 py-3 text-sm">
                           <button
                             onClick={() => openGradeHistory(admission.student)}
-                            className="text-blue-600 hover:text-blue-800 hover:underline"
+                            className="text-green-600 hover:text-green-800 hover:underline"
                           >
                             View History
                           </button>
@@ -1549,7 +1556,7 @@ function AttendanceGradesPage() {
                       <td className="px-4 py-3 text-sm">
                         <button
                           onClick={() => setSelectedStudent(admission.student)}
-                          className="text-blue-600 hover:text-blue-800 hover:underline"
+                          className="text-green-600 hover:text-green-800 hover:underline"
                         >
                           View Details
                         </button>
@@ -1558,7 +1565,7 @@ function AttendanceGradesPage() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={selectedTab === 'attendance' ? 9 : 8} className="p-4 text-center text-gray-500">
+                    <td colSpan={selectedTab === 'attendance' ? 9 : 8} className="p-4 text-center text-green-700">
                       No students found. Try searching or viewing all students.
                     </td>
                   </tr>

@@ -390,23 +390,23 @@ function InvoiceGenerationPage() {
   };
 
   return (
-    <div className="p-5">
-      <h1 className="text-2xl font-bold mb-6">Generate Invoices</h1>
+    <div className="p-5 bg-green-50 min-h-screen">
+      <h1 className="text-3xl font-bold mb-6 text-green-800">Generate Invoices</h1>
 
-      <div className="bg-white p-4 rounded-lg shadow mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="bg-white p-6 rounded-lg shadow-md mb-6 border border-green-200">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label className="block text-sm font-medium mb-1">Search by Name</label>
+            <label className="block text-sm font-medium mb-1 text-green-700">Search by Name</label>
             <div className="flex">
               <input
                 type="text"
-                className="w-full p-2 border rounded-l focus:outline-none focus:ring-1 focus:ring-blue-300"
+                className="w-full p-2 border border-green-300 rounded-l focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="Enter student name"
                 value={tempSearchName}
                 onChange={(e) => setTempSearchName(e.target.value)}
               />
               <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center justify-center"
+                className="bg-green-600 text-white px-4 py-2 rounded-r hover:bg-green-700 disabled:bg-green-300 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
                 onClick={() => handleSearch('name')}
                 disabled={isSearching || !tempSearchName}
               >
@@ -422,10 +422,10 @@ function InvoiceGenerationPage() {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Search by Class</label>
+            <label className="block text-sm font-medium mb-1 text-green-700">Search by Class</label>
             <div className="flex">
               <select
-                className="w-full p-2 border rounded-l focus:outline-none focus:ring-1 focus:ring-blue-300"
+                className="w-full p-2 border border-green-300 rounded-l focus:outline-none focus:ring-2 focus:ring-green-500"
                 value={tempSearchClass}
                 onChange={(e) => setTempSearchClass(e.target.value)}
               >
@@ -435,7 +435,7 @@ function InvoiceGenerationPage() {
                 ))}
               </select>
               <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center justify-center"
+                className="bg-green-600 text-white px-4 py-2 rounded-r hover:bg-green-700 disabled:bg-green-300 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
                 onClick={() => handleSearch('class')}
                 disabled={isSearching || !tempSearchClass}
               >
@@ -452,7 +452,7 @@ function InvoiceGenerationPage() {
           </div>
           <div className="flex items-end">
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full flex items-center justify-center disabled:bg-blue-300 disabled:cursor-not-allowed"
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full flex items-center justify-center disabled:bg-green-300 disabled:cursor-not-allowed transition-colors shadow-md"
               onClick={handleViewAll}
               disabled={isLoading || isSearching}
             >
@@ -473,11 +473,11 @@ function InvoiceGenerationPage() {
       </div>
 
       {/* Invoice Type Selection */}
-      <div className="bg-white p-4 rounded-lg shadow mb-6">
-        <h2 className="text-lg font-semibold mb-3">Select Invoice Type</h2>
+      <div className="bg-white p-6 rounded-lg shadow-md mb-6 border border-green-200">
+        <h2 className="text-lg font-semibold mb-3 text-green-800">Select Invoice Type</h2>
         <div className="flex gap-2">
           <select
-            className="w-full p-2 border rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+            className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
             value={selectedInvoiceType}
             onChange={(e) => setSelectedInvoiceType(e.target.value as keyof typeof invoiceTemplates)}
           >
@@ -486,7 +486,7 @@ function InvoiceGenerationPage() {
             ))}
           </select>
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 whitespace-nowrap"
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 whitespace-nowrap transition-colors shadow-md"
             onClick={() => {
               if (selectedStudent) {
                 setInvoiceContent(invoiceTemplates[selectedInvoiceType](selectedStudent));
@@ -499,23 +499,23 @@ function InvoiceGenerationPage() {
       </div>
 
       {!hasSearched && (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden border border-green-200">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-100">
+            <thead className="bg-green-100">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Photo</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Name</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date of Birth</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nationality</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Gender</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Address</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Class</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Create Invoice</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Photo</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Name</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Date of Birth</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Nationality</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Gender</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Address</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Class</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Create Invoice</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td colSpan={8} className="p-4 text-center text-gray-500">
+                <td colSpan={8} className="p-4 text-center text-green-700">
                   Use the search or filter options above to view students
                 </td>
               </tr>
@@ -529,52 +529,52 @@ function InvoiceGenerationPage() {
           {/* Gender Count Summary */}
           {(searchName || searchClass || filteredStudents.length > 0) ? (
             <>
-              <div className="bg-blue-50 p-4 rounded-lg shadow mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-white p-3 rounded-lg shadow text-center">
-                    <h3 className="font-bold text-lg">Total Students</h3>
-                    <p className="text-2xl">{totalStudents}</p>
+              <div className="bg-green-100 p-6 rounded-lg shadow-md mb-6 border border-green-200">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-white p-4 rounded-lg shadow-sm border border-green-200 text-center">
+                    <h3 className="font-bold text-lg text-green-800">Total Students</h3>
+                    <p className="text-2xl text-green-600">{totalStudents}</p>
                   </div>
-                  <div className="bg-white p-3 rounded-lg shadow text-center">
-                    <h3 className="font-bold text-lg">Male Students</h3>
-                    <p className="text-2xl">{maleCount}</p>
+                  <div className="bg-white p-4 rounded-lg shadow-sm border border-green-200 text-center">
+                    <h3 className="font-bold text-lg text-green-800">Male Students</h3>
+                    <p className="text-2xl text-green-600">{maleCount}</p>
                   </div>
-                  <div className="bg-white p-3 rounded-lg shadow text-center">
-                    <h3 className="font-bold text-lg">Female Students</h3>
-                    <p className="text-2xl">{femaleCount}</p>
+                  <div className="bg-white p-4 rounded-lg shadow-sm border border-green-200 text-center">
+                    <h3 className="font-bold text-lg text-green-800">Female Students</h3>
+                    <p className="text-2xl text-green-600">{femaleCount}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg shadow overflow-hidden">
+              <div className="bg-white rounded-lg shadow-md overflow-hidden border border-green-200">
                 <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-100">
+                  <thead className="bg-green-100">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Photo</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Name</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date of Birth</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nationality</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Gender</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Address</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Class</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Create Invoice</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Photo</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Name</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Date of Birth</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Nationality</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Gender</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Address</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Class</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Create Invoice</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {filteredStudents.map((student) => (
-                      <tr key={student.id} className="hover:bg-gray-50">
+                      <tr key={student.id} className="hover:bg-green-50">
                         <td className="px-4 py-3">
                           <img src={`/images/${student.id}.jpg`} alt={student.fullName} className="w-10 h-10 rounded-full" />
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-900">{student.fullName}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{student.dateOfBirth}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{student.nationality}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{student.gender}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{student.address}</td>
-                        <td className="px-4 py-3 text-sm text-gray-600">{student.class}</td>
+                        <td className="px-4 py-3 text-sm text-green-900">{student.fullName}</td>
+                        <td className="px-4 py-3 text-sm text-green-700">{student.dateOfBirth}</td>
+                        <td className="px-4 py-3 text-sm text-green-700">{student.nationality}</td>
+                        <td className="px-4 py-3 text-sm text-green-700">{student.gender}</td>
+                        <td className="px-4 py-3 text-sm text-green-700">{student.address}</td>
+                        <td className="px-4 py-3 text-sm text-green-700">{student.class}</td>
                         <td className="px-4 py-3">
                           <button
-                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors shadow-md"
                             onClick={() => handleCreateInvoice(student)}
                           >
                             Create Invoice
@@ -587,23 +587,23 @@ function InvoiceGenerationPage() {
               </div>
             </>
           ) : (
-            <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden border border-green-200">
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-100">
+                <thead className="bg-green-100">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Photo</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Name</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date of Birth</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nationality</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Gender</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Address</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Class</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Create Invoice</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Photo</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Name</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Date of Birth</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Nationality</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Gender</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Address</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Class</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Create Invoice</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td colSpan={8} className="p-4 text-center text-gray-500">
+                    <td colSpan={8} className="p-4 text-center text-green-700">
                       No students found. Try searching or viewing all students.
                     </td>
                   </tr>
@@ -616,12 +616,12 @@ function InvoiceGenerationPage() {
 
       {isPreviewing && selectedStudent && (
         <Modal isOpen={isPreviewing} onClose={() => setIsPreviewing(false)}>
-          <div className="bg-white p-6 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white p-6 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto border-2 border-green-200">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Invoice Preview - {invoiceTypeOptions.find(opt => opt.value === selectedInvoiceType)?.label}</h2>
+              <h2 className="text-xl font-bold text-green-800">Invoice Preview - {invoiceTypeOptions.find(opt => opt.value === selectedInvoiceType)?.label}</h2>
               <button 
                 onClick={() => setIsPreviewing(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-green-600 hover:text-green-800"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -633,7 +633,7 @@ function InvoiceGenerationPage() {
               <div
                 contentEditable
                 suppressContentEditableWarning
-                className="border p-4 rounded"
+                className="border border-green-300 p-4 rounded"
                 onBlur={(e) => setInvoiceContent(e.currentTarget.innerHTML)}
                 dangerouslySetInnerHTML={{ __html: invoiceContent }}
               />
@@ -646,7 +646,7 @@ function InvoiceGenerationPage() {
 
             <div className="mt-6 flex flex-wrap justify-end gap-2">
               <button
-                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
                 onClick={() => setIsPreviewing(false)}
               >
                 Close
@@ -655,19 +655,19 @@ function InvoiceGenerationPage() {
               {isEditing ? (
                 <>
                   <button
-                    className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
+                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
                     onClick={handleFinishEditing}
                   >
                     Finish Editing
                   </button>
                   <button
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
                     onClick={handleAddRow}
                   >
                     Add Row
                   </button>
                   <button
-                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
                     onClick={handleAddColumn}
                   >
                     Add Column
@@ -675,7 +675,7 @@ function InvoiceGenerationPage() {
                 </>
               ) : (
                 <button
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
                   onClick={handleEditInvoice}
                 >
                   Edit Invoice
@@ -683,7 +683,7 @@ function InvoiceGenerationPage() {
               )}
               
               <button
-                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center justify-center min-w-[120px]"
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center justify-center min-w-[120px] transition-colors shadow-md"
                 onClick={handleSaveInvoice}
                 disabled={isSaving}
               >
@@ -701,7 +701,7 @@ function InvoiceGenerationPage() {
               </button>
               
               <button
-                className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 flex items-center justify-center min-w-[120px]"
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center justify-center min-w-[120px] transition-colors shadow-md"
                 onClick={handleSendInvoice}
                 disabled={isSending}
               >

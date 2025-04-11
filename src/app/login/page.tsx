@@ -45,6 +45,11 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <img 
+        src="/OAIS NEW LOGO.png" 
+        alt="School Logo" 
+        className="h-48 w-auto mb-8"
+      />
       <div className="bg-white p-8 rounded shadow-md w-96">
         <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
 
