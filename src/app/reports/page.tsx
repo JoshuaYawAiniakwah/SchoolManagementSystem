@@ -535,9 +535,6 @@ function ReportsPage() {
                             </div>
 
                             <div className="flex justify-end space-x-2 mt-4">
-                              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                                Download Report
-                              </button>
                               <button 
                                 className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
                                 onClick={() => setSelectedStudentGrades(null)}
@@ -633,9 +630,6 @@ function ReportsPage() {
                             <div className="flex justify-end space-x-2">
                               <button className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
                                 Mark as Resolved
-                              </button>
-                              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                                Assign Support
                               </button>
                               <button 
                                 className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
@@ -749,9 +743,6 @@ function ReportsPage() {
                   </div>
 
                   <div className="flex justify-end space-x-2">
-                    <button className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
-                      Download Plan
-                    </button>
                     <button 
                       className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
                       onClick={() => setSelectedLessonPlan(null)}
@@ -888,9 +879,6 @@ function ReportsPage() {
                   <div className="flex justify-end space-x-2">
                     <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
                       Contact Parent
-                    </button>
-                    <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                      Schedule Meeting
                     </button>
                     <button 
                       className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
@@ -1061,9 +1049,6 @@ function ReportsPage() {
                               )}
 
                               <div className="flex justify-end space-x-2">
-                                <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                                  Download Report
-                                </button>
                                 <button 
                                   className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
                                   onClick={() => setSelectedAttendanceStudent(null)}
