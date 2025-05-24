@@ -1,6 +1,6 @@
 "use client";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Tab } from "@headlessui/react";
 import dynamic from "next/dynamic";
@@ -19,6 +19,9 @@ function CommunicationPage() {
   const [subject, setSubject] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [isCreatingEvent, setIsCreatingEvent] = useState(false);
+  const [isLoadingEvents, setIsLoadingEvents] = useState(true);
+  const [eventView, setEventView] = useState("upcoming"); // 'upcoming' or 'past'
 
   // Initialize events state
   const [events, setEvents] = useState([]);
@@ -28,6 +31,8 @@ function CommunicationPage() {
     title: "",
     time: "",
     description: "",
+    image: null,
+    imagePreview: null
   });
 
   // State for editing an event
@@ -42,6 +47,51 @@ function CommunicationPage() {
   // State for replying to a parent message
   const [reply, setReply] = useState("");
   const [replyingTo, setReplyingTo] = useState(null);
+
+  // File input ref
+  const fileInputRef = useRef(null);
+
+  // Fetch events based on current view (upcoming or past)
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setIsLoadingEvents(true);
+      try {
+        let endpoint;
+        if (eventView === "upcoming") {
+          endpoint = "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/upcoming";
+        } else {
+          endpoint = "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/past";
+        }
+        
+        const response = await fetch(endpoint, {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch events: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        // Add image preview URLs if they exist
+        const eventsWithPreviews = data.map(event => ({
+          ...event,
+          imagePreview: event.imageUrl || null,
+          // Store the original eventTime from backend
+          time: event.eventTime || ""
+        }));
+        setEvents(eventsWithPreviews);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        alert("Failed to load events. Please refresh the page.");
+      } finally {
+        setIsLoadingEvents(false);
+      }
+    };
+    
+    fetchEvents();
+  }, [eventView]);
 
   // Updated Options for Recipient
   const options = [
@@ -94,7 +144,14 @@ function CommunicationPage() {
         setFilteredResults(filtered);
         return;
       } else if (selectedRecipient === "All Students") {
-        response = await fetch(`https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/search?name=${encodeURIComponent(searchQuery)}`);
+        response = await fetch(
+          `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/search?name=${encodeURIComponent(searchQuery)}`,
+          {
+            headers: {
+              "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+            }
+          }
+        );
       }
 
       if (response && !response.ok) {
@@ -129,20 +186,141 @@ function CommunicationPage() {
     setFilteredResults([]);
   };
 
-  // Handle adding a new event
-  const handleAddEvent = () => {
+  // Handle image upload
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Check if file is an image
+      if (!file.type.match('image.*')) {
+        alert('Please select an image file (jpg, png, gif, etc.)');
+        return;
+      }
+      
+      // Check file size (limit to 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size should be less than 5MB');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewEvent({
+          ...newEvent,
+          image: file,
+          imagePreview: reader.result
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Remove image
+  const removeImage = () => {
+    setNewEvent({
+      ...newEvent,
+      image: null,
+      imagePreview: null
+    });
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  // Handle creating a new event via API
+  const handleCreateEvent = async () => {
     if (!newEvent.title || !newEvent.time || !newEvent.description) {
-      alert("Please fill in all fields.");
+      alert("Please fill in all required fields.");
       return;
     }
 
-    const newEventWithId = {
-      id: (events?.length || 0) + 1,
-      ...newEvent,
-    };
+    // Validate date
+    const eventDate = new Date(newEvent.time);
+    if (isNaN(eventDate.getTime())) {
+      alert("Please enter a valid date and time");
+      return;
+    }
 
-    setEvents([...(events || []), newEventWithId]);
-    setNewEvent({ title: "", time: "", description: "" });
+    setIsCreatingEvent(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('title', newEvent.title);
+      formData.append('description', newEvent.description);
+      formData.append('eventTime', eventDate.toISOString());
+      if (newEvent.image) {
+        formData.append('image', newEvent.image);
+      }
+
+      const response = await fetch(
+        "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/create",
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+          }
+        }
+      );
+
+      if (!response.ok) {
+        let errorMessage = "Failed to create event";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          const text = await response.text();
+          errorMessage = text || errorMessage;
+        }
+        throw new Error(errorMessage);
+      }
+
+      let createdEvent;
+      try {
+        createdEvent = await response.json();
+      } catch (e) {
+        createdEvent = { message: "Event created successfully" };
+      }
+      
+      // Refresh events based on current view
+      const refreshEndpoint = eventView === "upcoming" 
+        ? "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/upcoming"
+        : "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/past";
+      
+      const refreshResponse = await fetch(refreshEndpoint, {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+        }
+      });
+      
+      if (refreshResponse.ok) {
+        const updatedEvents = await refreshResponse.json();
+        setEvents(updatedEvents.map(event => ({
+          ...event,
+          imagePreview: event.imageUrl || null,
+          time: event.eventTime || ""
+        })));
+      }
+      
+      // Reset form
+      setNewEvent({ 
+        title: "", 
+        time: "", 
+        description: "",
+        image: null,
+        imagePreview: null
+      });
+      
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+
+      alert(createdEvent.message || "Event created successfully!");
+    } catch (error) {
+      console.error("Error creating event:", error);
+      alert(error.message || "Failed to create event. Please try again.");
+    } finally {
+      setIsCreatingEvent(false);
+    }
   };
 
   // Handle editing an event
@@ -150,31 +328,139 @@ function CommunicationPage() {
     setEditingEvent(event);
     setNewEvent({
       title: event.title,
-      time: event.time,
+      time: event.time || "",
       description: event.description,
+      image: event.image,
+      imagePreview: event.imagePreview
     });
   };
 
   // Handle updating an event
-  const handleUpdateEvent = () => {
-    if (!newEvent.title || !newEvent.time || !newEvent.description) {
-      alert("Please fill in all fields.");
+  const handleUpdateEvent = async () => {
+    if (!newEvent.title || !newEvent.time || !newEvent.description || !editingEvent) {
+      alert("Please fill in all required fields.");
       return;
     }
 
-    const updatedEvents = events.map((event) =>
-      event.id === editingEvent.id ? { ...event, ...newEvent } : event
-    );
+    // Validate date
+    const eventDate = new Date(newEvent.time);
+    if (isNaN(eventDate.getTime())) {
+      alert("Please enter a valid date and time");
+      return;
+    }
 
-    setEvents(updatedEvents);
-    setEditingEvent(null);
-    setNewEvent({ title: "", time: "", description: "" });
+    try {
+      const formData = new FormData();
+      formData.append('title', newEvent.title);
+      formData.append('description', newEvent.description);
+      formData.append('eventTime', eventDate.toISOString());
+      if (newEvent.image) {
+        formData.append('image', newEvent.image);
+      }
+
+      const response = await fetch(
+        `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/${editingEvent.id}`,
+        {
+          method: "PUT",
+          body: formData,
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+          }
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Failed to update event");
+      }
+
+      // Refresh events based on current view
+      const refreshEndpoint = eventView === "upcoming" 
+        ? "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/upcoming"
+        : "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/past";
+      
+      const refreshResponse = await fetch(refreshEndpoint, {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+        }
+      });
+      
+      if (refreshResponse.ok) {
+        const updatedEvents = await refreshResponse.json();
+        setEvents(updatedEvents.map(event => ({
+          ...event,
+          imagePreview: event.imageUrl || null,
+          time: event.eventTime || ""
+        })));
+      }
+      
+      // Reset editing state
+      setEditingEvent(null);
+      setNewEvent({ 
+        title: "", 
+        time: "", 
+        description: "",
+        image: null,
+        imagePreview: null
+      });
+      
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+
+      alert("Event updated successfully!");
+    } catch (error) {
+      console.error("Error updating event:", error);
+      alert(error.message || "Failed to update event. Please try again.");
+    }
   };
 
   // Handle deleting an event
-  const handleDeleteEvent = (id) => {
-    const updatedEvents = events.filter((event) => event.id !== id);
-    setEvents(updatedEvents);
+  const handleDeleteEvent = async (id) => {
+    if (!window.confirm("Are you sure you want to permanently delete this event?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete event");
+      }
+
+      // Refresh events based on current view
+      const refreshEndpoint = eventView === "upcoming" 
+        ? "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/upcoming"
+        : "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/past";
+      
+      const refreshResponse = await fetch(refreshEndpoint, {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+        }
+      });
+      
+      if (refreshResponse.ok) {
+        const updatedEvents = await refreshResponse.json();
+        setEvents(updatedEvents.map(event => ({
+          ...event,
+          imagePreview: event.imageUrl || null,
+          time: event.eventTime || ""
+        })));
+      }
+      
+      alert("Event deleted successfully");
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      alert("Failed to delete event. Please try again.");
+    }
   };
 
   // Function to handle sending an announcement
@@ -221,14 +507,17 @@ function CommunicationPage() {
     }
 
     try {
-      const response = await fetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/messages/send", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer YOUR_AUTH_TOKEN"
-        },
-        body: JSON.stringify(requestBody),
-      });
+      const response = await fetch(
+        "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/messages/send",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem('authToken')}`
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -280,6 +569,26 @@ function CommunicationPage() {
 
     setReply("");
     setReplyingTo(null);
+  };
+
+  // Format date for display
+  const formatEventTime = (eventTime) => {
+    if (!eventTime) return "No date set";
+    
+    try {
+      const date = new Date(eventTime);
+      if (isNaN(date.getTime())) return eventTime; // Return raw string if can't parse
+      
+      return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (e) {
+      return eventTime; // Return raw string if error
+    }
   };
 
   return (
@@ -545,11 +854,10 @@ function CommunicationPage() {
                   <div>
                     <label className="block text-lg font-medium text-green-700 mb-1">Time:</label>
                     <input
-                      type="text"
+                      type="datetime-local"
                       className="w-full border border-green-200 rounded-lg py-2 px-3 focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       value={newEvent.time}
                       onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })}
-                      placeholder="Enter event time (e.g., 10th March, 10:00 AM)"
                     />
                   </div>
                   <div>
@@ -562,19 +870,76 @@ function CommunicationPage() {
                       placeholder="Enter event description"
                     />
                   </div>
+                  
+                  {/* Image Upload Section */}
+                  <div>
+                    <label className="block text-lg font-medium text-green-700 mb-1">Event Image:</label>
+                    <div className="flex items-center gap-4">
+                      <label className="cursor-pointer">
+                        <span className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md inline-block">
+                          Choose Image
+                        </span>
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          className="hidden"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                        />
+                      </label>
+                      {newEvent.imagePreview && (
+                        <div className="relative">
+                          <img 
+                            src={newEvent.imagePreview} 
+                            alt="Event preview" 
+                            className="h-20 w-20 object-cover rounded-lg border border-gray-300"
+                          />
+                          <button
+                            onClick={removeImage}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
+                            title="Remove image"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-500 mt-1">Upload an image for your event (optional)</p>
+                  </div>
+                  
                   <div className="flex space-x-2">
                     <button
-                      className="px-5 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-md"
-                      onClick={editingEvent ? handleUpdateEvent : handleAddEvent}
+                      className="px-5 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-md disabled:bg-green-400 disabled:cursor-not-allowed"
+                      onClick={editingEvent ? handleUpdateEvent : handleCreateEvent}
+                      disabled={isCreatingEvent}
                     >
-                      {editingEvent ? "Update Event" : "Add Event"}
+                      {isCreatingEvent ? (
+                        <>
+                          <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          {editingEvent ? "Updating..." : "Creating..."}
+                        </>
+                      ) : (
+                        editingEvent ? "Update Event" : "Create Event"
+                      )}
                     </button>
                     {editingEvent && (
                       <button
                         className="px-5 py-2 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition-colors shadow-md"
                         onClick={() => {
                           setEditingEvent(null);
-                          setNewEvent({ title: "", time: "", description: "" });
+                          setNewEvent({ 
+                            title: "", 
+                            time: "", 
+                            description: "",
+                            image: null,
+                            imagePreview: null
+                          });
+                          if (fileInputRef.current) {
+                            fileInputRef.current.value = "";
+                          }
                         }}
                       >
                         Cancel
@@ -584,28 +949,76 @@ function CommunicationPage() {
                 </div>
               </div>
 
+              {/* Events View Tabs */}
+              <div className="flex space-x-2 mb-4">
+                <button
+                  className={`px-4 py-2 rounded-lg ${eventView === 'upcoming' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                  onClick={() => setEventView('upcoming')}
+                >
+                  Upcoming Events
+                </button>
+                <button
+                  className={`px-4 py-2 rounded-lg ${eventView === 'past' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                  onClick={() => setEventView('past')}
+                >
+                  Past Events
+                </button>
+              </div>
+
+              {/* Events List */}
               <div className="space-y-4">
-                {events && events.map((event) => (
-                  <div key={event.id} className="p-4 bg-white rounded-lg shadow-sm border border-green-100">
-                    <h3 className="text-xl font-semibold text-green-700">{event.title}</h3>
-                    <p className="text-gray-600 mt-1">{event.time}</p>
-                    <p className="text-gray-800 mt-2">{event.description}</p>
-                    <div className="mt-3 flex space-x-2">
-                      <button
-                        className="px-3 py-1 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors shadow-md"
-                        onClick={() => handleEditEvent(event)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors shadow-md"
-                        onClick={() => handleDeleteEvent(event.id)}
-                      >
-                        Delete
-                      </button>
+                {isLoadingEvents ? (
+                  <div className="p-4 bg-white rounded-lg shadow-sm border border-green-100 text-center">
+                    <div className="flex items-center justify-center">
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Loading {eventView} events...
                     </div>
                   </div>
-                ))}
+                ) : events.length > 0 ? (
+                  events.map((event) => (
+                    <div key={event.id} className="p-4 bg-white rounded-lg shadow-sm border border-green-100">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <h3 className="text-xl font-semibold text-green-700">{event.title}</h3>
+                          <p className="text-gray-600 mt-1">
+                            {formatEventTime(event.time)}
+                          </p>
+                          <p className="text-gray-800 mt-2">{event.description}</p>
+                        </div>
+                        {event.imagePreview && (
+                          <div className="ml-4">
+                            <img 
+                              src={event.imagePreview} 
+                              alt="Event" 
+                              className="h-24 w-24 object-cover rounded-lg border border-gray-300"
+                            />
+                          </div>
+                        )}
+                      </div>
+                      <div className="mt-3 flex space-x-2">
+                        <button
+                          className="px-3 py-1 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors shadow-md"
+                          onClick={() => handleEditEvent(event)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors shadow-md"
+                          onClick={() => handleDeleteEvent(event.id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="p-4 bg-white rounded-lg shadow-sm border border-green-100 text-center text-gray-500">
+                    No {eventView} events found. {eventView === 'upcoming' && 'Create your first event above.'}
+                  </div>
+                )}
               </div>
             </motion.div>
           </Tab.Panel>

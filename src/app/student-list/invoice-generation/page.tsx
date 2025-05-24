@@ -211,6 +211,154 @@ const invoiceTemplates = {
       <p>Should you have any questions regarding this invoice, please do not hesitate to contact me at [YOUR EMAIL].</p>
     </div>
   `,
+  boardingHouseFees: (student: Student) => `
+    <div style="font-family: Arial, sans-serif; padding: 20px;">
+      <h1 style="text-align: center; font-size: 24px; font-weight: bold;">Boarding House Fees Invoice</h1>
+      <p><strong>School Name:</strong> [YOUR COMPANY NAME]</p>
+      <p><strong>School Address:</strong> [YOUR COMPANY ADDRESS]</p>
+      <p><strong>School Number:</strong> [YOUR COMPANY NUMBER]</p>
+      <p><strong>Parent/Guardian Name:</strong> ${student.fullName}</p>
+      <p><strong>Address:</strong> ${student.address}</p>
+      <p><strong>Email:</strong> [PARENT EMAIL]</p>
+      <p><strong>Phone Number:</strong> [PARENT PHONE NUMBER]</p>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+          <tr>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Description</th>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Term 1 Boarding Fees</td>
+            <td style="border: 1px solid #000; padding: 8px;">$1,200.00</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Boarding Materials</td>
+            <td style="border: 1px solid #000; padding: 8px;">$150.00</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Total Amount to be Paid</td>
+            <td style="border: 1px solid #000; padding: 8px;">$1,350.00</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Bank Transfer:</strong> Please make payments to [YOUR COMPANY NAME] Account Number: 123456789 at BlueLeaf Bank.</p>
+      <p><strong>Payment Due Date:</strong> November 14, 2050.</p>
+      <p>Should you have any questions regarding this invoice, please do not hesitate to contact me at [YOUR EMAIL].</p>
+    </div>
+  `,
+  admissionFees: (student: Student) => `
+    <div style="font-family: Arial, sans-serif; padding: 20px;">
+      <h1 style="text-align: center; font-size: 24px; font-weight: bold;">Admission Fees Invoice</h1>
+      <p><strong>School Name:</strong> [YOUR COMPANY NAME]</p>
+      <p><strong>School Address:</strong> [YOUR COMPANY ADDRESS]</p>
+      <p><strong>School Number:</strong> [YOUR COMPANY NUMBER]</p>
+      <p><strong>Parent/Guardian Name:</strong> ${student.fullName}</p>
+      <p><strong>Address:</strong> ${student.address}</p>
+      <p><strong>Email:</strong> [PARENT EMAIL]</p>
+      <p><strong>Phone Number:</strong> [PARENT PHONE NUMBER]</p>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+          <tr>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Description</th>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Admission Processing Fee</td>
+            <td style="border: 1px solid #000; padding: 8px;">$100.00</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Registration Fee</td>
+            <td style="border: 1px solid #000; padding: 8px;">$250.00</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Total Amount to be Paid</td>
+            <td style="border: 1px solid #000; padding: 8px;">$350.00</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Bank Transfer:</strong> Please make payments to [YOUR COMPANY NAME] Account Number: 123456789 at BlueLeaf Bank.</p>
+      <p><strong>Payment Due Date:</strong> November 14, 2050.</p>
+      <p>Should you have any questions regarding this invoice, please do not hesitate to contact me at [YOUR EMAIL].</p>
+    </div>
+  `,
+  mockFees: (student: Student) => `
+    <div style="font-family: Arial, sans-serif; padding: 20px;">
+      <h1 style="text-align: center; font-size: 24px; font-weight: bold;">Mock Exam Fees Invoice</h1>
+      <p><strong>School Name:</strong> [YOUR COMPANY NAME]</p>
+      <p><strong>School Address:</strong> [YOUR COMPANY ADDRESS]</p>
+      <p><strong>School Number:</strong> [YOUR COMPANY NUMBER]</p>
+      <p><strong>Parent/Guardian Name:</strong> ${student.fullName}</p>
+      <p><strong>Address:</strong> ${student.address}</p>
+      <p><strong>Email:</strong> [PARENT EMAIL]</p>
+      <p><strong>Phone Number:</strong> [PARENT PHONE NUMBER]</p>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+          <tr>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Description</th>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Mock Exam Registration</td>
+            <td style="border: 1px solid #000; padding: 8px;">$75.00</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Study Materials</td>
+            <td style="border: 1px solid #000; padding: 8px;">$25.00</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Total Amount to be Paid</td>
+            <td style="border: 1px solid #000; padding: 8px;">$100.00</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Bank Transfer:</strong> Please make payments to [YOUR COMPANY NAME] Account Number: 123456789 at BlueLeaf Bank.</p>
+      <p><strong>Payment Due Date:</strong> November 14, 2050.</p>
+      <p>Should you have any questions regarding this invoice, please do not hesitate to contact me at [YOUR EMAIL].</p>
+    </div>
+  `,
+  others: (student: Student) => `
+    <div style="font-family: Arial, sans-serif; padding: 20px;">
+      <h1 style="text-align: center; font-size: 24px; font-weight: bold;">Miscellaneous Fees Invoice</h1>
+      <p><strong>School Name:</strong> [YOUR COMPANY NAME]</p>
+      <p><strong>School Address:</strong> [YOUR COMPANY ADDRESS]</p>
+      <p><strong>School Number:</strong> [YOUR COMPANY NUMBER]</p>
+      <p><strong>Parent/Guardian Name:</strong> ${student.fullName}</p>
+      <p><strong>Address:</strong> ${student.address}</p>
+      <p><strong>Email:</strong> [PARENT EMAIL]</p>
+      <p><strong>Phone Number:</strong> [PARENT PHONE NUMBER]</p>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+          <tr>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Description</th>
+            <th style="border: 1px solid #000; padding: 8px; text-align: left;">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Excursion Fee</td>
+            <td style="border: 1px solid #000; padding: 8px;">$50.00</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Activity Fee</td>
+            <td style="border: 1px solid #000; padding: 8px;">$30.00</td>
+          </tr>
+          <tr>
+            <td style="border: 1px solid #000; padding: 8px;">Total Amount to be Paid</td>
+            <td style="border: 1px solid #000; padding: 8px;">$80.00</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Bank Transfer:</strong> Please make payments to [YOUR COMPANY NAME] Account Number: 123456789 at BlueLeaf Bank.</p>
+      <p><strong>Payment Due Date:</strong> November 14, 2050.</p>
+      <p>Should you have any questions regarding this invoice, please do not hesitate to contact me at [YOUR EMAIL].</p>
+    </div>
+  `
 };
 
 function InvoiceGenerationPage() {
@@ -239,7 +387,11 @@ function InvoiceGenerationPage() {
     { value: 'canteenFees', label: 'Canteen Fees' },
     { value: 'books', label: 'Books' },
     { value: 'uniforms', label: 'Uniforms' },
-    { value: 'stationery', label: 'Stationery' }
+    { value: 'stationery', label: 'Stationery' },
+    { value: 'boardingHouseFees', label: 'Boarding House Fees' },
+    { value: 'admissionFees', label: 'Admission Fees' },
+    { value: 'mockFees', label: 'Mock Fees' },
+    { value: 'others', label: 'Others (Excursions, etc.)' }
   ];
 
   const filteredStudents = students.filter(student => {

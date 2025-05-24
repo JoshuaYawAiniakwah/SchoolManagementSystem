@@ -243,8 +243,10 @@ function StudentList() {
   const [isStatusFilterLoading, setIsStatusFilterLoading] = useState(false);
   const [currentStatusFilter, setCurrentStatusFilter] = useState("");
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [isPromoteLoading, setIsPromoteLoading] = useState(false);
 
-   const fetchAPI = async (url: string, options: RequestInit = {}) => {
+  const fetchAPI = async (url: string, options: RequestInit = {}) => {
     try {
       const response = await fetch(url, {
         ...options,
@@ -266,49 +268,47 @@ function StudentList() {
     }
   };
 
- const fetchAllStudents = async () => {
-  setIsViewAllLoading(true);
-  setCurrentStatusFilter("");
-  setError(null);
-  try {
-    const data = await fetchAPI("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/approved");
-    
-    // Get current statuses from localStorage if available
-    const savedStatuses = JSON.parse(localStorage.getItem('studentStatuses') || '{}');
-    
-    const mappedStudents = Array.isArray(data) ? data.map((student: Student) => {
-      // Use saved status if exists, otherwise server status, otherwise default to "Active"
-      const status = savedStatuses[student.studentId] || student.status || "Active";
+  const fetchAllStudents = async () => {
+    setIsViewAllLoading(true);
+    setCurrentStatusFilter("");
+    setError(null);
+    try {
+      const data = await fetchAPI("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/approved");
       
-      return {
-        classForAdmission: student.grade,
-        academicYear: new Date().getFullYear(),
-        preferredSecondLanguage: null,
-        hasSiblingsInSchool: false,
-        siblingName: null,
-        siblingClass: null,
-        status: status,
-        student: {
-          ...student,
-          status: status
-        },
-      };
-    }) : [];
+      const savedStatuses = JSON.parse(localStorage.getItem('studentStatuses') || '{}');
+      
+      const mappedStudents = Array.isArray(data) ? data.map((student: Student) => {
+        const status = savedStatuses[student.studentId] || student.status || "ACTIVE";
+        
+        return {
+          classForAdmission: student.grade,
+          academicYear: new Date().getFullYear(),
+          preferredSecondLanguage: null,
+          hasSiblingsInSchool: false,
+          siblingName: null,
+          siblingClass: null,
+          status: status,
+          student: {
+            ...student,
+            status: status
+          },
+        };
+      }) : [];
 
-    setStudents(mappedStudents);
-    setAllStudents(mappedStudents);
-    setHasSearched(true);
-    
-    if (mappedStudents.length === 0) {
-      setError("No students found in the system");
+      setStudents(mappedStudents);
+      setAllStudents(mappedStudents);
+      setHasSearched(true);
+      
+      if (mappedStudents.length === 0) {
+        setError("No students found in the system");
+      }
+    } catch (error: any) {
+      console.error("Error fetching all students:", error);
+      setError(error.message || "Failed to fetch students. Please try again.");
+    } finally {
+      setIsViewAllLoading(false);
     }
-  } catch (error: any) {
-    console.error("Error fetching all students:", error);
-    setError(error.message || "Failed to fetch students. Please try again.");
-  } finally {
-    setIsViewAllLoading(false);
-  }
-};
+  };
 
   const searchStudentsByName = async () => {
     if (!searchQuery.trim()) {
@@ -320,7 +320,7 @@ function StudentList() {
     setError(null);
     try {
       const data = await fetchAPI(
-        `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/search?name=${encodeURIComponent(searchQuery)}`
+        `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/approved/search/name?name=${encodeURIComponent(searchQuery)}`
       );
 
       const mappedStudents = Array.isArray(data) ? data.map((student: Student) => ({
@@ -330,10 +330,10 @@ function StudentList() {
         hasSiblingsInSchool: false,
         siblingName: null,
         siblingClass: null,
-        status: student.status || "Active",
+        status: student.status || "ACTIVE",
         student: {
           ...student,
-          status: student.status || "Active"
+          status: student.status || "ACTIVE"
         }
       })) : [];
       
@@ -361,7 +361,7 @@ function StudentList() {
     setError(null);
     try {
       const data = await fetchAPI(
-        `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/grade?grade=${encodeURIComponent(classQuery)}`
+        `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/approved/search/grade?grade=${encodeURIComponent(classQuery)}`
       );
 
       const mappedStudents = Array.isArray(data) ? data.map((student: Student) => ({
@@ -371,10 +371,10 @@ function StudentList() {
         hasSiblingsInSchool: false,
         siblingName: null,
         siblingClass: null,
-        status: student.status || "Active",
+        status: student.status || "ACTIVE",
         student: {
           ...student,
-          status: student.status || "Active"
+          status: student.status || "ACTIVE"
         }
       })) : [];
       
@@ -431,124 +431,140 @@ function StudentList() {
   };
 
   const updateStudentStatus = async (studentId: string, status: string) => {
-  try {
-    setIsUpdatingStatus(true);
-    setError(null);
-    
-    const formattedStatus = status.toUpperCase();
-    const endpoint = `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/status/updateGrade/${studentId}?newStatus=${formattedStatus}`;
-    
-    const response = await fetch(endpoint, {
-      method: "PUT",
-      headers: { 
-        "Content-Type": "application/json",
+    try {
+      setIsUpdatingStatus(true);
+      setError(null);
+      
+      const formattedStatus = status.toUpperCase();
+      console.log("Updating status to:", formattedStatus);
+      
+      const endpoint = `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/status/updateGrade/${studentId}?newStatus=${formattedStatus}`;
+      
+      const response = await fetch(endpoint, {
+        method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+        }
+      });
+
+      console.log("Response status:", response.status);
+      const responseData = await response.text();
+      console.log("Response data:", responseData);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Server responded with ${response.status}: ${errorText}`);
       }
-    });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Server responded with ${response.status}: ${errorText}`);
+      // Update localStorage
+      const savedStatuses = JSON.parse(localStorage.getItem('studentStatuses') || '{}');
+      savedStatuses[studentId] = formattedStatus;
+      localStorage.setItem('studentStatuses', JSON.stringify(savedStatuses));
+
+      // Update both students and allStudents state
+      setStudents(prevStudents => 
+        prevStudents.map(student => 
+          student.student.studentId === studentId 
+            ? { 
+                ...student, 
+                status: formattedStatus,
+                student: { ...student.student, status: formattedStatus }
+              } 
+            : student
+        )
+      );
+
+      setAllStudents(prevAllStudents => 
+        prevAllStudents.map(student => 
+          student.student.studentId === studentId 
+            ? { 
+                ...student, 
+                status: formattedStatus,
+                student: { ...student.student, status: formattedStatus }
+              } 
+            : student
+        )
+      );
+      
+      setIsStatusModalOpen(false);
+      setError(`Status updated successfully to ${formattedStatus}`);
+      setTimeout(() => setError(null), 3000);
+      
+    } catch (error) {
+      console.error("Error updating student status:", error);
+      setError(error instanceof Error ? error.message : "Failed to update student status");
+    } finally {
+      setIsUpdatingStatus(false);
     }
+  };
 
-    // Update localStorage
-    const savedStatuses = JSON.parse(localStorage.getItem('studentStatuses') || '{}');
-    savedStatuses[studentId] = formattedStatus;
-    localStorage.setItem('studentStatuses', JSON.stringify(savedStatuses));
+  const promoteStudent = async () => {
+    if (!currentStudentForStatus || !newGrade) return;
 
-    // Update both students and allStudents state
-    setStudents(prevStudents => 
-      prevStudents.map(student => 
-        student.student.studentId === studentId 
-          ? { 
-              ...student, 
-              status: formattedStatus,
-              student: { ...student.student, status: formattedStatus }
-            } 
-          : student
-      )
-    );
+    try {
+      setIsPromoteLoading(true);
+      const endpoint = `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/promote/${currentStudentForStatus.student.studentId}`;
+      
+      const response = await fetch(endpoint, {
+        method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          newGrade
+        })
+      });
 
-    setAllStudents(prevAllStudents => 
-      prevAllStudents.map(student => 
-        student.student.studentId === studentId 
-          ? { 
-              ...student, 
-              status: formattedStatus,
-              student: { ...student.student, status: formattedStatus }
-            } 
-          : student
-      )
-    );
-    
-    setIsStatusModalOpen(false);
-    setError(`Status updated successfully to ${status}`);
-    setTimeout(() => setError(null), 3000);
-    
-  } catch (error) {
-    console.error("Error updating student status:", error);
-    setError(error instanceof Error ? error.message : "Failed to update student status");
-  } finally {
-    setIsUpdatingStatus(false);
-  }
-};
-  const promoteStudent = async (studentId: string, newGrade: string) => {
-  try {
-    const endpoint = `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/updateGrade/${studentId}?newGrade=${encodeURIComponent(newGrade)}`;
-    
-    const response = await fetch(endpoint, {
-      method: "PUT",
-      headers: { 
-        "Content-Type": "application/json",
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Server responded with ${response.status}: ${errorText}`);
       }
-    });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Server responded with ${response.status}: ${errorText}`);
+      // Update localStorage for grades if needed
+      const savedGrades = JSON.parse(localStorage.getItem('studentGrades') || '{}');
+      savedGrades[currentStudentForStatus.student.studentId] = newGrade;
+      localStorage.setItem('studentGrades', JSON.stringify(savedGrades));
+
+      // Update both states
+      setStudents(prevStudents => 
+        prevStudents.map(student => 
+          student.student.studentId === currentStudentForStatus.student.studentId 
+            ? { 
+                ...student, 
+                classForAdmission: newGrade,
+                student: { ...student.student, grade: newGrade }
+              } 
+            : student
+        )
+      );
+
+      setAllStudents(prevAllStudents => 
+        prevAllStudents.map(student => 
+          student.student.studentId === currentStudentForStatus.student.studentId 
+            ? { 
+                ...student, 
+                classForAdmission: newGrade,
+                student: { ...student.student, grade: newGrade }
+              } 
+            : student
+        )
+      );
+
+      setIsPromoteModalOpen(false);
+      setIsConfirmationModalOpen(false);
+      setError(`Student promoted to ${newGrade} successfully`);
+      setTimeout(() => setError(null), 3000);
+    } catch (error) {
+      console.error("Error promoting student:", error);
+      setError(error instanceof Error ? error.message : "Failed to promote student");
+    } finally {
+      setIsPromoteLoading(false);
     }
-
-    // Update localStorage for grades if needed
-    const savedGrades = JSON.parse(localStorage.getItem('studentGrades') || '{}');
-    savedGrades[studentId] = newGrade;
-    localStorage.setItem('studentGrades', JSON.stringify(savedGrades));
-
-    // Update both states
-    setStudents(prevStudents => 
-      prevStudents.map(student => 
-        student.student.studentId === studentId 
-          ? { 
-              ...student, 
-              classForAdmission: newGrade,
-              student: { ...student.student, grade: newGrade }
-            } 
-          : student
-      )
-    );
-
-    setAllStudents(prevAllStudents => 
-      prevAllStudents.map(student => 
-        student.student.studentId === studentId 
-          ? { 
-              ...student, 
-              classForAdmission: newGrade,
-              student: { ...student.student, grade: newGrade }
-            } 
-          : student
-      )
-    );
-
-    setIsPromoteModalOpen(false);
-    setError(`Student promoted to ${newGrade} successfully`);
-    setTimeout(() => setError(null), 3000);
-  } catch (error) {
-    console.error("Error promoting student:", error);
-    setError(error instanceof Error ? error.message : "Failed to promote student");
-  }
-};
+  };
 
   const openStatusModal = (student: Admission) => {
     setCurrentStudentForStatus(student);
-    setNewStatus(student.status || "Active");
+    setNewStatus(student.status || "ACTIVE");
     setIsStatusModalOpen(true);
   };
 
@@ -576,10 +592,10 @@ function StudentList() {
     admission.student.gender && admission.student.gender.toLowerCase() === 'female'
   ).length;
 
-  const activeStudentsCount = allStudents.filter(s => s.status === "Active" || s.status === "ACTIVE").length;
-  const completedStudentsCount = allStudents.filter(s => s.status === "Completed" || s.status === "COMPLETED").length;
-  const suspendedStudentsCount = allStudents.filter(s => s.status === "Suspended" || s.status === "SUSPENDED").length;
-  const sackedStudentsCount = allStudents.filter(s => s.status === "Sacked" || s.status === "SACKED").length;
+  const activeStudentsCount = allStudents.filter(s => s.status === "ACTIVE").length;
+  const completedStudentsCount = allStudents.filter(s => s.status === "COMPLETED").length;
+  const suspendedStudentsCount = allStudents.filter(s => s.status === "SUSPENDED").length;
+  const sackedStudentsCount = allStudents.filter(s => s.status === "SACKED").length;
 
   return (
     <ProtectedRoute>
@@ -686,17 +702,16 @@ function StudentList() {
           </div>
 
           <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-2">
-            {/* Status buttons remain with their original colors */}
             <button
               onClick={() => {
-                setCurrentStatusFilter("Active");
-                fetchStudentsByStatus("Active");
+                setCurrentStatusFilter("ACTIVE");
+                fetchStudentsByStatus("ACTIVE");
               }}
               className={`bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded text-sm flex items-center justify-center ${
-                isStatusFilterLoading && currentStatusFilter === "Active" ? 'opacity-50 cursor-not-allowed' : ''
+                isStatusFilterLoading && currentStatusFilter === "ACTIVE" ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              {isStatusFilterLoading && currentStatusFilter === "Active" ? (
+              {isStatusFilterLoading && currentStatusFilter === "ACTIVE" ? (
                 <>
                   <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -713,14 +728,14 @@ function StudentList() {
 
             <button
               onClick={() => {
-                setCurrentStatusFilter("Completed");
-                fetchStudentsByStatus("Completed");
+                setCurrentStatusFilter("COMPLETED");
+                fetchStudentsByStatus("COMPLETED");
               }}
               className={`bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm flex items-center justify-center ${
-                isStatusFilterLoading && currentStatusFilter === "Completed" ? 'opacity-50 cursor-not-allowed' : ''
+                isStatusFilterLoading && currentStatusFilter === "COMPLETED" ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              {isStatusFilterLoading && currentStatusFilter === "Completed" ? (
+              {isStatusFilterLoading && currentStatusFilter === "COMPLETED" ? (
                 <>
                   <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -737,14 +752,14 @@ function StudentList() {
 
             <button
               onClick={() => {
-                setCurrentStatusFilter("Suspended");
-                fetchStudentsByStatus("Suspended");
+                setCurrentStatusFilter("SUSPENDED");
+                fetchStudentsByStatus("SUSPENDED");
               }}
               className={`bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded text-sm flex items-center justify-center ${
-                isStatusFilterLoading && currentStatusFilter === "Suspended" ? 'opacity-50 cursor-not-allowed' : ''
+                isStatusFilterLoading && currentStatusFilter === "SUSPENDED" ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              {isStatusFilterLoading && currentStatusFilter === "Suspended" ? (
+              {isStatusFilterLoading && currentStatusFilter === "SUSPENDED" ? (
                 <>
                   <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -761,14 +776,14 @@ function StudentList() {
 
             <button
               onClick={() => {
-                setCurrentStatusFilter("Sacked");
-                fetchStudentsByStatus("Sacked");
+                setCurrentStatusFilter("SACKED");
+                fetchStudentsByStatus("SACKED");
               }}
               className={`bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm flex items-center justify-center ${
-                isStatusFilterLoading && currentStatusFilter === "Sacked" ? 'opacity-50 cursor-not-allowed' : ''
+                isStatusFilterLoading && currentStatusFilter === "SACKED" ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              {isStatusFilterLoading && currentStatusFilter === "Sacked" ? (
+              {isStatusFilterLoading && currentStatusFilter === "SACKED" ? (
                 <>
                   <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -848,12 +863,12 @@ function StudentList() {
                       <td className="px-4 py-3 text-sm text-green-700">{admission.student.grade}</td>
                       <td className="px-4 py-3 text-sm">
                         <span className={`px-2 py-1 rounded-full text-xs ${
-                          admission.status === "Active" || admission.status === "ACTIVE" ? "bg-green-100 text-green-800" :
-                          admission.status === "Completed" || admission.status === "COMPLETED" ? "bg-blue-100 text-blue-800" :
-                          admission.status === "Suspended" || admission.status === "SUSPENDED" ? "bg-yellow-100 text-yellow-800" :
+                          admission.status === "ACTIVE" ? "bg-green-100 text-green-800" :
+                          admission.status === "COMPLETED" ? "bg-blue-100 text-blue-800" :
+                          admission.status === "SUSPENDED" ? "bg-yellow-100 text-yellow-800" :
                           "bg-red-100 text-red-800"
                         }`}>
-                          {admission.status || "Active"}
+                          {admission.status || "ACTIVE"}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-sm">
@@ -871,10 +886,10 @@ function StudentList() {
                             Update Status
                           </button>
                           <button
-                            onClick={() => admission.status === "Active" && openPromoteModal(admission)}
-                            disabled={admission.status !== "Active" && admission.status !== "ACTIVE"}
+                            onClick={() => openPromoteModal(admission)}
+                            disabled={!(admission.status === "ACTIVE")}
                             className={`text-green-600 hover:text-green-800 hover:underline text-left ${
-                              admission.status !== "Active" && admission.status !== "ACTIVE" ? 'opacity-50 cursor-not-allowed' : ''
+                              !(admission.status === "ACTIVE") ? 'opacity-50 cursor-not-allowed' : ''
                             }`}
                           >
                             Promote
@@ -905,7 +920,7 @@ function StudentList() {
               <h2 className="text-xl font-bold mb-4 text-green-800">Update Student Status</h2>
               <div className="space-y-4">
                 <p><span className="font-medium text-green-700">Student:</span> <span className="text-green-600">{currentStudentForStatus.student.fullName}</span></p>
-                <p><span className="font-medium text-green-700">Current Status:</span> <span className="text-green-600">{currentStudentForStatus.status || "Active"}</span></p>
+                <p><span className="font-medium text-green-700">Current Status:</span> <span className="text-green-600">{currentStudentForStatus.status || "ACTIVE"}</span></p>
                 
                 <div>
                   <label className="block text-sm font-medium mb-1 text-green-700">New Status</label>
@@ -915,10 +930,10 @@ function StudentList() {
                     onChange={(e) => setNewStatus(e.target.value)}
                     disabled={isUpdatingStatus}
                   >
-                    <option value="Active">Active</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Suspended">Suspended</option>
-                    <option value="Sacked">Sacked</option>
+                    <option value="ACTIVE">Active</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="SUSPENDED">Suspended</option>
+                    <option value="SACKED">Sacked</option>
                   </select>
                 </div>
               </div>
@@ -959,6 +974,7 @@ function StudentList() {
               <div className="space-y-4">
                 <p><span className="font-medium text-green-700">Student:</span> <span className="text-green-600">{currentStudentForStatus.student.fullName}</span></p>
                 <p><span className="font-medium text-green-700">Current Class:</span> <span className="text-green-600">{currentStudentForStatus.student.grade}</span></p>
+                <p><span className="font-medium text-green-700">Student ID:</span> <span className="text-green-600">{currentStudentForStatus.student.studentId}</span></p>
                 
                 <div>
                   <label className="block text-sm font-medium mb-1 text-green-700">Promote To</label>
@@ -988,11 +1004,55 @@ function StudentList() {
                   Cancel
                 </button>
                 <button
-                  onClick={() => promoteStudent(currentStudentForStatus.student.studentId, newGrade)}
+                  onClick={() => {
+                    if (newGrade) {
+                      setIsConfirmationModalOpen(true);
+                    }
+                  }}
                   disabled={!newGrade}
                   className={`px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 ${!newGrade ? 'opacity-50 cursor-not-allowed' : ''} transition-colors`}
                 >
                   Promote Student
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isConfirmationModalOpen && currentStudentForStatus && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg w-full max-w-md border-2 border-green-200">
+              <h2 className="text-xl font-bold mb-4 text-green-800">Confirm Promotion</h2>
+              <div className="space-y-4">
+                <p className="text-red-600 font-medium">Are you sure you want to promote {currentStudentForStatus.student.fullName} to {newGrade}?</p>
+                <p className="text-sm text-gray-600">This action is not reversible.</p>
+              </div>
+              <div className="mt-6 flex justify-end space-x-3">
+                <button
+                  onClick={() => setIsConfirmationModalOpen(false)}
+                  className="px-4 py-2 border border-green-300 rounded hover:bg-green-50 transition-colors"
+                  disabled={isPromoteLoading}
+                >
+                  No, Cancel
+                </button>
+                <button
+                  onClick={async () => {
+                    await promoteStudent();
+                  }}
+                  className={`px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center justify-center ${
+                    isPromoteLoading ? 'opacity-50 cursor-not-allowed' : ''
+                  } transition-colors`}
+                  disabled={isPromoteLoading}
+                >
+                  {isPromoteLoading ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Promoting...
+                    </>
+                  ) : 'Yes, Promote'}
                 </button>
               </div>
             </div>

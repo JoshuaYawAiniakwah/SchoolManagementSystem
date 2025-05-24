@@ -52,6 +52,7 @@ export default function Menu() {
     { name: "Teacher Profiles", path: "/teacher-profile" },
     { name: "Student Profile Management", path: "/student-profile" },
     { name: "Timetable Section", path: "/timetable-management" },
+    { name: "Reports and Insights", path: "/reports" },
     { name: "Parental Involvement", path: "/parental-involvement" },
   ];
 
