@@ -1,6 +1,7 @@
 'use client';
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useState } from 'react';
+import { useAuth } from "@/context/AuthContext";
 import { Modal } from '@/components/ui/Modal';
 import html2pdf from 'html2pdf.js';
 
@@ -377,6 +378,7 @@ function InvoiceGenerationPage() {
   const [showResults, setShowResults] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const { authFetch } = useAuth();
 
   const classOptions = ["Creche", "Nursery 1", "Nursery 2", "KG 1", "KG 2", 
                        "Grade 1", "Grade 2", "Grade 3", "Grade 4", 
@@ -486,7 +488,7 @@ function InvoiceGenerationPage() {
       const formData = new FormData();
       formData.append('file', pdfBlob, 'invoice.pdf');
 
-      const response = await fetch('/api/send-invoice', {
+      const response = await authFetch('/api/send-invoice', {
         method: "POST",
         body: formData,
       });

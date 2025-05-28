@@ -425,7 +425,7 @@ function ReportsPage() {
               className={({ selected }) =>
                 `px-6 py-2 text-lg font-semibold rounded-lg transition-all ${
                   selected
-                    ? "bg-blue-600 text-white shadow-md"
+                    ? "bg-green-600 text-white shadow-md"
                     : "text-gray-700 bg-gray-200 hover:bg-gray-300"
                 }`
               }
@@ -439,23 +439,23 @@ function ReportsPage() {
           {/* Grades Reports Tab */}
           <Tab.Panel>
             <motion.div
-              className="p-6 bg-blue-50 border-2 border-blue-200 rounded-lg shadow-lg"
+              className="p-6 bg-green-50 border-2 border-green-200 rounded-lg shadow-lg"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
             >
-              <h2 className="text-2xl font-semibold text-blue-800 mb-4">📝 Grades Reports from Teachers</h2>
+              <h2 className="text-2xl font-semibold text-green-800 mb-4">📝 Grades Reports from Teachers</h2>
 
               {!classQuery ? (
-                <div className="p-4 bg-white rounded-lg shadow-sm border border-blue-100 text-center">
+                <div className="p-4 bg-white rounded-lg shadow-sm border border-green-100 text-center">
                   Please select a class to view grades reports
                 </div>
               ) : isLoading ? (
                 <div className="flex justify-center items-center h-40">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
                 </div>
               ) : gradesReports.length === 0 ? (
-                <div className="p-4 bg-white rounded-lg shadow-sm border border-blue-100 text-center">
+                <div className="p-4 bg-white rounded-lg shadow-sm border border-green-100 text-center">
                   No grades reports available for {classQuery}.
                 </div>
               ) : (
@@ -464,8 +464,8 @@ function ReportsPage() {
                     report.students.map((student: any) => (
                       <div key={`${report.id}-${student.name}`}>
                         <div 
-                          className={`p-4 bg-white rounded-lg shadow-sm border border-blue-100 cursor-pointer transition-all ${
-                            selectedStudentGrades?.name === student.name ? 'ring-2 ring-blue-500' : ''
+                          className={`p-4 bg-white rounded-lg shadow-sm border border-green-100 cursor-pointer transition-all ${
+                            selectedStudentGrades?.name === student.name ? 'ring-2 ring-green-500' : ''
                           }`}
                           onClick={() => setSelectedStudentGrades({
                             ...student,
@@ -477,7 +477,7 @@ function ReportsPage() {
                         >
                           <div className="flex justify-between items-start">
                             <div>
-                              <h3 className="text-xl font-semibold text-blue-700">{student.name}</h3>
+                              <h3 className="text-xl font-semibold text-green-700">{student.name}</h3>
                               <p className="text-gray-600">Class: {report.className}</p>
                               <p className="text-gray-600">Subject: {report.subject}</p>
                               <p className="text-gray-600">Teacher: {report.teacherName}</p>
@@ -492,7 +492,7 @@ function ReportsPage() {
                         </div>
 
                         {selectedStudentGrades?.name === student.name && (
-                          <div className="mt-2 bg-white p-4 rounded-lg shadow-sm border border-blue-100">
+                          <div className="mt-2 bg-white p-4 rounded-lg shadow-sm border border-green-100">
                             <div className="grid grid-cols-2 gap-4 mb-4">
                               <div>
                                 <p className="text-gray-600">Class:</p>
@@ -514,24 +514,24 @@ function ReportsPage() {
 
                             <div className="grid grid-cols-2 gap-4 mb-4">
                               <div>
-                                <h5 className="font-medium text-blue-700 mb-2">Test Score:</h5>
+                                <h5 className="font-medium text-green-700 mb-2">Test Score:</h5>
                                 <p>{selectedStudentGrades.testScore}%</p>
                               </div>
                               
                               <div>
-                                <h5 className="font-medium text-blue-700 mb-2">Assignment Score:</h5>
+                                <h5 className="font-medium text-green-700 mb-2">Assignment Score:</h5>
                                 <p>{selectedStudentGrades.assignmentScore}%</p>
                               </div>
                             </div>
                             
                             <div className="mb-3">
-                              <h5 className="font-medium text-blue-700 mb-1">Exam Score:</h5>
+                              <h5 className="font-medium text-green-700 mb-1">Exam Score:</h5>
                               <p>{selectedStudentGrades.examScore}%</p>
                             </div>
                             
                             <div>
-                              <h5 className="font-medium text-blue-700 mb-1">Teacher Comments:</h5>
-                              <p className="whitespace-pre-line bg-blue-50 p-3 rounded">{selectedStudentGrades.comments}</p>
+                              <h5 className="font-medium text-green-700 mb-1">Teacher Comments:</h5>
+                              <p className="whitespace-pre-line bg-green-50 p-3 rounded">{selectedStudentGrades.comments}</p>
                             </div>
 
                             <div className="flex justify-end space-x-2 mt-4">
@@ -555,23 +555,23 @@ function ReportsPage() {
           {/* Support Needed Tab */}
           <Tab.Panel>
             <motion.div
-              className="p-6 bg-orange-50 border-2 border-orange-200 rounded-lg shadow-lg"
+              className="p-6 bg-green-50 border-2 border-green-200 rounded-lg shadow-lg"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
             >
-              <h2 className="text-2xl font-semibold text-orange-800 mb-4">🆘 Support Needed Reports from Teachers</h2>
+              <h2 className="text-2xl font-semibold text-green-800 mb-4">🆘 Support Needed Reports from Teachers</h2>
 
               {!classQuery ? (
-                <div className="p-4 bg-white rounded-lg shadow-sm border border-orange-100 text-center">
+                <div className="p-4 bg-white rounded-lg shadow-sm border border-green-100 text-center">
                   Please select a class to view support requests
                 </div>
               ) : isLoading ? (
                 <div className="flex justify-center items-center h-40">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
                 </div>
               ) : supportReports.length === 0 ? (
-                <div className="p-4 bg-white rounded-lg shadow-sm border border-orange-100 text-center">
+                <div className="p-4 bg-white rounded-lg shadow-sm border border-green-100 text-center">
                   No support requests available for {classQuery}.
                 </div>
               ) : (
@@ -580,8 +580,8 @@ function ReportsPage() {
                     report.students.map((student: any) => (
                       <div key={`${report.id}-${student.name}`}>
                         <div 
-                          className={`p-4 bg-white rounded-lg shadow-sm border border-orange-100 cursor-pointer transition-all ${
-                            selectedSupportStudent?.name === student.name ? 'ring-2 ring-orange-500' : ''
+                          className={`p-4 bg-white rounded-lg shadow-sm border border-green-100 cursor-pointer transition-all ${
+                            selectedSupportStudent?.name === student.name ? 'ring-2 ring-green-500' : ''
                           }`}
                           onClick={() => setSelectedSupportStudent({
                             ...student,
@@ -593,7 +593,7 @@ function ReportsPage() {
                         >
                           <div className="flex justify-between items-start">
                             <div>
-                              <h3 className="text-xl font-semibold text-orange-700">{student.name}</h3>
+                              <h3 className="text-xl font-semibold text-green-700">{student.name}</h3>
                               <p className="text-gray-600">Class: {report.className}</p>
                               <p className="text-gray-600">Teacher: {report.teacherName}</p>
                               <p className="text-gray-600">Subject Affected: {student.subjectAffected}</p>
@@ -602,7 +602,7 @@ function ReportsPage() {
                         </div>
 
                         {selectedSupportStudent?.name === student.name && (
-                          <div className="mt-2 bg-white p-4 rounded-lg shadow-sm border border-orange-100">
+                          <div className="mt-2 bg-white p-4 rounded-lg shadow-sm border border-green-100">
                             <div className="grid grid-cols-2 gap-4 mb-4">
                               <div>
                                 <p className="text-gray-600">Class:</p>
@@ -623,12 +623,12 @@ function ReportsPage() {
                             </div>
 
                             <div className="mb-4">
-                              <h4 className="text-lg font-semibold text-orange-700 mb-2">Description:</h4>
-                              <p className="whitespace-pre-line bg-orange-50 p-3 rounded">{selectedSupportStudent.description}</p>
+                              <h4 className="text-lg font-semibold text-green-700 mb-2">Description:</h4>
+                              <p className="whitespace-pre-line bg-green-50 p-3 rounded">{selectedSupportStudent.description}</p>
                             </div>
 
                             <div className="flex justify-end space-x-2">
-                              <button className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+                              <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
                                 Mark as Resolved
                               </button>
                               <button 
@@ -651,23 +651,23 @@ function ReportsPage() {
           {/* Lesson Plans Tab */}
           <Tab.Panel>
             <motion.div
-              className="p-6 bg-purple-50 border-2 border-purple-200 rounded-lg shadow-lg"
+              className="p-6 bg-green-50 border-2 border-green-200 rounded-lg shadow-lg"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
             >
-              <h2 className="text-2xl font-semibold text-purple-800 mb-4">📚 Lesson Plans from Teachers</h2>
+              <h2 className="text-2xl font-semibold text-green-800 mb-4">📚 Lesson Plans from Teachers</h2>
 
               {!classQuery ? (
-                <div className="p-4 bg-white rounded-lg shadow-sm border border-purple-100 text-center">
+                <div className="p-4 bg-white rounded-lg shadow-sm border border-green-100 text-center">
                   Please select a class to view lesson plans
                 </div>
               ) : isLoading ? (
                 <div className="flex justify-center items-center h-40">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
                 </div>
               ) : lessonPlans.length === 0 ? (
-                <div className="p-4 bg-white rounded-lg shadow-sm border border-purple-100 text-center">
+                <div className="p-4 bg-white rounded-lg shadow-sm border border-green-100 text-center">
                   No lesson plans available for {classQuery}.
                 </div>
               ) : (
@@ -675,14 +675,14 @@ function ReportsPage() {
                   {lessonPlans.map((plan) => (
                     <div 
                       key={plan.id} 
-                      className={`p-4 bg-white rounded-lg shadow-sm border border-purple-100 cursor-pointer transition-all ${
-                        selectedLessonPlan?.id === plan.id ? 'ring-2 ring-purple-500' : ''
+                      className={`p-4 bg-white rounded-lg shadow-sm border border-green-100 cursor-pointer transition-all ${
+                        selectedLessonPlan?.id === plan.id ? 'ring-2 ring-green-500' : ''
                       }`}
                       onClick={() => setSelectedLessonPlan(plan)}
                     >
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="text-xl font-semibold text-purple-700">{plan.title}</h3>
+                          <h3 className="text-xl font-semibold text-green-700">{plan.title}</h3>
                           <p className="text-gray-600">Class: {plan.className}</p>
                           <p className="text-gray-600">Subject: {plan.subject}</p>
                           <p className="text-gray-600">Teacher: {plan.teacherName}</p>
@@ -695,8 +695,8 @@ function ReportsPage() {
               )}
 
               {selectedLessonPlan && (
-                <div className="mt-6 bg-white p-4 rounded-lg shadow-sm border border-purple-100">
-                  <h3 className="text-xl font-semibold text-purple-700 mb-2">Lesson Plan Details</h3>
+                <div className="mt-6 bg-white p-4 rounded-lg shadow-sm border border-green-100">
+                  <h3 className="text-xl font-semibold text-green-700 mb-2">Lesson Plan Details</h3>
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
                       <p className="text-gray-600">Title:</p>
@@ -725,7 +725,7 @@ function ReportsPage() {
                   </div>
 
                   <div className="mb-4">
-                    <h4 className="text-lg font-semibold text-purple-700 mb-2">Learning Objectives:</h4>
+                    <h4 className="text-lg font-semibold text-green-700 mb-2">Learning Objectives:</h4>
                     <ul className="list-disc pl-5 space-y-1">
                       {selectedLessonPlan.objectives.map((obj: string, index: number) => (
                         <li key={index}>{obj}</li>
@@ -734,7 +734,7 @@ function ReportsPage() {
                   </div>
 
                   <div className="mb-4">
-                    <h4 className="text-lg font-semibold text-purple-700 mb-2">Required Materials:</h4>
+                    <h4 className="text-lg font-semibold text-green-700 mb-2">Required Materials:</h4>
                     <ul className="list-disc pl-5 space-y-1">
                       {selectedLessonPlan.materials.map((material: string, index: number) => (
                         <li key={index}>{material}</li>
@@ -758,23 +758,23 @@ function ReportsPage() {
           {/* Flagged Absences Tab */}
           <Tab.Panel>
             <motion.div
-              className="p-6 bg-red-50 border-2 border-red-200 rounded-lg shadow-lg"
+              className="p-6 bg-green-50 border-2 border-green-200 rounded-lg shadow-lg"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
             >
-              <h2 className="text-2xl font-semibold text-red-800 mb-4">🚩 Flagged Absences from Teachers</h2>
+              <h2 className="text-2xl font-semibold text-green-800 mb-4">🚩 Flagged Absences from Teachers</h2>
 
               {!classQuery ? (
-                <div className="p-4 bg-white rounded-lg shadow-sm border border-red-100 text-center">
+                <div className="p-4 bg-white rounded-lg shadow-sm border border-green-100 text-center">
                   Please select a class to view flagged absences
                 </div>
               ) : isLoading ? (
                 <div className="flex justify-center items-center h-40">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
                 </div>
               ) : flaggedAbsences.length === 0 ? (
-                <div className="p-4 bg-white rounded-lg shadow-sm border border-red-100 text-center">
+                <div className="p-4 bg-white rounded-lg shadow-sm border border-green-100 text-center">
                   No flagged absences available for {classQuery}.
                 </div>
               ) : (
@@ -782,14 +782,14 @@ function ReportsPage() {
                   {flaggedAbsences.map((absence) => (
                     <div 
                       key={absence.id} 
-                      className={`p-4 bg-white rounded-lg shadow-sm border border-red-100 cursor-pointer transition-all ${
-                        selectedFlaggedAbsence?.id === absence.id ? 'ring-2 ring-red-500' : ''
+                      className={`p-4 bg-white rounded-lg shadow-sm border border-green-100 cursor-pointer transition-all ${
+                        selectedFlaggedAbsence?.id === absence.id ? 'ring-2 ring-green-500' : ''
                       }`}
                       onClick={() => setSelectedFlaggedAbsence(absence)}
                     >
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="text-xl font-semibold text-red-700">{absence.studentName}</h3>
+                          <h3 className="text-xl font-semibold text-green-700">{absence.studentName}</h3>
                           <p className="text-gray-600">Class: {absence.className}</p>
                           <p className="text-gray-600">Teacher: {absence.teacherName}</p>
                           <p className="text-gray-600">Absences: {absence.absenceCount}</p>
@@ -809,8 +809,8 @@ function ReportsPage() {
               )}
 
               {selectedFlaggedAbsence && (
-                <div className="mt-6 bg-white p-4 rounded-lg shadow-sm border border-red-100">
-                  <h3 className="text-xl font-semibold text-red-700 mb-2">Flagged Absence Details</h3>
+                <div className="mt-6 bg-white p-4 rounded-lg shadow-sm border border-green-100">
+                  <h3 className="text-xl font-semibold text-green-700 mb-2">Flagged Absence Details</h3>
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
                       <p className="text-gray-600">Student:</p>
@@ -843,7 +843,7 @@ function ReportsPage() {
                   </div>
 
                   <div className="mb-4">
-                    <h4 className="text-lg font-semibold text-red-700 mb-2">Absence Dates:</h4>
+                    <h4 className="text-lg font-semibold text-green-700 mb-2">Absence Dates:</h4>
                     <div className="flex flex-wrap gap-2">
                       {selectedFlaggedAbsence.absenceDates.map((date: string, index: number) => (
                         <span key={index} className="px-3 py-1 bg-red-100 text-red-800 rounded-full">
@@ -854,12 +854,12 @@ function ReportsPage() {
                   </div>
 
                   <div className="mb-4">
-                    <h4 className="text-lg font-semibold text-red-700 mb-2">Teacher's Comments:</h4>
-                    <p className="whitespace-pre-line bg-red-50 p-3 rounded">{selectedFlaggedAbsence.comments}</p>
+                    <h4 className="text-lg font-semibold text-green-700 mb-2">Teacher's Comments:</h4>
+                    <p className="whitespace-pre-line bg-green-50 p-3 rounded">{selectedFlaggedAbsence.comments}</p>
                   </div>
 
                   <div className="mb-4">
-                    <h4 className="text-lg font-semibold text-red-700 mb-2">Parent Contact Information:</h4>
+                    <h4 className="text-lg font-semibold text-green-700 mb-2">Parent Contact Information:</h4>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <p className="text-gray-600">Parent Name:</p>
@@ -877,7 +877,7 @@ function ReportsPage() {
                   </div>
 
                   <div className="flex justify-end space-x-2">
-                    <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                    <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
                       Contact Parent
                     </button>
                     <button 
@@ -900,7 +900,7 @@ function ReportsPage() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
             >
-              <h2 className="text-2xl font-semibold text-green-800 mb-4">📅 Attendance Reports from Teachers</h2>
+              <h2 className="text-2xl font-semibold text-green-800 mb-4">📅 Attendance from Teachers</h2>
 
               <div className="flex space-x-2 mb-4">
                 <button

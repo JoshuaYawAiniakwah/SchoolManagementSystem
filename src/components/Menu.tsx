@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 export default function Menu() {
   const router = useRouter();
+  const { authFetch } = useAuth();
   const pathname = usePathname();
   const { isAuthenticated, isLoading, logout } = useAuth();
   const [pendingCount, setPendingCount] = useState(0);
@@ -14,7 +15,7 @@ export default function Menu() {
     if (isAuthenticated) {
       const fetchPendingCount = async () => {
         try {
-          const response = await fetch(
+          const response = await authFetch(
             'https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/admissions/status?status=PENDING'
           );
           if (response.ok) {

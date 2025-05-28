@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import React, { useState, useEffect } from "react";
 
@@ -6,7 +7,7 @@ import React, { useState, useEffect } from "react";
 const fetchImage = async (fileName: string): Promise<string | null> => {
   try {
     const response = await fetch(
-      `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/api/getFile`,
+      `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/getFile`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -230,6 +231,7 @@ const StudentDetailsModal: React.FC<{ student: Student | undefined; onClose: () 
 };
 
 function Applications() {
+  const { authFetch } = useAuth();
   const [applications, setApplications] = useState<Admission[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -263,31 +265,21 @@ function Applications() {
     setLoading(true);
     setError(null);
     setIsDataLoaded(false);
-
+  
     try {
       let url = "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/admissions";
-      
       if (status !== "ALL") {
         url = `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/admissions/status?status=${status}`;
       }
-      
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
+  
+      const response = await authFetch(url); // ✅
       const data = await response.json();
       setApplications(data);
-      
-      // To get counts, we need to fetch all applications
-      const allResponse = await fetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/admissions");
-      if (!allResponse.ok) {
-        throw new Error(`HTTP error! status: ${allResponse.status}`);
-      }
-      
+  
+      const allResponse = await authFetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/admissions"); // ✅
       const allData = await allResponse.json();
       updateApplicationCounts(allData);
-      
+  
       setSelectedStatus(status);
       localStorage.setItem("selectedStatus", status);
       setIsDataLoaded(true);
@@ -298,18 +290,15 @@ function Applications() {
       setLoading(false);
     }
   };
+  
 
   const fetchAllApplications = async () => {
     setLoading(true);
     setError(null);
     setIsDataLoaded(false);
-
+  
     try {
-      const response = await fetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/admissions");
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
+      const response = await authFetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/admissions"); // ✅
       const data = await response.json();
       setApplications(data);
       updateApplicationCounts(data);
@@ -323,30 +312,19 @@ function Applications() {
       setLoading(false);
     }
   };
+  
 
   const updateApplicationStatus = async (applicationNumber: string, status: string, email?: string) => {
     if (!applicationNumber) return setError("Missing Application Number. Update failed.");
-
+  
     setProcessingApplication(applicationNumber);
-    
+  
     try {
-      const response = await fetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/admissions/updateStatus", {
+      const response = await authFetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/admissions/updateStatus", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          applicationNumber,
-          status,
-          email
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      // Refresh the applications after update
+        body: JSON.stringify({ applicationNumber, status, email }),
+      }); // ✅
+  
       await fetchApplications(selectedStatus);
     } catch (error: any) {
       console.error("❌ Error updating application status:", error.message);
@@ -355,6 +333,7 @@ function Applications() {
       setProcessingApplication(null);
     }
   };
+  
 
   return (
     <ProtectedRoute>

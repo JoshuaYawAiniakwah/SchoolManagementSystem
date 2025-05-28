@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useState, useEffect } from "react";
 import { Modal } from '@/components/ui/Modal';
@@ -224,6 +225,7 @@ const StudentDetailsPopup: React.FC<{ student: Student | undefined; onClose: () 
 };
 
 function StudentList() {
+  const { authFetch } = useAuth();
   const [students, setStudents] = useState<Admission[]>([]);
   const [allStudents, setAllStudents] = useState<Admission[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -246,20 +248,17 @@ function StudentList() {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [isPromoteLoading, setIsPromoteLoading] = useState(false);
 
+
   const fetchAPI = async (url: string, options: RequestInit = {}) => {
     try {
-      const response = await fetch(url, {
+      const response = await authFetch(url, {
         ...options,
         headers: {
           'Content-Type': 'application/json',
           ...options.headers,
         },
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
+  
       const text = await response.text();
       return text ? JSON.parse(text) : null;
     } catch (error) {
@@ -440,7 +439,7 @@ function StudentList() {
       
       const endpoint = `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/status/updateGrade/${studentId}?newStatus=${formattedStatus}`;
       
-      const response = await fetch(endpoint, {
+      const response = await authFetch(endpoint, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",
@@ -505,7 +504,7 @@ function StudentList() {
       setIsPromoteLoading(true);
       const endpoint = `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/promote/${currentStudentForStatus.student.studentId}`;
       
-      const response = await fetch(endpoint, {
+      const response = await authFetch(endpoint, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",

@@ -1,7 +1,7 @@
 "use client";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useState, useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { authFetch, useAuth } from "@/context/AuthContext";
 import {
   PieChart,
   Pie,
@@ -18,7 +18,7 @@ import {
 } from "recharts";
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user,authFetch } = useAuth();
   
   // Student data state
   const [studentsData, setStudentsData] = useState({
@@ -43,10 +43,11 @@ const Dashboard = () => {
 
   // Fetch student data
   useEffect(() => {
+    
     const fetchStudentData = async () => {
       try {
         setLoadingStudents(true);
-        const response = await fetch(
+        const response = await authFetch(
           "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/approved"
         );
         
@@ -85,7 +86,7 @@ const Dashboard = () => {
     const fetchTeacherData = async () => {
       try {
         setLoadingTeachers(true);
-        const response = await fetch(
+        const response = await authFetch(
           "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/all",
           {
             headers: {
@@ -140,7 +141,7 @@ const Dashboard = () => {
     const fetchEvents = async () => {
       setLoadingEvents(true);
       try {
-        const response = await fetch(
+        const response = await authFetch(
           "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/upcoming",
           {
             headers: {

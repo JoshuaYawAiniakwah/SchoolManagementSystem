@@ -1,6 +1,7 @@
 'use client';
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext"
 import { motion } from "framer-motion";
 import { Tab } from "@headlessui/react";
 import { Modal } from '@/components/ui/Modal';
@@ -53,6 +54,31 @@ interface Teacher {
   email: string;
   subjects: string[];
   classes: string[];
+}
+
+interface SBARecord {
+  id: string;
+  studentId: string;
+  studentName: string;
+  gender: string;
+  monthlyTest1: number;
+  monthlyTest2: number;
+  groupExercise: number;
+  homeWork: number;
+  classEve1: number;
+  classEve2: number;
+  projectWork: number;
+  totalSBAScore: number;
+  fiftyPercent: number;
+  endOfTermExams: number;
+  fiftyPercentExam: number;
+  grandTotal: number;
+  grade: string;
+  position: number;
+  className: string;
+  subject: string;
+  term: number;
+  academicYear: string;
 }
 
 // Mock Data
@@ -596,6 +622,538 @@ const mockAssignments: Assignment[] = [
   }
 ];
 
+// Mock SBA Data with updated gender values (Male/Female instead of Boy/Girl)
+const mockSBARecords: SBARecord[] = [
+  {
+    id: "SBA001",
+    studentId: "S007",
+    studentName: "Dick Kwamena Norbert",
+    gender: "Male",
+    monthlyTest1: 18,
+    monthlyTest2: 19,
+    groupExercise: 10,
+    homeWork: 19,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 10,
+    totalSBAScore: 96,
+    fiftyPercent: 48,
+    endOfTermExams: 60,
+    fiftyPercentExam: 30,
+    grandTotal: 78,
+    grade: "A",
+    position: 1,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA002",
+    studentId: "S012",
+    studentName: "Sampson Kelvin Moses",
+    gender: "Male",
+    monthlyTest1: 18,
+    monthlyTest2: 20,
+    groupExercise: 10,
+    homeWork: 18,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 10,
+    totalSBAScore: 96,
+    fiftyPercent: 48,
+    endOfTermExams: 52,
+    fiftyPercentExam: 26,
+    grandTotal: 74,
+    grade: "B+",
+    position: 2,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA003",
+    studentId: "S002",
+    studentName: "Appiah Olygere George",
+    gender: "Male",
+    monthlyTest1: 19,
+    monthlyTest2: 19,
+    groupExercise: 10,
+    homeWork: 18,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 10,
+    totalSBAScore: 96,
+    fiftyPercent: 48,
+    endOfTermExams: 50,
+    fiftyPercentExam: 25,
+    grandTotal: 73,
+    grade: "B",
+    position: 3,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA004",
+    studentId: "S015",
+    studentName: "Andoh Aredziwa Nasrin",
+    gender: "Female",
+    monthlyTest1: 17,
+    monthlyTest2: 14,
+    groupExercise: 10,
+    homeWork: 16,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 10,
+    totalSBAScore: 87,
+    fiftyPercent: 44,
+    endOfTermExams: 55,
+    fiftyPercentExam: 28,
+    grandTotal: 71,
+    grade: "B-",
+    position: 4,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA005",
+    studentId: "S006",
+    studentName: "Cobbinah Kwei Franklin",
+    gender: "Male",
+    monthlyTest1: 17,
+    monthlyTest2: 20,
+    groupExercise: 10,
+    homeWork: 18,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 10,
+    totalSBAScore: 95,
+    fiftyPercent: 48,
+    endOfTermExams: 46,
+    fiftyPercentExam: 23,
+    grandTotal: 71,
+    grade: "B-",
+    position: 4,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA006",
+    studentId: "S001",
+    studentName: "Addison Hughes Gideon",
+    gender: "Male",
+    monthlyTest1: 17,
+    monthlyTest2: 17,
+    groupExercise: 10,
+    homeWork: 18,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 10,
+    totalSBAScore: 92,
+    fiftyPercent: 46,
+    endOfTermExams: 47,
+    fiftyPercentExam: 24,
+    grandTotal: 70,
+    grade: "C+",
+    position: 6,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA007",
+    studentId: "S011",
+    studentName: "Quaicoe Kwaku Galous",
+    gender: "Male",
+    monthlyTest1: 17,
+    monthlyTest2: 15,
+    groupExercise: 6,
+    homeWork: 17,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 7,
+    totalSBAScore: 82,
+    fiftyPercent: 41,
+    endOfTermExams: 43,
+    fiftyPercentExam: 22,
+    grandTotal: 63,
+    grade: "C",
+    position: 7,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA008",
+    studentId: "S019",
+    studentName: "Danquah Abena Elzer",
+    gender: "Female",
+    monthlyTest1: 16,
+    monthlyTest2: 14,
+    groupExercise: 9,
+    homeWork: 6,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 10,
+    totalSBAScore: 85,
+    fiftyPercent: 43,
+    endOfTermExams: 36,
+    fiftyPercentExam: 18,
+    grandTotal: 61,
+    grade: "C-",
+    position: 8,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA009",
+    studentId: "S003",
+    studentName: "Arthur K. Nana Jeffery",
+    gender: "Male",
+    monthlyTest1: 16,
+    monthlyTest2: 19,
+    groupExercise: 5,
+    homeWork: 15,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 7,
+    totalSBAScore: 82,
+    fiftyPercent: 41,
+    endOfTermExams: 37,
+    fiftyPercentExam: 19,
+    grandTotal: 60,
+    grade: "D+",
+    position: 9,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA010",
+    studentId: "S023",
+    studentName: "Mensah Ninjira Magdalene",
+    gender: "Female",
+    monthlyTest1: 15,
+    monthlyTest2: 16,
+    groupExercise: 5,
+    homeWork: 15,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 7,
+    totalSBAScore: 78,
+    fiftyPercent: 39,
+    endOfTermExams: 41,
+    fiftyPercentExam: 21,
+    grandTotal: 60,
+    grade: "D+",
+    position: 9,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA011",
+    studentId: "S022",
+    studentName: "Gebiwaa A. Sussanina Bonah",
+    gender: "Female",
+    monthlyTest1: 16,
+    monthlyTest2: 15,
+    groupExercise: 9,
+    homeWork: 16,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 10,
+    totalSBAScore: 86,
+    fiftyPercent: 43,
+    endOfTermExams: 32,
+    fiftyPercentExam: 16,
+    grandTotal: 59,
+    grade: "D",
+    position: 11,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA012",
+    studentId: "S010",
+    studentName: "Nietsiah Junior Joseph",
+    gender: "Male",
+    monthlyTest1: 15,
+    monthlyTest2: 19,
+    groupExercise: 5,
+    homeWork: 16,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 7,
+    totalSBAScore: 82,
+    fiftyPercent: 41,
+    endOfTermExams: 35,
+    fiftyPercentExam: 18,
+    grandTotal: 59,
+    grade: "D",
+    position: 11,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA013",
+    studentId: "S014",
+    studentName: "Americk Philpa",
+    gender: "Female",
+    monthlyTest1: 15,
+    monthlyTest2: 12,
+    groupExercise: 8,
+    homeWork: 14,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 7,
+    totalSBAScore: 76,
+    fiftyPercent: 38,
+    endOfTermExams: 41,
+    fiftyPercentExam: 21,
+    grandTotal: 59,
+    grade: "D",
+    position: 11,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA014",
+    studentId: "S004",
+    studentName: "Arthur Yaw Nana",
+    gender: "Male",
+    monthlyTest1: 15,
+    monthlyTest2: 18,
+    groupExercise: 6,
+    homeWork: 14,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 7,
+    totalSBAScore: 80,
+    fiftyPercent: 40,
+    endOfTermExams: 33,
+    fiftyPercentExam: 17,
+    grandTotal: 57,
+    grade: "D-",
+    position: 14,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA015",
+    studentId: "S005",
+    studentName: "Asamoah Arhu Isaac",
+    gender: "Male",
+    monthlyTest1: 15,
+    monthlyTest2: 18,
+    groupExercise: 5,
+    homeWork: 14,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 7,
+    totalSBAScore: 79,
+    fiftyPercent: 40,
+    endOfTermExams: 32,
+    fiftyPercentExam: 16,
+    grandTotal: 56,
+    grade: "E",
+    position: 15,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA016",
+    studentId: "S024",
+    studentName: "Odum Anna Emerald",
+    gender: "Female",
+    monthlyTest1: 13,
+    monthlyTest2: 10,
+    groupExercise: 9,
+    homeWork: 15,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 10,
+    totalSBAScore: 77,
+    fiftyPercent: 39,
+    endOfTermExams: 32,
+    fiftyPercentExam: 16,
+    grandTotal: 55,
+    grade: "E",
+    position: 16,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA017",
+    studentId: "S009",
+    studentName: "Nietsiah Leon",
+    gender: "Male",
+    monthlyTest1: 14,
+    monthlyTest2: 17,
+    groupExercise: 5,
+    homeWork: 15,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 7,
+    totalSBAScore: 78,
+    fiftyPercent: 39,
+    endOfTermExams: 28,
+    fiftyPercentExam: 14,
+    grandTotal: 53,
+    grade: "F",
+    position: 17,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA018",
+    studentId: "S021",
+    studentName: "Gaisey Emmanuela",
+    gender: "Female",
+    monthlyTest1: 14,
+    monthlyTest2: 15,
+    groupExercise: 5,
+    homeWork: 15,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 7,
+    totalSBAScore: 76,
+    fiftyPercent: 38,
+    endOfTermExams: 30,
+    fiftyPercentExam: 15,
+    grandTotal: 53,
+    grade: "F",
+    position: 17,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA019",
+    studentId: "S013",
+    studentName: "Teiterh Bryan",
+    gender: "Male",
+    monthlyTest1: 14,
+    monthlyTest2: 16,
+    groupExercise: 4,
+    homeWork: 13,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 7,
+    totalSBAScore: 74,
+    fiftyPercent: 37,
+    endOfTermExams: 32,
+    fiftyPercentExam: 16,
+    grandTotal: 53,
+    grade: "F",
+    position: 17,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA020",
+    studentId: "S020",
+    studentName: "Dey Vanessa",
+    gender: "Female",
+    monthlyTest1: 14,
+    monthlyTest2: 15,
+    groupExercise: 5,
+    homeWork: 14,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 7,
+    totalSBAScore: 75,
+    fiftyPercent: 38,
+    endOfTermExams: 30,
+    fiftyPercentExam: 15,
+    grandTotal: 53,
+    grade: "F",
+    position: 17,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA021",
+    studentId: "S017",
+    studentName: "Baidoo Christabel",
+    gender: "Female",
+    monthlyTest1: 14,
+    monthlyTest2: 14,
+    groupExercise: 5,
+    homeWork: 14,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 7,
+    totalSBAScore: 74,
+    fiftyPercent: 37,
+    endOfTermExams: 27,
+    fiftyPercentExam: 14,
+    grandTotal: 51,
+    grade: "F",
+    position: 21,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  },
+  {
+    id: "SBA022",
+    studentId: "S018",
+    studentName: "Banson Ruth",
+    gender: "Female",
+    monthlyTest1: 15,
+    monthlyTest2: 15,
+    groupExercise: 5,
+    homeWork: 15,
+    classEve1: 10,
+    classEve2: 10,
+    projectWork: 7,
+    totalSBAScore: 77,
+    fiftyPercent: 39,
+    endOfTermExams: 23,
+    fiftyPercentExam: 12,
+    grandTotal: 50,
+    grade: "F",
+    position: 22,
+    className: "Grade 7",
+    subject: "Mathematics",
+    term: 1,
+    academicYear: "2024/2025"
+  }
+];
+
 // Attendance Report Modal
 const AttendanceReportModal: React.FC<{
   report: AttendanceRecord;
@@ -895,12 +1453,294 @@ const AssignmentModal: React.FC<{
   );
 };
 
+// SBA Modal
+const SBAModal: React.FC<{
+  sba: SBARecord;
+  onClose: () => void;
+  onUpdate: (updatedSBA: SBARecord) => Promise<void>;
+}> = ({ sba, onClose, onUpdate }) => {
+  const [monthlyTest1, setMonthlyTest1] = useState(sba.monthlyTest1.toString());
+  const [monthlyTest2, setMonthlyTest2] = useState(sba.monthlyTest2.toString());
+  const [groupExercise, setGroupExercise] = useState(sba.groupExercise.toString());
+  const [homeWork, setHomeWork] = useState(sba.homeWork.toString());
+  const [classEve1, setClassEve1] = useState(sba.classEve1.toString());
+  const [classEve2, setClassEve2] = useState(sba.classEve2.toString());
+  const [projectWork, setProjectWork] = useState(sba.projectWork.toString());
+  const [endOfTermExams, setEndOfTermExams] = useState(sba.endOfTermExams.toString());
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const calculateScores = () => {
+    const mt1 = parseFloat(monthlyTest1) || 0;
+    const mt2 = parseFloat(monthlyTest2) || 0;
+    const ge = parseFloat(groupExercise) || 0;
+    const hw = parseFloat(homeWork) || 0;
+    const ce1 = parseFloat(classEve1) || 0;
+    const ce2 = parseFloat(classEve2) || 0;
+    const pw = parseFloat(projectWork) || 0;
+    const eote = parseFloat(endOfTermExams) || 0;
+
+    const totalSBAScore = mt1 + mt2 + ge + hw + ce1 + ce2 + pw;
+    const fiftyPercent = totalSBAScore / 2;
+    const fiftyPercentExam = eote / 2;
+    const grandTotal = fiftyPercent + fiftyPercentExam;
+
+    return {
+      totalSBAScore,
+      fiftyPercent,
+      fiftyPercentExam,
+      grandTotal
+    };
+  };
+
+  const calculateGrade = (score: number) => {
+    if (score >= 80) return "A";
+    if (score >= 70) return "B";
+    if (score >= 60) return "C";
+    if (score >= 50) return "D";
+    if (score >= 40) return "E";
+    return "F";
+  };
+
+  const handleSubmit = async () => {
+    setIsUpdating(true);
+    try {
+      const calculated = calculateScores();
+      await onUpdate({
+        ...sba,
+        monthlyTest1: parseFloat(monthlyTest1),
+        monthlyTest2: parseFloat(monthlyTest2),
+        groupExercise: parseFloat(groupExercise),
+        homeWork: parseFloat(homeWork),
+        classEve1: parseFloat(classEve1),
+        classEve2: parseFloat(classEve2),
+        projectWork: parseFloat(projectWork),
+        endOfTermExams: parseFloat(endOfTermExams),
+        totalSBAScore: calculated.totalSBAScore,
+        fiftyPercent: calculated.fiftyPercent,
+        fiftyPercentExam: calculated.fiftyPercentExam,
+        grandTotal: calculated.grandTotal,
+        grade: calculateGrade(calculated.grandTotal)
+      });
+      onClose();
+    } catch (error) {
+      console.error("Error updating SBA:", error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const calculatedScores = calculateScores();
+
+  return (
+    <Modal isOpen={true} onClose={onClose}>
+      <div className="bg-white p-6 rounded-lg w-full max-w-4xl">
+        <h2 className="text-xl font-bold text-green-800 mb-4">Student Based Assessment</h2>
+        
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Student</label>
+              <p className="text-gray-900">{sba.studentName}</p>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+              <p className="text-gray-900">{sba.gender}</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Class</label>
+              <p className="text-gray-900">{sba.className}</p>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+              <p className="text-gray-900">{sba.subject}</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Term</label>
+              <p className="text-gray-900">{sba.term}</p>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Academic Year</label>
+              <p className="text-gray-900">{sba.academicYear}</p>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-200 pt-4 mt-4">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">Assessment Scores</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Monthly Test 1 (20)</label>
+                <input
+                  type="number"
+                  value={monthlyTest1}
+                  onChange={(e) => setMonthlyTest1(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  min="0"
+                  max="20"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Monthly Test 2 (20)</label>
+                <input
+                  type="number"
+                  value={monthlyTest2}
+                  onChange={(e) => setMonthlyTest2(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  min="0"
+                  max="20"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Group Exercise (10)</label>
+                <input
+                  type="number"
+                  value={groupExercise}
+                  onChange={(e) => setGroupExercise(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  min="0"
+                  max="10"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Home Work (20)</label>
+                <input
+                  type="number"
+                  value={homeWork}
+                  onChange={(e) => setHomeWork(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  min="0"
+                  max="20"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Class Eve 1 (10)</label>
+                <input
+                  type="number"
+                  value={classEve1}
+                  onChange={(e) => setClassEve1(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  min="0"
+                  max="10"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Class Eve 2 (10)</label>
+                <input
+                  type="number"
+                  value={classEve2}
+                  onChange={(e) => setClassEve2(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  min="0"
+                  max="10"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Project Work (10)</label>
+                <input
+                  type="number"
+                  value={projectWork}
+                  onChange={(e) => setProjectWork(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  min="0"
+                  max="10"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">End of Term Exams (100)</label>
+                <input
+                  type="number"
+                  value={endOfTermExams}
+                  onChange={(e) => setEndOfTermExams(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  min="0"
+                  max="100"
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-200 pt-4 mt-4">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">Calculated Scores</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">TOTAL SBA SCORE (100)</label>
+                <p className="text-gray-900 font-semibold">{calculatedScores.totalSBAScore.toFixed(1)}</p>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">50%</label>
+                <p className="text-gray-900 font-semibold">{calculatedScores.fiftyPercent.toFixed(1)}</p>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">END OF TERM EXAMS (100)</label>
+                <p className="text-gray-900 font-semibold">{parseFloat(endOfTermExams) || 0}</p>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">50%</label>
+                <p className="text-gray-900 font-semibold">{calculatedScores.fiftyPercentExam.toFixed(1)}</p>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">GRAND TOTAL (50+50)</label>
+                <p className="text-gray-900 font-semibold">{calculatedScores.grandTotal.toFixed(1)}</p>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">GRADE</label>
+                <p className="text-gray-900 font-semibold">{calculateGrade(calculatedScores.grandTotal)}</p>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">POSITION</label>
+                <p className="text-gray-900 font-semibold">{sba.position}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-6 flex justify-end space-x-2">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={isUpdating}
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+          >
+            {isUpdating ? 'Updating...' : 'Update'}
+          </button>
+        </div>
+      </div>
+    </Modal>
+  );
+};
+
 // Main Page Component
 function AttendanceGradesPage() {
   const [selectedTab, setSelectedTab] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Attendance Reports State
+  // Attendance State
   const [attendanceReports, setAttendanceReports] = useState<AttendanceRecord[]>(mockAttendanceRecords);
   const [selectedAttendanceReport, setSelectedAttendanceReport] = useState<AttendanceRecord | null>(null);
   const [selectedClassForAttendance, setSelectedClassForAttendance] = useState("");
@@ -919,6 +1759,12 @@ function AttendanceGradesPage() {
   const [selectedClassForAssignments, setSelectedClassForAssignments] = useState("");
   const [selectedSubjectForAssignments, setSelectedSubjectForAssignments] = useState("");
   const [selectedAssignmentName, setSelectedAssignmentName] = useState("");
+
+  // SBA State
+  const [sbaRecords, setSBARecords] = useState<SBARecord[]>(mockSBARecords);
+  const [selectedSBARecord, setSelectedSBARecord] = useState<SBARecord | null>(null);
+  const [selectedClassForSBA, setSelectedClassForSBA] = useState("");
+  const [selectedSubjectForSBA, setSelectedSubjectForSBA] = useState("");
 
   const allClasses = [
     "Creche", "Nursery 1", "Nursery 2", "KG 1", "KG 2", 
@@ -973,6 +1819,21 @@ function AttendanceGradesPage() {
     }
   };
 
+  const updateSBARecord = async (updatedSBA: SBARecord) => {
+    setIsLoading(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setSBARecords(prev => 
+        prev.map(record => record.id === updatedSBA.id ? updatedSBA : record)
+      );
+    } catch (error) {
+      console.error("Error updating SBA record:", error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Format date for display
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -1005,6 +1866,14 @@ function AttendanceGradesPage() {
     return true;
   });
 
+  // Filter SBA records based on selected class and subject
+  const filteredSBARecords = sbaRecords.filter(record => {
+    if (!selectedClassForSBA || !selectedSubjectForSBA) return false;
+    if (record.className !== selectedClassForSBA) return false;
+    if (record.subject !== selectedSubjectForSBA) return false;
+    return true;
+  });
+
   return (
     <ProtectedRoute>
       <div className="bg-gray-100 min-h-screen p-8">
@@ -1019,13 +1888,13 @@ function AttendanceGradesPage() {
 
         <Tab.Group selectedIndex={selectedTab} onChange={setSelectedTab}>
           <Tab.List className="flex justify-center space-x-4 bg-white p-3 rounded-lg shadow-md">
-            {["📝 Attendance Reports", "📊 Grade Reports", "📚 Assignments"].map((title, index) => (
+            {["📝 Attendance", "📊 Grades", "📚 Assignments", "📈 SBA"].map((title, index) => (
               <Tab
                 key={index}
                 className={({ selected }) =>
                   `px-6 py-2 text-lg font-semibold rounded-lg transition-all ${
                     selected
-                      ? "bg-blue-600 text-white shadow-md"
+                      ? "bg-green-600 text-white shadow-md"
                       : "text-gray-700 bg-gray-200 hover:bg-gray-300"
                   }`
                 }
@@ -1036,21 +1905,21 @@ function AttendanceGradesPage() {
           </Tab.List>
 
           <Tab.Panels className="mt-6">
-            {/* Attendance Reports Tab */}
+            {/* Attendance Tab */}
             <Tab.Panel>
               <motion.div
-                className="p-6 bg-blue-50 border-2 border-blue-200 rounded-lg shadow-lg"
+                className="p-6 bg-green-50 border-2 border-green-200 rounded-lg shadow-lg"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4 }}
               >
-                <h2 className="text-2xl font-semibold text-blue-800 mb-4">📝 Attendance Reports from Teachers</h2>
+                <h2 className="text-2xl font-semibold text-green-800 mb-4">📝 Attendance from Teachers</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                   <div>
-                    <label className="block text-sm font-medium mb-1 text-blue-700">Select Class</label>
+                    <label className="block text-sm font-medium mb-1 text-green-700">Select Class</label>
                     <select
-                      className="w-full p-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                       value={selectedClassForAttendance}
                       onChange={(e) => setSelectedClassForAttendance(e.target.value)}
                     >
@@ -1061,10 +1930,10 @@ function AttendanceGradesPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1 text-blue-700">Select Date</label>
+                    <label className="block text-sm font-medium mb-1 text-green-700">Select Date</label>
                     <input
                       type="date"
-                      className="w-full p-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                       value={selectedDateForAttendance}
                       onChange={(e) => setSelectedDateForAttendance(e.target.value)}
                     />
@@ -1073,12 +1942,12 @@ function AttendanceGradesPage() {
 
                 {isLoading ? (
                   <div className="flex justify-center items-center h-40">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
                   </div>
                 ) : filteredAttendanceReports.length === 0 ? (
-                  <div className="p-4 bg-white rounded-lg shadow-sm border border-blue-100 text-center">
+                  <div className="p-4 bg-white rounded-lg shadow-sm border border-green-100 text-center">
                     {!selectedClassForAttendance || !selectedDateForAttendance ? 
-                      "Please select both a class and a date to view attendance reports" : 
+                      "Please select both a class and a date to view attendance" : 
                       "No attendance reports available for the selected criteria"}
                   </div>
                 ) : (
@@ -1086,14 +1955,14 @@ function AttendanceGradesPage() {
                     {filteredAttendanceReports.map((report) => (
                       <div 
                         key={report.id} 
-                        className={`p-4 bg-white rounded-lg shadow-sm border border-blue-100 cursor-pointer transition-all ${
-                          selectedAttendanceReport?.id === report.id ? 'ring-2 ring-blue-500' : ''
+                        className={`p-4 bg-white rounded-lg shadow-sm border border-green-100 cursor-pointer transition-all ${
+                          selectedAttendanceReport?.id === report.id ? 'ring-2 ring-green-500' : ''
                         }`}
                         onClick={() => setSelectedAttendanceReport(report)}
                       >
                         <div className="flex justify-between items-start">
                           <div>
-                            <h3 className="text-xl font-semibold text-blue-700">{report.studentName}</h3>
+                            <h3 className="text-xl font-semibold text-green-700">{report.studentName}</h3>
                             <p className="text-gray-600">Teacher: {report.teacherName}</p>
                             <p className="text-gray-600">Status: 
                               <span className={`ml-2 px-2 py-1 rounded-full text-xs ${
@@ -1124,18 +1993,18 @@ function AttendanceGradesPage() {
             {/* Grade Reports Tab */}
             <Tab.Panel>
               <motion.div
-                className="p-6 bg-purple-50 border-2 border-purple-200 rounded-lg shadow-lg"
+                className="p-6 bg-green-50 border-2 border-green-200 rounded-lg shadow-lg"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4 }}
               >
-                <h2 className="text-2xl font-semibold text-purple-800 mb-4">📊 Grade Reports from Teachers</h2>
+                <h2 className="text-2xl font-semibold text-green-800 mb-4">📊 Grade Reports from Teachers</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                   <div>
-                    <label className="block text-sm font-medium mb-1 text-purple-700">Select Class</label>
+                    <label className="block text-sm font-medium mb-1 text-green-700">Select Class</label>
                     <select
-                      className="w-full p-2 border border-purple-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                       value={selectedClassForGrades}
                       onChange={(e) => setSelectedClassForGrades(e.target.value)}
                     >
@@ -1146,9 +2015,9 @@ function AttendanceGradesPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1 text-purple-700">Select Subject</label>
+                    <label className="block text-sm font-medium mb-1 text-green-700">Select Subject</label>
                     <select
-                      className="w-full p-2 border border-purple-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                       value={selectedSubjectForGrades}
                       onChange={(e) => setSelectedSubjectForGrades(e.target.value)}
                       disabled={!selectedClassForGrades}
@@ -1160,9 +2029,9 @@ function AttendanceGradesPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1 text-purple-700">Select Test</label>
+                    <label className="block text-sm font-medium mb-1 text-green-700">Select Test</label>
                     <select
-                      className="w-full p-2 border border-purple-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
                       value={selectedTestForGrades}
                       onChange={(e) => setSelectedTestForGrades(e.target.value)}
                       disabled={!selectedSubjectForGrades}
@@ -1184,10 +2053,10 @@ function AttendanceGradesPage() {
 
                 {isLoading ? (
                   <div className="flex justify-center items-center h-40">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
                   </div>
                 ) : filteredGradeReports.length === 0 ? (
-                  <div className="p-4 bg-white rounded-lg shadow-sm border border-purple-100 text-center">
+                  <div className="p-4 bg-white rounded-lg shadow-sm border border-green-100 text-center">
                     {!selectedClassForGrades || !selectedSubjectForGrades || !selectedTestForGrades ? 
                       "Please select a class, subject, and test to view grade reports" : 
                       "No grade reports available for the selected criteria"}
@@ -1197,14 +2066,14 @@ function AttendanceGradesPage() {
                     {filteredGradeReports.map((report) => (
                       <div 
                         key={report.id} 
-                        className={`p-4 bg-white rounded-lg shadow-sm border border-purple-100 cursor-pointer transition-all ${
-                          selectedGradeReport?.id === report.id ? 'ring-2 ring-purple-500' : ''
+                        className={`p-4 bg-white rounded-lg shadow-sm border border-green-100 cursor-pointer transition-all ${
+                          selectedGradeReport?.id === report.id ? 'ring-2 ring-green-500' : ''
                         }`}
                         onClick={() => setSelectedGradeReport(report)}
                       >
                         <div className="flex justify-between items-start">
                           <div>
-                            <h3 className="text-xl font-semibold text-purple-700">{report.studentName}</h3>
+                            <h3 className="text-xl font-semibold text-green-700">{report.studentName}</h3>
                             <p className="text-gray-600">Title: {report.title}</p>
                             <p className="text-gray-600">Subject: {report.subject}</p>
                             <p className="text-gray-600">Teacher: {report.teacherName}</p>
@@ -1339,6 +2208,139 @@ function AttendanceGradesPage() {
                     assignment={selectedAssignment}
                     onClose={() => setSelectedAssignment(null)}
                     onUpdate={updateAssignment}
+                  />
+                )}
+              </motion.div>
+            </Tab.Panel>
+
+            {/* SBA Tab */}
+            <Tab.Panel>
+              <motion.div
+                className="p-6 bg-green-50 border-2 border-green-200 rounded-lg shadow-lg"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4 }}
+              >
+                <h2 className="text-2xl font-semibold text-green-800 mb-4">📈 Student Based Assessment (SBA)</h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <div>
+                    <label className="block text-sm font-medium mb-1 text-green-700">Select Class</label>
+                    <select
+                      className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                      value={selectedClassForSBA}
+                      onChange={(e) => setSelectedClassForSBA(e.target.value)}
+                    >
+                      <option value="">Select Class</option>
+                      {allClasses.map((className) => (
+                        <option key={className} value={className}>{className}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1 text-green-700">Select Subject</label>
+                    <select
+                      className="w-full p-2 border border-green-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                      value={selectedSubjectForSBA}
+                      onChange={(e) => setSelectedSubjectForSBA(e.target.value)}
+                      disabled={!selectedClassForSBA}
+                    >
+                      <option value="">Select Subject</option>
+                      {allSubjects.map((subject) => (
+                        <option key={subject} value={subject}>{subject}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {isLoading ? (
+                  <div className="flex justify-center items-center h-40">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
+                  </div>
+                ) : filteredSBARecords.length === 0 ? (
+                  <div className="p-4 bg-white rounded-lg shadow-sm border border-green-100 text-center">
+                    {!selectedClassForSBA || !selectedSubjectForSBA ? 
+                      "Please select both a class and a subject to view SBA records" : 
+                      "No SBA records available for the selected criteria"}
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full bg-white rounded-lg overflow-hidden">
+                      <thead className="bg-green-100">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">SN</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Names</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Gender</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Monthly Test 1 (20)</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Monthly Test 2 (20)</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Group Exercise (10)</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Home Work (20)</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Class Eve 1 (10)</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Class Eve 2 (10)</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Project Work (10)</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">TOTAL SBA SCORE (100)</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">50%</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">END OF TERM EXAMS (100)</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">50%</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">GRAND TOTAL (50+50)</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">GRADE</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">POSITION</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-green-200">
+                        {filteredSBARecords.map((record, index) => (
+                          <tr 
+                            key={record.id} 
+                            className={`hover:bg-green-50 ${index % 2 === 0 ? 'bg-white' : 'bg-green-50'}`}
+                          >
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{index + 1}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{record.studentName}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{record.gender}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{record.monthlyTest1}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{record.monthlyTest2}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{record.groupExercise}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{record.homeWork}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{record.classEve1}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{record.classEve2}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{record.projectWork}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700 font-semibold">{record.totalSBAScore}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700 font-semibold">{record.fiftyPercent}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{record.endOfTermExams}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700 font-semibold">{record.fiftyPercentExam}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700 font-semibold">{record.grandTotal}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                              <span className={`px-2 py-1 rounded-full text-xs ${
+                                record.grade === 'A' ? 'bg-green-100 text-green-800' :
+                                record.grade === 'B' ? 'bg-blue-100 text-blue-800' :
+                                record.grade === 'C' ? 'bg-yellow-100 text-yellow-800' :
+                                record.grade === 'D' ? 'bg-orange-100 text-orange-800' :
+                                'bg-red-100 text-red-800'
+                              }`}>
+                                {record.grade}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700 font-semibold">{record.position}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                              <button
+                                className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+                                onClick={() => setSelectedSBARecord(record)}
+                              >
+                                Edit
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                {selectedSBARecord && (
+                  <SBAModal
+                    sba={selectedSBARecord}
+                    onClose={() => setSelectedSBARecord(null)}
+                    onUpdate={updateSBARecord}
                   />
                 )}
               </motion.div>

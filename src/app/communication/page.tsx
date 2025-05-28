@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/context/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -9,6 +10,7 @@ const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 
 function CommunicationPage() {
+  const { authFetch } = useAuth();
   const [selectedTab, setSelectedTab] = useState(0);
   const [announcement, setAnnouncement] = useState("");
   const [selectedRecipient, setSelectedRecipient] = useState("All");
@@ -63,11 +65,8 @@ function CommunicationPage() {
           endpoint = "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/past";
         }
         
-        const response = await fetch(endpoint, {
-          headers: {
-            "Authorization": `Bearer ${localStorage.getItem('authToken')}`
-          }
-        });
+        const response = await authFetch(endpoint);
+
         
         if (!response.ok) {
           throw new Error(`Failed to fetch events: ${response.status}`);
@@ -144,7 +143,7 @@ function CommunicationPage() {
         setFilteredResults(filtered);
         return;
       } else if (selectedRecipient === "All Students") {
-        response = await fetch(
+        response = await authFetch(
           `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/students/search?name=${encodeURIComponent(searchQuery)}`,
           {
             headers: {
@@ -251,14 +250,11 @@ function CommunicationPage() {
         formData.append('image', newEvent.image);
       }
 
-      const response = await fetch(
+      const response = await authFetch(
         "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/create",
         {
           method: "POST",
           body: formData,
-          headers: {
-            "Authorization": `Bearer ${localStorage.getItem('authToken')}`
-          }
         }
       );
 
@@ -358,14 +354,11 @@ function CommunicationPage() {
         formData.append('image', newEvent.image);
       }
 
-      const response = await fetch(
+      const response = await authFetch(
         `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/${editingEvent.id}`,
         {
           method: "PUT",
           body: formData,
-          headers: {
-            "Authorization": `Bearer ${localStorage.getItem('authToken')}`
-          }
         }
       );
 
@@ -422,13 +415,10 @@ function CommunicationPage() {
     }
 
     try {
-      const response = await fetch(
+      const response = await authFetch(
         `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/events/${id}`,
         {
           method: "DELETE",
-          headers: {
-            "Authorization": `Bearer ${localStorage.getItem('authToken')}`
-          }
         }
       );
 
@@ -507,14 +497,10 @@ function CommunicationPage() {
     }
 
     try {
-      const response = await fetch(
+      const response = await authFetch(
         "https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/messages/send",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem('authToken')}`
-          },
           body: JSON.stringify(requestBody),
         }
       );

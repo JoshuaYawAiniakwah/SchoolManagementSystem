@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/context/AuthContext"
 import ProtectedRoute from "@/components/ProtectedRoute";
 import React, { useState, useEffect } from "react";
 import { Modal } from '@/components/ui/Modal';
@@ -37,6 +38,7 @@ interface Subject {
 
 export default function TeacherProfile() {
   // State management
+  const { authFetch } = useAuth();
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [allTeachers, setAllTeachers] = useState<Teacher[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -148,12 +150,8 @@ export default function TeacherProfile() {
   // API functions
   const fetchAllTeachers = async () => {
     try {
-      const response = await fetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/all", {
+      const response = await authFetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/all", {
         method: "GET",
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem('authToken')}`,
-          "Content-Type": "application/json"
-        }
       });
       
       if (!response.ok) throw new Error("Failed to fetch teachers");
@@ -186,12 +184,8 @@ export default function TeacherProfile() {
 
   const fetchAllClasses = async () => {
     try {
-      const response = await fetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/teacher/classes/all", {
+      const response = await authFetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teacher/classes/all", {
         method: "GET",
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem('authToken')}`,
-          "Content-Type": "application/json"
-        }
       });
       
       if (!response.ok) {
@@ -209,12 +203,8 @@ export default function TeacherProfile() {
 
   const fetchAllSubjects = async () => {
     try {
-      const response = await fetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/subjects/all", {
+      const response = await authFetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/subjects/all", {
         method: "GET",
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem('authToken')}`,
-          "Content-Type": "application/json"
-        }
       });
       
       if (!response.ok) {
@@ -233,12 +223,8 @@ export default function TeacherProfile() {
   const addClass = async (classData: { className: string; gradeLevel: string }) => {
     setIsAddingClass(true);
     try {
-      const response = await fetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/teacher/classes/add", {
+      const response = await authFetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teacher/classes/add", {
         method: "POST",
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem('authToken')}`,
-          "Content-Type": "application/json"
-        },
         body: JSON.stringify({
           className: classData.className,
           gradeLevel: classData.gradeLevel
@@ -264,12 +250,8 @@ export default function TeacherProfile() {
   const addSubject = async (subjectData: { subjectName: string }) => {
     setIsAddingSubject(true);
     try {
-      const response = await fetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/subjects/add", {
+      const response = await authFetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/subjects/add", {
         method: "POST",
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem('authToken')}`,
-          "Content-Type": "application/json"
-        },
         body: JSON.stringify({
           subjectName: subjectData.subjectName
         })
@@ -296,14 +278,10 @@ export default function TeacherProfile() {
     setIsAssigningClass(true);
     setAssigningClassForTeacher(email);
     try {
-      const response = await fetch(
+      const response = await  authFetch(
         `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/${email}/assign-class/${className}`,
         {
           method: "POST",
-          headers: {
-            "Authorization": `Bearer ${localStorage.getItem('authToken')}`,
-            "Content-Type": "application/json"
-          }
         }
       );
 
@@ -356,7 +334,7 @@ export default function TeacherProfile() {
     setIsAssigningSubject(true);
     setAssigningSubjectForTeacher(email);
     try {
-      const response = await fetch(
+      const response = await authFetch(
         `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/${email}/assign-subjects`,
         {
           method: "POST",
@@ -414,12 +392,8 @@ export default function TeacherProfile() {
 
   const searchTeachersByName = async (name: string) => {
     try {
-      const response = await fetch(`https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/search/by-name/${name}`, {
+      const response = await authFetch(`https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/search/by-name/${name}`, {
         method: "GET",
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem('authToken')}`,
-          "Content-Type": "application/json"
-        }
       });
       
       if (!response.ok) {
@@ -452,7 +426,7 @@ export default function TeacherProfile() {
 
   const fetchTeachersByClass = async (className: string) => {
     try {
-      const response = await fetch(`https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/search/class/${className}`, {
+      const response = await authFetch(`https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/search/class/${className}`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${localStorage.getItem('authToken')}`,
@@ -490,7 +464,7 @@ export default function TeacherProfile() {
 
   const fetchTeachersBySubject = async (subject: string) => {
     try {
-      const response = await fetch(`https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/search/by-subject/${subject}`, {
+      const response = await authFetch(`https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/search/by-subject/${subject}`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${localStorage.getItem('authToken')}`,
@@ -528,7 +502,7 @@ export default function TeacherProfile() {
 
   const fetchTeachersByGender = async (gender: string) => {
     try {
-      const response = await fetch(`https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/by-gender?gender=${gender}`, {
+      const response = await authFetch(`https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/by-gender?gender=${gender}`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${localStorage.getItem('authToken')}`,
@@ -566,7 +540,7 @@ export default function TeacherProfile() {
 
   const fetchTeachersByGradeLevel = async (gradeLevel: string) => {
     try {
-      const response = await fetch(`https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/search/grade-level/${gradeLevel}`, {
+      const response = await authFetch(`https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/search/grade-level/${gradeLevel}`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${localStorage.getItem('authToken')}`,
@@ -614,7 +588,7 @@ export default function TeacherProfile() {
         throw new Error("Please enter a valid email address");
       }
 
-      const response = await fetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/add", {
+      const response = await authFetch("https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/add", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${localStorage.getItem('authToken')}`,
@@ -652,7 +626,7 @@ export default function TeacherProfile() {
   const updateTeacher = async (teacherData: Teacher) => {
     setIsUpdatingTeacher(true);
     try {
-      const response = await fetch(
+      const response = await authFetch(
         `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/${teacherData.email}/update`,
         {
           method: "PUT",
@@ -696,7 +670,7 @@ export default function TeacherProfile() {
   const deleteTeacher = async (email: string) => {
     setIsRemovingTeacher(true);
     try {
-      const response = await fetch(
+      const response = await authFetch(
         `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/${email}/delete`,
         {
           method: "DELETE",
@@ -732,7 +706,7 @@ export default function TeacherProfile() {
     setIsAssigningSubject(true);
     setAssigningSubjectForTeacher(email);
     try {
-      const response = await fetch(
+      const response = await authFetch(
         `https://xpnnkh6h-8082.uks1.devtunnels.ms/admin/v1/api/teachers/${email}/assign-subjects`,
         {
           method: "POST",
